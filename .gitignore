@@ -1,0 +1,6 @@
+## python class
+*.pyc
+
+## database settings
+*database_settings.py
+
