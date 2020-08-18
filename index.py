@@ -17,7 +17,7 @@ def display_page(pathname):
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
-    	html.Button([dcc.Link('sign in', href='/Register')])
+    	html.Button(id='sign_in_button',children=[dcc.Link('sign in', href='/Register')])
     	])
     else:
         return '404'
