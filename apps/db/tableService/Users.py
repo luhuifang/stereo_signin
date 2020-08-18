@@ -1,4 +1,5 @@
 import warnings
+import hashlib
 
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
@@ -69,14 +70,32 @@ class Users(TableServiceBase, UserMixin):
 
 	def getId(self):
 		return self.UserID
+	
+	def getKey(self):
+		if self.LoginName :
+			return self.getKeyByName(self.LoginName)
+		elif self.UserID:
+			return self.getKeyById(self.UserID)
+		return ''
+
+	def getKeyByName(self, name):
+		sql = 'select HashKey from {table} where LoginName=%s'.format(table=self.tableName)
+		return self._getSingleField(sql, args=(name,))
+
+	def getKeyById(self, userid):
+		sql = 'select HashKey from {table} where UserID=%s'.format(table=self.tableName)
+		return self._getSingleField(sql, args=(userid,))
 
 	def add(self):
 		if not self.LoginName:
 			warnings.warn('No Username, nothing to do')
 		elif not self.UserID: ## not exists
 			user_id = get_randstr('USER')
+			row_str = user_id.split('_')[1]
+			hashkey = hashlib.md5(row_str.encode(encoding='utf-8')).hexdigest()
 			all_field = self.getAllField()
 			all_field['UserID'] = user_id
+			all_field['HashKey'] = hashkey
 			if self.DB.insertDB(self.tableName , **all_field):
 				self.UserID = user_id
 		return self.UserID
@@ -172,6 +191,14 @@ class Users(TableServiceBase, UserMixin):
 		if updated:
 			self.setUserRole(role_id)
 		return updated
+	
+	def getFieldByName(self, username, fieldname):
+		sql = 'select {field} from {table} where LoginName=%s'.format(field=fieldname, table=self.tableName)
+		return self._getSingleField(sql, args=(username,))
+	
+	def getFieldById(self, userid, fieldname):
+		sql = 'select {field} from {table} where UserID=%s'.format(field=fieldname, table=self.tableName)
+		return self._getSingleField(sql, args=(userid,))
 
 	def __getPasswd(self):
 		sql = 'select LoginPasswd from {table} where LoginName=%s'.format(table=self.tableName)

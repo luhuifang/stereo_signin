@@ -1,0 +1,24 @@
+.login_form{
+	padding: 0px;
+}
+.login_form input{
+	outline: none;
+}
+
+.input_part{
+	margin-bottom: 8px;
+	font-size: 13px;
+}
+.input_part input{
+	border: 0px solid #ECECEC;
+}
+
+.login_button{
+	margin-top: 10px;
+	display:block;
+	border: 1px solid var(--stereo-blue-4);
+	background-color: var(--stereo-blue-4);
+}
+.login_button:hover{
+	border-color: var(--stereo-blue-3);
+}
