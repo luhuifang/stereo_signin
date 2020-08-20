@@ -1,0 +1,55 @@
+.findPassWd{
+    margin-top: 80px;
+    border-radius: 5px;
+    background-color: rgba(206,212,218, 0.6);
+    min-height: 300px;
+}
+.findPassWd .row{
+    margin: 0;
+}
+.findPassWd_header{
+    height: 60px;
+    border-bottom: 1px dashed var(--stereo-gray-5);
+}
+.findPassWd h2{
+    line-height: 60px;
+    background-color: rgba(165,216,255, 0.6); /* --stereo-blue-2 */
+    font-weight: bold;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+.findPassWd .login_form{
+    padding: 20px 35px;
+}
+
+.findPassWd button:disabled{
+    background-color: var(--stereo-gray-4);
+    border: 0;
+}
+.findPassWd input:disabled{
+    background-color: var(--stereo-white);
+    border: 0;
+}
+.form_note_msg{
+    padding: 20px 35px 10px 35px;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+}
+.form_note_msg span::before{
+    content: '*';
+    color: red;
+}
+
+.findPassWd_content{
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10%;
+    line-height: 30px;
+}
+
+label.xrequired:before{
+    content: '*';
+    color:red;
+  }

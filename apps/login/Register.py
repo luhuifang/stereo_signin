@@ -238,9 +238,9 @@ def update_username(username, new_pw, re_pw):
     if u.checkExists():
         return 'Username already exists, please re-enter!'
     elif new_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',new_pw):
-        return 'The password length must be between 8 and 25, and must include numbers, letters and special characters'
+        return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
     elif re_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',re_pw):
-        return 'The password length must be between 8 and 25, and must include numbers, letters and special characters'
+        return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
     elif new_pw and re_pw and new_pw != re_pw:
         return 'Different two passwords, please re-enter'
     else:
