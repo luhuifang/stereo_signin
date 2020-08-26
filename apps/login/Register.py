@@ -1,7 +1,4 @@
 import re
-import dash
-import json
-import time
 import pandas as pd
 
 import dash_core_components as dcc
@@ -14,12 +11,13 @@ from spatialTrancriptomeReport import app
 from apps.db.tableService.Users import Users
 from apps.db.tableService.UserRole import UserRole
 from apps.login.country_dict import options as Disoptions
+from apps.login.connect_redis import r as conn_redis
 
 
-veri_code = Ver.random_str()
 temp_click = 0
 
 def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Email='',Phone='',District='',Country='',Province='',City='',Organization='',Verification_code=''):
+
     return html.Form(role='form', id='father_div',className=" login_form",children=[
         html.Div(className = 'login_err_div', children=[
             html.P(id='account_result',className='subwrong text-center text-danger', children=err_msg)
@@ -114,7 +112,7 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
                 options=[{'label':i,'value':i} for i in Disoptions.keys()],
                 id='District',
                 value=District,
-                # persistence=True,
+                persistence=False,
                 placeholder='Select the District',
                 # className=" dropdown_font_size input_part"
                 )
@@ -124,6 +122,7 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
             dcc.Dropdown(
                 id='Country',
                 placeholder='Select the Country',
+                persistence=False,
                 # className=" dropdown_font_size input_part",
                 value=Country,
                 )
@@ -133,6 +132,7 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
             dcc.Dropdown(
                 id='Province',
                 placeholder='Select the Province',
+                persistence=False,
                 className=" dropdown_font_size input_part",
                 value = Province,
                 )
@@ -142,6 +142,7 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
             dcc.Dropdown(
                 id='City',
                 placeholder='Select the City',
+                persistence=False,
                 className=" dropdown_font_size input_part",
                 value=City,
                 )
@@ -217,10 +218,11 @@ def registerFailedLayout():
     [Input('District', 'value')]
 )
 def set_neighborhood(District):
-    if not District:
-        raise PreventUpdate
-    neighborhoods = [i for i in Disoptions[District]["childrens"].keys()]
-    return [{'label': v, 'value': v} for v in neighborhoods]
+    try:
+        neighborhoods = [i for i in Disoptions[District]["childrens"].keys()]
+        return [{'label': v, 'value': v} for v in neighborhoods]
+    except:
+        return [{'label': 'None', 'value': 'None'}]
 
 @app.callback(
     Output('Province', 'options'),
@@ -248,7 +250,8 @@ def set_city_neighborhood(country,District,Province):
         return [{'label': 'None', 'value': 'None'}]
 
 @app.callback(
-    Output('countdown','children'),
+    [Output('countdown','children'),
+    Output('countdown','disabled')],
     [Input('countdown', 'n_clicks'),
     Input('Email','value')],
     [State('Realname','value'),
@@ -256,15 +259,18 @@ def set_city_neighborhood(country,District,Province):
     )
 def ver_countdown(n_clicks,email,Realname,Username):
     global temp_click
-    if not n_clicks :
-        raise PreventUpdate
-    if not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',email):
+    if email and Realname and Username:
+        if not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',email):
+            temp_click = n_clicks
+            return 'Examine email and try again!',True
+        if temp_click < n_clicks:
+            Ver.Send_email(email,Realname,Username)
+            temp_click = n_clicks
+            return 'Check your email, Please!',True
         temp_click = n_clicks
-        return 'Examine email and try again!'
-    if temp_click != n_clicks:
-        Ver.Send_email(email,veri_code,Realname,Username)
-    temp_click = n_clicks
-    return 'Send verification code'
+        return 'Send verification code',False
+    else:
+        return 'Send verification code',True
 
 @app.callback(
     Output('account_result', 'children'),
@@ -307,6 +313,8 @@ def update_account(n_clicks,
             Username, Password,RePassword,
             Realname,Email,Phone,
             District,Country, Province, City,Organization,Verification_code):
+
+    veri_code = conn_redis.get(Email)
     if not n_clicks :
         raise PreventUpdate
 
@@ -332,7 +340,7 @@ def update_account(n_clicks,
                 return registerFailedLayout()
     else:
         err_msg = '* Part of the content is required, please fill in completely!'
-    return formlayout(err_msg, Username, Password,RePassword,Realname,Email,Phone,District,Country,Province,City,Organization)
+    return formlayout(err_msg, Username, Password,RePassword,Realname,Email,Phone,'','','','',Organization,Verification_code)
 
 
 @app.callback(

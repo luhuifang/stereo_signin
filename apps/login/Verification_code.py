@@ -2,6 +2,7 @@ import sys
 import imaplib
 import smtplib
 import email
+import redis
 import requests
 import json
 import apps.login.email_setting as eset
@@ -11,6 +12,7 @@ from email.header import Header
 from email.mime.text import MIMEText
 from email.mime.image import MIMEImage
 from email.mime.multipart import MIMEMultipart
+from apps.login.connect_redis import r as conn_redis
 
 
 # 生成随机字符串
@@ -58,7 +60,6 @@ def conn_emial(veri_email,veri_code):
         msg_root = send_email_by_qq(veri_email,veri_code)
         sftp_conn.sendmail(email_user, veri_email, msg_root.as_string())
         sftp_conn.quit()
-        # os.system('mv {} picture/used_img'.format(picture_name))
         print('sendemail successful!')
         return True
     except Exception as e:
@@ -66,11 +67,12 @@ def conn_emial(veri_email,veri_code):
         print(e)
         return False
 
-def Send_email(veri_email,veri_code,Realname,Username):
-	msg_root = send_email_by_qq(veri_email,veri_code)
+def Send_email(veri_email,Realname,Username):
+	veri_code = random_str()
+	conn_redis.set(veri_email,veri_code,ex=1800)
+
 	url = 'http://10.225.5.11:8080/Bioinfo/mail.shtml'
-	content = """Dear {}:\n\nThank you for registering at Stereomics. \nYour login is as follows: {} \nVerification code: {}\n\nKind regards,\n
-The Stereomics Team""".format(Realname,Username,veri_code)
+	content = """Dear {}:\n\nThank you for registering at Stereomics. \nYour login is as follows: {} \nVerification code: {}\nThe verification code is valid for 30 minutes,please verify in time.\n\nKind regards,\nThe Stereomics Team""".format(Realname,Username,veri_code)
 	r = requests.post(
 	                        url,
 	                        data = {
