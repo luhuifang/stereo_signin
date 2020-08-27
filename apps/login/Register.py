@@ -1,3 +1,4 @@
+import dash
 import re
 import pandas as pd
 
@@ -13,8 +14,6 @@ from apps.db.tableService.UserRole import UserRole
 from apps.login.country_dict import options as Disoptions
 from apps.login.connect_redis import r as conn_redis
 
-
-temp_click = 0
 
 def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Email='',Phone='',District='',Country='',Province='',City='',Organization='',Verification_code=''):
 
@@ -36,7 +35,7 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
             ),
             html.Span(
                 id='Username_info',
-                children='Username can contain numbers, letters and underscores, cannot be empty and repeated, and cannot contain spaces and special characters',
+                children='Username can contain numbers, letters and underscores, cannot be empty, and cannot contain spaces and special characters',
                 className='help-block'
             ),
         ]),
@@ -173,6 +172,9 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
                 ])
             ])
         ]),
+        html.Div(className = 'login_err_div', children=[
+            html.P(id='sendEmail_res',className='subwrong text-center text-danger')
+        ]),
         html.Div(className = 'row clearfix', children=[
             html.Button('Create account',id='create_button',type='button',n_clicks=0,className="login_button col-sm-12 col-md-12 column"),
         ]),
@@ -249,28 +251,28 @@ def set_city_neighborhood(country,District,Province):
     except:
         return [{'label': 'None', 'value': 'None'}]
 
+
 @app.callback(
-    [Output('countdown','children'),
-    Output('countdown','disabled')],
+    [Output('countdown','disabled'),
+    Output('sendEmail_res','children')],
     [Input('countdown', 'n_clicks'),
-    Input('Email','value')],
-    [State('Realname','value'),
-    State('Username','value')]
+    Input('Email','value'),
+    Input('Realname','value'),
+    Input('Username','value')]
     )
-def ver_countdown(n_clicks,email,Realname,Username):
-    global temp_click
+def ver_countdown(n_clicks,email,Realname,Username):    
     if email and Realname and Username:
-        if not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',email):
-            temp_click = n_clicks
-            return 'Examine email and try again!',True
-        if temp_click < n_clicks:
-            Ver.Send_email(email,Realname,Username)
-            temp_click = n_clicks
-            return 'Check your email, Please!',True
-        temp_click = n_clicks
-        return 'Send verification code',False
+        if not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]{2,6})+$',email):
+            return True,''
+        if dash.callback_context.triggered[0]['prop_id'] == 'countdown.n_clicks':
+            send_result = Ver.Send_email(email,Realname,Username)
+            if send_result['code'] == 200:
+                return True,'Email sent successfully, please check!'
+            else:
+                return False,'The server is under maintenance, please register later!'
+        return False,''
     else:
-        return 'Send verification code',True
+        return True,''
 
 @app.callback(
     Output('account_result', 'children'),
@@ -280,16 +282,18 @@ def ver_countdown(n_clicks,email,Realname,Username):
      Input('Email','value')]
 )
 def update_username(username, new_pw, re_pw, email):
-    u = Users(username)
+    u = Users(username=username,email=email)
     if u.checkExists():
         return 'Username already exists, please re-enter!'
+    elif u.checkEmailExists():
+        return 'The email has been registered, You can retrieve your account, or use another email to register!'
     elif new_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',new_pw):
         return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
     elif re_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',re_pw):
         return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
     elif new_pw and re_pw and new_pw != re_pw:
         return 'Different two passwords, please re-enter'
-    elif email and not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',email):
+    elif email and not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]{2,6})+$',email):
         return 'The email format is wrong, please re-enter!'
     else:
         return ''
@@ -321,14 +325,16 @@ def update_account(n_clicks,
     if Username and Password and RePassword and Email and Organization and Verification_code:
         user = Users(username=Username, realname=Realname, email=Email, phone=Phone, district=District, country=Country, city=City, org=Organization)
         if not re.search(r'^[0-9a-zA-Z_]+$',Username):
-            err_msg = 'The username is incorrect, please re-enter!'
+            err_msg = 'The username format is incorrect, please re-enter!'
         elif user.checkExists():
-                err_msg = 'Username already exists, please re-enter!'
+            err_msg = 'Username already exists, please re-enter!'
+        elif user.checkEmailExists():
+            err_msg = 'The email has been registered, You can retrieve your account, or use another email to register!'
         elif not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',Password) and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',RePassword):
             err_msg = 'The password input format is wrong, please input according to the rules!'
         elif Password != RePassword:
             err_msg = 'The two password entries are different, please re-enter!'
-        elif not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$',Email):
+        elif not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]{2,6})+$',Email):
             err_msg = 'The email format is wrong, please re-enter!'
         elif Verification_code != veri_code:
             err_msg = 'The verification code is incorrect'

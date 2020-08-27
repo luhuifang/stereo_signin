@@ -47,6 +47,9 @@ class Users(TableServiceBase, UserMixin):
 	def checkExists(self):
 		return self.exists(LoginName=self.LoginName)
 
+	def checkEmailExists(self):
+		return self.exists(Email=self.Email)
+
 	def getUserIdByName(self, username):
 		sql = 'select UserID from {table} where LoginName=%s'.format(table=self.tableName)
 		return self._getSingleField(sql, args=(username,))
