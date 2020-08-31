@@ -1,0 +1,319 @@
+{
+    "1.Filter_and_Map": {
+        "1.1.Adapter_Filter": [
+            {
+                "Sample_id": "V300073914_L04",
+                "getBarcodePositionMap_uniqBarcodeTypes": "555.98M",
+                "total_reads": "151.5M",
+                "fixed_sequence_contianing_reads": "96.62K(0.06%)",
+                "mapped_reads": "68.53M(45.26%)",
+                "barcode_misOverlap_reads": "10.84M(7.16%)",
+                "barcode_withN_reads": "131.12K(0.09%)",
+                "Q10_bases_in_barcode": "99.16%",
+                "Q20_bases_in_barcode": "97.96%",
+                "Q30_bases_in_barcode": "95.42%",
+                "Q10_bases_in_umi": "94.43%",
+                "Q20_bases_in_umi": "87.56%",
+                "Q30_bases_in_umi": "77.25%",
+                "umi_filter_reads": "19.0M(12.55%)",
+                "umi_with_N_reads": "319.25K(0.21%)",
+                "umi_with_polyA_reads": "22.79K(0.02%)",
+                "umi_with_low_quality_base_reads": "18.66M(12.32%)"
+            },
+            {
+                "Sample_id": "V300073914_L03",
+                "getBarcodePositionMap_uniqBarcodeTypes": "555.98M",
+                "total_reads": "154.01M",
+                "fixed_sequence_contianing_reads": "95.48K(0.06%)",
+                "mapped_reads": "69.55M(45.19%)",
+                "barcode_misOverlap_reads": "11.53M(7.49%)",
+                "barcode_withN_reads": "133.45K(0.09%)",
+                "Q10_bases_in_barcode": "99.14%",
+                "Q20_bases_in_barcode": "97.93%",
+                "Q30_bases_in_barcode": "95.39%",
+                "Q10_bases_in_umi": "94.18%",
+                "Q20_bases_in_umi": "87.10%",
+                "Q30_bases_in_umi": "76.59%",
+                "umi_filter_reads": "20.93M(13.60%)",
+                "umi_with_N_reads": "997.97K(0.65%)",
+                "umi_with_polyA_reads": "25.29K(0.02%)",
+                "umi_with_low_quality_base_reads": "19.91M(12.93%)"
+            },
+            {
+                "Sample_id": "V300073914_L02",
+                "getBarcodePositionMap_uniqBarcodeTypes": "555.98M",
+                "total_reads": "154.74M",
+                "fixed_sequence_contianing_reads": "95.46K(0.06%)",
+                "mapped_reads": "69.97M(45.25%)",
+                "barcode_misOverlap_reads": "11.28M(7.29%)",
+                "barcode_withN_reads": "123.25K(0.08%)",
+                "Q10_bases_in_barcode": "99.15%",
+                "Q20_bases_in_barcode": "97.91%",
+                "Q30_bases_in_barcode": "95.28%",
+                "Q10_bases_in_umi": "94.21%",
+                "Q20_bases_in_umi": "87.09%",
+                "Q30_bases_in_umi": "76.50%",
+                "umi_filter_reads": "20.64M(13.35%)",
+                "umi_with_N_reads": "621.03K(0.40%)",
+                "umi_with_polyA_reads": "26.73K(0.02%)",
+                "umi_with_low_quality_base_reads": "20.0M(12.93%)"
+            },
+            {
+                "Sample_id": "V300073914_L01",
+                "getBarcodePositionMap_uniqBarcodeTypes": "555.98M",
+                "total_reads": "153.96M",
+                "fixed_sequence_contianing_reads": "92.0K(0.06%)",
+                "mapped_reads": "69.63M(45.26%)",
+                "barcode_misOverlap_reads": "11.4M(7.41%)",
+                "barcode_withN_reads": "6.35K(0.00%)",
+                "Q10_bases_in_barcode": "99.15%",
+                "Q20_bases_in_barcode": "97.91%",
+                "Q30_bases_in_barcode": "95.29%",
+                "Q10_bases_in_umi": "94.41%",
+                "Q20_bases_in_umi": "87.46%",
+                "Q30_bases_in_umi": "77.02%",
+                "umi_filter_reads": "19.37M(12.59%)",
+                "umi_with_N_reads": "266.13K(0.17%)",
+                "umi_with_polyA_reads": "24.29K(0.02%)",
+                "umi_with_low_quality_base_reads": "19.08M(12.40%)"
+            }
+        ],
+        "1.2.Filter_Stat": [
+            {
+                "Sample_Name": "V300073914_L04",
+                "Raw_Reads": "58.58M",
+                "Clean_Reads": "3.31M",
+                "Low_Quality_Reads": "95.11K",
+                "Too_Many_N_Reads": "10.0",
+                "Too_Short_Reads": "55.17M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300073914_L04_read_read_trim.html"
+            },
+            {
+                "Sample_Name": "V300073914_L03",
+                "Raw_Reads": "58.67M",
+                "Clean_Reads": "3.27M",
+                "Low_Quality_Reads": "90.06K",
+                "Too_Many_N_Reads": "0.0",
+                "Too_Short_Reads": "55.31M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300073914_L03_read_read_trim.html"
+            },
+            {
+                "Sample_Name": "V300073914_L02",
+                "Raw_Reads": "59.18M",
+                "Clean_Reads": "3.28M",
+                "Low_Quality_Reads": "93.86K",
+                "Too_Many_N_Reads": "15.0",
+                "Too_Short_Reads": "55.81M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300073914_L02_read_read_trim.html"
+            },
+            {
+                "Sample_Name": "V300073914_L01",
+                "Raw_Reads": "59.5M",
+                "Clean_Reads": "3.32M",
+                "Low_Quality_Reads": "95.72K",
+                "Too_Many_N_Reads": "129.0",
+                "Too_Short_Reads": "56.09M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300073914_L01_read_read_trim.html"
+            }
+        ]
+    },
+    "2.Alignment": {
+        "2.6.Filter_And_Deduplication": [
+            {
+                "TOTAL_READS": "3.89M",
+                "PASS_FILTER": "1.97M",
+                "UNIQUE_READS": "366.53K",
+                "FAIL_FILTER_RATE": "49.36",
+                "DUPLICATION_RATE": "81.37"
+            }
+        ],
+        "2.7.Annotation": [
+            {
+                "TOTAL_READS": "1.97M",
+                "READS_WRONG_STRAND": "41.23K",
+                "READS_RIGHT_STRAND": "1.93M",
+                "READ_AMBIGUOUS_GENE_FIXED": "0.0",
+                "AMBIGUOUS_READS_REJECTED": "0.0"
+            }
+        ],
+        "2.1.Input_Read": [
+            {
+                "Sample_Id": "V300073914_L02",
+                "Number_Of_Input_Reads": "3.28M",
+                "Average_Input_Read_Length": "50.0"
+            },
+            {
+                "Sample_Id": "V300073914_L03",
+                "Number_Of_Input_Reads": "3.27M",
+                "Average_Input_Read_Length": "50.0"
+            },
+            {
+                "Sample_Id": "V300073914_L04",
+                "Number_Of_Input_Reads": "3.31M",
+                "Average_Input_Read_Length": "50.0"
+            },
+            {
+                "Sample_Id": "V300073914_L01",
+                "Number_Of_Input_Reads": "3.32M",
+                "Average_Input_Read_Length": "50.0"
+            }
+        ],
+        "2.2.Uniquely_Mapped_Read": [
+            {
+                "Sample_Id": "V300073914_L02",
+                "Mapped_Reads_Number": "490.67K",
+                "Mapped_Reads(%)": "14.96%",
+                "Average_Mapped_Length": "48.61"
+            },
+            {
+                "Sample_Id": "V300073914_L03",
+                "Mapped_Reads_Number": "483.76K",
+                "Mapped_Reads(%)": "14.79%",
+                "Average_Mapped_Length": "48.6"
+            },
+            {
+                "Sample_Id": "V300073914_L04",
+                "Mapped_Reads_Number": "491.05K",
+                "Mapped_Reads(%)": "14.86%",
+                "Average_Mapped_Length": "48.61"
+            },
+            {
+                "Sample_Id": "V300073914_L01",
+                "Mapped_Reads_Number": "502.34K",
+                "Mapped_Reads(%)": "15.15%",
+                "Average_Mapped_Length": "48.61"
+            }
+        ],
+        "2.3.Multi_Mapping_Read": [
+            {
+                "Sample_Id": "V300073914_L02",
+                "Multiple_Loci": "157.5K(4.80%)",
+                "Many_Loci": "12.32K(0.38%)"
+            },
+            {
+                "Sample_Id": "V300073914_L03",
+                "Multiple_Loci": "156.81K(4.79%)",
+                "Many_Loci": "12.07K(0.37%)"
+            },
+            {
+                "Sample_Id": "V300073914_L04",
+                "Multiple_Loci": "159.88K(4.84%)",
+                "Many_Loci": "12.23K(0.37%)"
+            },
+            {
+                "Sample_Id": "V300073914_L01",
+                "Multiple_Loci": "161.23K(4.86%)",
+                "Many_Loci": "12.37K(0.37%)"
+            }
+        ],
+        "2.4.Unmapping_Read": [
+            {
+                "Sample_Id": "V300073914_L02",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "2.61M(79.74%)",
+                "Other": "3.96K(0.12%)"
+            },
+            {
+                "Sample_Id": "V300073914_L03",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "2.61M(79.92%)",
+                "Other": "3.88K(0.12%)"
+            },
+            {
+                "Sample_Id": "V300073914_L04",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "2.64M(79.82%)",
+                "Other": "3.88K(0.12%)"
+            },
+            {
+                "Sample_Id": "V300073914_L01",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "2.64M(79.50%)",
+                "Other": "3.95K(0.12%)"
+            }
+        ],
+        "2.5.Chimeric_Read": [
+            {
+                "Sample_Id": "V300073914_L02",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            },
+            {
+                "Sample_Id": "V300073914_L03",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            },
+            {
+                "Sample_Id": "V300073914_L04",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            },
+            {
+                "Sample_Id": "V300073914_L01",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            }
+        ]
+    },
+    "3.Basic": {
+        "3.1.Get_Exp": [
+            {
+                "Total_Umi_Mapping_To_Gene_And_slide": "366.53K",
+                "Gene_Number": "12.24K",
+                "Number_Of_DNB_With_Reads": "193.2K",
+                "Slide_Area": "991.24M",
+                "Density_Of_DNB": "0.02%"
+            }
+        ],
+        "3.2.Bin": [
+            {
+                "Bin_Size": "1x1",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "187.55K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "1.91",
+                "Gene_Counts_Per_Bin": "1.01"
+            },
+            {
+                "Bin_Size": "20x20",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "97.89K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "3.65",
+                "Gene_Counts_Per_Bin": "1.93"
+            },
+            {
+                "Bin_Size": "50x50",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "25.65K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "13.93",
+                "Gene_Counts_Per_Bin": "7.32"
+            },
+            {
+                "Bin_Size": "100x100",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "7.84K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "45.6",
+                "Gene_Counts_Per_Bin": "23.64"
+            },
+            {
+                "Bin_Size": "150x150",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "4.07K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "87.82",
+                "Gene_Counts_Per_Bin": "44.79"
+            },
+            {
+                "Bin_Size": "200x200",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "2.41K",
+                "Gene_Numbers": "12.2K",
+                "Umi_Counts_Per_Bin": "148.19",
+                "Gene_Counts_Per_Bin": "74.24"
+            }
+        ]
+    }
+}

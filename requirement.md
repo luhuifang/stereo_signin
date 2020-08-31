@@ -1,4 +1,4 @@
-### 总要求
+## 登录页面总要求
 
 编写一个用户注册页面，提供外部用户注册。为此需要再设计一个空index页面，并且有一个sign in的按钮，用户点击sign in按钮之后，跳转到注册页面，填写信息并提交后返回index页面。
 
@@ -38,7 +38,6 @@
    | 7          | Administrator | 系统管理员                                       |
 
 
-
 __8月18号待修改__
 
 1. __样式调整，请调整成如下样式（类似）：__
@@ -51,7 +50,7 @@ _说明如下:_
 	* 表单内直接子元素的className包含 ‘input_part’
 	* 表单中button的className包含‘login_button’
 	* 表单中每个输入框和下拉框保持相同的高度和宽度
-	
+
 
 2. __关于提示信息__：
 
@@ -78,3 +77,28 @@ _说明如下:_
 
 
 
+## stat页面总要求
+
+根据结果文件`./data/test_stat/`生成html报告，报告样式可以参考 `./data/example.html`。
+
+### 需求
+
+1. 可以使用Tab实现，json文件中第一层的key作为Tab的标签名，标签页中，可以使用下拉框来选择不同的样本或者不同的bin size来展示其相关信息；
+
+2. 每个标签页中重点突出的数据为：
+
+   | 标签名         | 重点指标名          |
+   | -------------- | ------------------- |
+   | Filter and Map | mapped_reads        |
+   |                | clean_reads         |
+   | Alignment      | Mapped_reads        |
+   |                | Unique_reads        |
+   |                | Duplication_rate    |
+   | Basic          | Umi_Counts_Per_Bin  |
+   |                | Gene_Counts_Per_bin |
+
+3. 图片需要对应上不同的bin size页面
+
+4. 过滤结果的报告以链接展示
+
+Note：样本数目可能会增加和减少，bin size的数目也可能会增加和减少，需要能适配。可以尝试使用dash_bootstrap_components来实现
