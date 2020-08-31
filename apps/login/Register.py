@@ -257,15 +257,14 @@ def set_city_neighborhood(country,District,Province):
     Output('sendEmail_res','children')],
     [Input('countdown', 'n_clicks'),
     Input('Email','value'),
-    Input('Realname','value'),
     Input('Username','value')]
     )
-def ver_countdown(n_clicks,email,Realname,Username):    
-    if email and Realname and Username:
+def ver_countdown(n_clicks,email,Username):    
+    if email and Username:
         if not re.search(r'^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]{2,6})+$',email):
             return True,''
         if dash.callback_context.triggered[0]['prop_id'] == 'countdown.n_clicks':
-            send_result = Ver.Send_email(email,Realname,Username)
+            send_result = Ver.Send_email(email,Username)
             if send_result['code'] == 200:
                 return True,'Email sent successfully, please check!'
             else:
@@ -283,9 +282,9 @@ def ver_countdown(n_clicks,email,Realname,Username):
 )
 def update_username(username, new_pw, re_pw, email):
     u = Users(username=username,email=email)
-    if u.checkExists():
+    if username and u.checkExists():
         return 'Username already exists, please re-enter!'
-    elif u.checkEmailExists():
+    elif email and u.checkEmailExists():
         return 'The email has been registered, You can retrieve your account, or use another email to register!'
     elif new_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',new_pw):
         return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
