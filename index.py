@@ -6,12 +6,14 @@ from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
 from apps.login.Register import registerLayout
+from apps.data.data import layout
 
 app.layout = html.Div([
     dcc.Location(id = 'url', refresh = False),
     html.Div(id = 'custom-auth-frame', children=[
     	html.H1('Welcome!'),
     	html.Button('sign in'),
+        html.Button('data analysis'),
     ])
 ])
 
@@ -20,10 +22,13 @@ app.layout = html.Div([
 def display_page(pathname):
     if pathname == '/Register':
         return registerLayout()
+    elif pathname == '/Data_analysis':
+        return layout
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
-    	html.Button(id='sign_in_button',children=[dcc.Link('sign in', href='/Register')])
+    	html.Button(id='sign_in_button',children=[dcc.Link('sign in', href='/Register')]),
+        html.Button(id='data_analysis_button',children=[dcc.Link('data analysis', href='/Data_analysis')])
     	])
     else:
         return '404'

@@ -1,0 +1,271 @@
+{
+    "1.Filter_and_Map": {
+        "1.1.Adapter_Filter": [
+            {
+                "Sample_id": "V300062757_T67",
+                "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
+                "total_reads": "238.59M",
+                "fixed_sequence_contianing_reads": "5.55K(0.00%)",
+                "mapped_reads": "90.54M(37.95%)",
+                "barcode_misOverlap_reads": "22.29M(9.34%)",
+                "barcode_withN_reads": "1.25M(0.53%)",
+                "Q10_bases_in_barcode": "98.99%",
+                "Q20_bases_in_barcode": "96.31%",
+                "Q30_bases_in_barcode": "86.27%",
+                "Q10_bases_in_umi": "88.01%",
+                "Q20_bases_in_umi": "73.12%",
+                "Q30_bases_in_umi": "58.79%",
+                "umi_filter_reads": "65.03M(27.26%)",
+                "umi_with_N_reads": "1.76M(0.74%)",
+                "umi_with_polyA_reads": "16.61K(0.01%)",
+                "umi_with_low_quality_base_reads": "63.26M(26.51%)"
+            },
+            {
+                "Sample_id": "V300062757_T67",
+                "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
+                "total_reads": "231.64M",
+                "fixed_sequence_contianing_reads": "5.3K(0.00%)",
+                "mapped_reads": "88.19M(38.07%)",
+                "barcode_misOverlap_reads": "22.23M(9.60%)",
+                "barcode_withN_reads": "1.21M(0.52%)",
+                "Q10_bases_in_barcode": "98.83%",
+                "Q20_bases_in_barcode": "96.14%",
+                "Q30_bases_in_barcode": "85.90%",
+                "Q10_bases_in_umi": "88.76%",
+                "Q20_bases_in_umi": "74.78%",
+                "Q30_bases_in_umi": "60.83%",
+                "umi_filter_reads": "59.02M(25.48%)",
+                "umi_with_N_reads": "3.0M(1.29%)",
+                "umi_with_polyA_reads": "16.58K(0.01%)",
+                "umi_with_low_quality_base_reads": "56.01M(24.18%)"
+            }
+        ],
+        "1.2.Filter_Stat": [
+            {
+                "Sample_Name": "V300062757_T67",
+                "Raw_Reads": "77.89M",
+                "Clean_Reads": "68.95M",
+                "Low_Quality_Reads": "1.07M",
+                "Too_Many_N_Reads": "8.0",
+                "Too_Short_Reads": "7.87M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300062757_T67_L04_read_read_trim.html"
+            },
+            {
+                "Sample_Name": "V300062757_T67",
+                "Raw_Reads": "76.39M",
+                "Clean_Reads": "68.23M",
+                "Low_Quality_Reads": "968.42K",
+                "Too_Many_N_Reads": "2.0",
+                "Too_Short_Reads": "7.19M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300062757_T67_L03_read_read_trim.html"
+            }
+        ]
+    },
+    "2.Alignment": {
+        "2.6.Filter_And_Deduplication": [
+            {
+                "TOTAL_READS": "93.53M",
+                "PASS_FILTER": "65.25M",
+                "UNIQUE_READS": "3.58M",
+                "FAIL_FILTER_RATE": "30.24",
+                "DUPLICATION_RATE": "94.52"
+            }
+        ],
+        "2.7.Annotation": [
+            {
+                "TOTAL_READS": "65.25M(100.0%)",
+                "MAP": "65.25M(100.0%)",
+                "EXONIC": "42.54M(65.2%)",
+                "INTRONIC": "58.46K(0.1%)",
+                "INTERGENIC": "6.57M(34.7%)",
+                "TRANSCRIPTOME": "39.87M(61.1%)",
+                "ANTISENSE": "6.75M(10.3%)"
+            }
+        ],
+        "2.1.Input_Read": [
+            {
+                "Sample_Id": "V300062757_T67",
+                "Number_Of_Input_Reads": "68.23M",
+                "Average_Input_Read_Length": "50.0"
+            },
+            {
+                "Sample_Id": "V300062757_T67",
+                "Number_Of_Input_Reads": "68.95M",
+                "Average_Input_Read_Length": "50.0"
+            }
+        ],
+        "2.2.Uniquely_Mapped_Read": [
+            {
+                "Sample_Id": "V300062757_T67",
+                "Mapped_Reads_Number": "32.84M",
+                "Mapped_Reads(%)": "48.13%",
+                "Average_Mapped_Length": "49.14"
+            },
+            {
+                "Sample_Id": "V300062757_T67",
+                "Mapped_Reads_Number": "32.4M",
+                "Mapped_Reads(%)": "46.99%",
+                "Average_Mapped_Length": "49.12"
+            }
+        ],
+        "2.3.Multi_Mapping_Read": [
+            {
+                "Sample_Id": "V300062757_T67",
+                "Multiple_Loci": "14.3M(20.95%)",
+                "Many_Loci": "3.02M(4.43%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67",
+                "Multiple_Loci": "13.99M(20.29%)",
+                "Many_Loci": "2.9M(4.21%)"
+            }
+        ],
+        "2.4.Unmapping_Read": [
+            {
+                "Sample_Id": "V300062757_T67",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "17.73M(25.99%)",
+                "Other": "342.06K(0.50%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "19.33M(28.04%)",
+                "Other": "322.87K(0.47%)"
+            }
+        ],
+        "2.5.Chimeric_Read": [
+            {
+                "Sample_Id": "V300062757_T67",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            }
+        ]
+    },
+    "3.Basic": {
+        "3.1.Get_Exp": [
+            {
+                "Total_Umi_Mapping_To_Gene_And_slide": "3.58M",
+                "Gene_Number": "18.0K",
+                "Number_Of_DNB_With_Reads": "2.32M",
+                "Slide_Area": "141.28M",
+                "Density_Of_DNB": "1.64%"
+            }
+        ],
+        "3.2.Bin": [
+            {
+                "Bin_Size": "1x1",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "2.31M",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "1.54",
+                "Gene_Counts_Per_Bin": "1.15"
+            },
+            {
+                "Bin_Size": "20x20",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "304.43K",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "11.73",
+                "Gene_Counts_Per_Bin": "8.62"
+            },
+            {
+                "Bin_Size": "50x50",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "51.92K",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "68.8",
+                "Gene_Counts_Per_Bin": "48.37"
+            },
+            {
+                "Bin_Size": "100x100",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "13.55K",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "263.63",
+                "Gene_Counts_Per_Bin": "169.95"
+            },
+            {
+                "Bin_Size": "150x150",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "6.21K",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "575.27",
+                "Gene_Counts_Per_Bin": "342.2"
+            },
+            {
+                "Bin_Size": "200x200",
+                "Filtered_Minimal_Umi_Number": "0.0",
+                "Bin_Numbers": "3.52K",
+                "Gene_Numbers": "18.0K",
+                "Umi_Counts_Per_Bin": "1.01K",
+                "Gene_Counts_Per_Bin": "559.72"
+            }
+        ]
+    },
+    "4.TissueCut": {
+        "4.2.TissueCut_Bin_stat": [
+            {
+                "binSize": "1",
+                "Mean_reads_per_spot": "33.95",
+                "Median_reads_per_spot": "5.0",
+                "Mean_gene_type_per_spot": "1.15",
+                "Median_gene_type_per_spot": "1.0",
+                "Mean_Umi_per_spot": "1.54",
+                "Median_Umi_per_spot": "1.0"
+            },
+            {
+                "binSize": "50",
+                "Mean_reads_per_spot": "1.77K",
+                "Median_reads_per_spot": "1.52K",
+                "Mean_gene_type_per_spot": "59.99",
+                "Median_gene_type_per_spot": "58.0",
+                "Mean_Umi_per_spot": "80.64",
+                "Median_Umi_per_spot": "76.0"
+            },
+            {
+                "binSize": "100",
+                "Mean_reads_per_spot": "6.94K",
+                "Median_reads_per_spot": "6.17K",
+                "Mean_gene_type_per_spot": "235.13",
+                "Median_gene_type_per_spot": "231.0",
+                "Mean_Umi_per_spot": "316.07",
+                "Median_Umi_per_spot": "304.0"
+            },
+            {
+                "binSize": "150",
+                "Mean_reads_per_spot": "15.38K",
+                "Median_reads_per_spot": "13.8K",
+                "Mean_gene_type_per_spot": "520.9",
+                "Median_gene_type_per_spot": "517.0",
+                "Mean_Umi_per_spot": "700.22",
+                "Median_Umi_per_spot": "676.0"
+            },
+            {
+                "binSize": "200",
+                "Mean_reads_per_spot": "27.09K",
+                "Median_reads_per_spot": "24.28K",
+                "Mean_gene_type_per_spot": "917.15",
+                "Median_gene_type_per_spot": "915.0",
+                "Mean_Umi_per_spot": "1.23K",
+                "Median_Umi_per_spot": "1.19K"
+            }
+        ],
+        "4.1.TissueCut_Total_Stat": [
+            {
+                "Contour_area": "100.86M",
+                "Number_of_DNB_under_tissue": "2.1M",
+                "Ratio": "2.09%",
+                "Total_Gene_type": "17.82K",
+                "Raw_reads": "178.72M",
+                "Reads_under_tissue": "71.43M",
+                "Fraction_Reads_in_Spots_Under_Tissue": "39.97%"
+            }
+        ]
+    }
+}

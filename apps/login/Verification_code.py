@@ -6,6 +6,7 @@ import redis
 import requests
 import json
 
+
 from random import Random
 from email.header import Header
 from email.mime.text import MIMEText
@@ -28,6 +29,8 @@ def random_str(randomlength=6):
     for i in range(randomlength):
         str += chars[random.randint(0, length)]
     return str
+
+
 
 
 def Send_email(veri_email,Username):

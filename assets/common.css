@@ -26,3 +26,86 @@
 .margin-left-15{
 	margin-left: -15px;
 }
+
+.card-sma{
+	margin-top: 20px;
+	height: 120px;
+	padding: 0px 14px;
+}
+.card-mid{
+	margin-top: 20px;
+	height: 330px;
+	padding: 0px 14px;
+}
+.card-big{
+	margin-top: 20px;
+	height: 550px
+}
+
+.badge-style{
+	margin: 0px;
+	padding: 0px;
+	border:0px;
+	background-color: white;
+}
+
+.button-style{
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 50%;
+	font-size: 12px;
+	padding: 0px 5px;
+}
+.button-style:hover {
+    background-color: black; 
+    color: white;
+}
+h4.card-title{
+	font-weight:700;
+	font-size:25px;
+	font-size: 1.2em;
+	font-weight: bold;
+	padding-left: 10px;
+	margin-top: 10px;
+
+}
+p.text-P{
+	font-family: DIN Next LT Pro;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 15px;
+    margin: 0px;
+}
+p.text-td{
+	font-family: DIN Next LT Pro;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 5px;
+    margin: 0px;
+}
+
+.card-body{
+	padding: 20px 0px;
+	border: none;
+}
+
+.text-green{
+	color: green
+}
+
+.table-space{
+	border-spacing: 10px;
+}
+.collapse-type{
+	border: none;
+	margin: 0px;
+	padding: 0px;
+}
