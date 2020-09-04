@@ -53,7 +53,7 @@ layout = html.Div(children=[
                                             ]),
                                         ]),
                             html.Div(className='row',children=[
-                                html.Div(className='col-md-6',children=[
+                                html.Div(className='col-md-6 box-style-right',children=[
                                 dbc.Card(
                                     dbc.CardBody([
                                             html.H2(children = [],id = 'mapped_reads', className="card-title text-center text-green"),
@@ -136,7 +136,7 @@ layout = html.Div(children=[
                                         html.Tr([html.Td([html.P("Too Long Reads",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Too_Long_Reads')])]),
                                         ])], bordered=True,className='card-sma'),
                                 ]),
-                                html.Div(className='col-md-6',children=[
+                                html.Div(className='col-md-6 box-style-left',children=[
                                 dbc.Card(
                                     dbc.CardBody([
                                         html.Div(className='collapse-type',children=[

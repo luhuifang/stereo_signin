@@ -74,8 +74,6 @@ def get_sun_fig():
     UnMapping_2 = tran_data(data_json["1.Filter_and_Map"]["1.1.Adapter_Filter"][1]["total_reads"]) - tran_data(data_json["1.Filter_and_Map"]["1.1.Adapter_Filter"][1]["mapped_reads"].split('(')[-2])
     UnMapping = UnMapping_1 + UnMapping_2
 
-
-
     Clean_reads = Mapping_reads + Unmapping_Read
 
     Filter_reads = Umi_Filter_Reads + Too_Long_Reads + Too_Short_Reads + Low_Quality_Reads + Too_Many_N_Reads
@@ -84,6 +82,7 @@ def get_sun_fig():
 
     #Total reads Data
     Total_reads = Mapping + UnMapping
+
     labels_color = {'Total_reads':'#F0FFFF','Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Mapping',
     'Clean_reads':'Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
     'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
@@ -91,11 +90,21 @@ def get_sun_fig():
     'Fail_Filter':'Mapping_reads','Unique_Reads':'Mapping_reads'
     }
 
-    hovertext_dice = {'Total_reads':'#F0FFFF','Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Mapping',
-    'Clean_reads':'Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
-    'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
-    'Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Mapping_reads',
-    'Fail_Filter':'Mapping_reads','Unique_Reads':'Mapping_reads'
+    hovertext_dict = {'Total_reads':'Total number of sequencing reads',
+    'Mapping':'Number of reads from the second sequencing map back to the first time',
+    'UnMapping':'Second sequencing cannot map back the number of reads from the first time',
+    'Filter_reads':'Number of filter reads after quality control',
+    'Clean_reads':'Number of reads after quality control', 
+    'Umi_Filter_Reads':'Filter_reads',
+    'Too_Long_Reads':'Number of reads filtered with too long',
+    'Too_Short_Reads':'Number of reads filtered which too short',
+    'Too_Many_N_Reads':'Number of reads filtered that contain too many N',
+    'Low_Quality_Reads':'Number of reads filtered due to low quality',
+    'Mapping_reads':'Uniquely mapped reads number',
+    'Unmapping_Read':'Clean_reads',
+    'DuPlication_Reads':'Number of reads of duplication',
+    'Fail_Filter':'Number of reads that failed to pass the q10 filter',
+    'Unique_Reads':'Reads number of uniquely'
     }
 
     parents_dict = {'Total_reads':'','Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Mapping',
@@ -104,10 +113,12 @@ def get_sun_fig():
     'Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Mapping_reads',
     'Fail_Filter':'Mapping_reads','Unique_Reads':'Mapping_reads'
     }
-
-    df = [['labels','parents','value']]
+    name_pro = []
+    df = [['labels','parents','value','text']]
     for k,v in parents_dict.items():
-        df.append([k.replace('_',' '),v.replace('_',' '),eval(k)])
+        df.append([k.replace('_',' '),v.replace('_',' '),str(eval(k)),hovertext_dict[k]])
+        name_pro.append(str(round(eval(k),2))+'M')
+    
     df = DataFrame(df)
     df.columns = df.loc[0,:]
     df = df.loc[1:,:]
@@ -118,15 +129,18 @@ def get_sun_fig():
         values=df.value,
         labels=df.labels,
         parents=df.parents,
-        hovertext='hello',
-    #     text = ['hello'],
-        hoverinfo='label+value+text',
+        # name = 'name_pro',
+        hovertext=df.text,
+        # text = ['hello','hello'],
+        hoverinfo='label+text',
+        # hovertemplate = "<extra>{fullData.name}</extra>",
+        text = name_pro,
         branchvalues="total",
         marker = {
     #         'colors':['red'],
             'line':{'color':'green','width':2},'colorscale':'YlGnBu'},
         
     ))
-    fig.update_layout(margin = dict(t=0, l=0, r=0, b=0))
+    fig.update_layout(margin = dict(t=0, l=0, r=0, b=0),height=525)
   
     return fig

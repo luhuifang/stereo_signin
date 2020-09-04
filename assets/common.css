@@ -39,7 +39,9 @@
 }
 .card-big{
 	margin-top: 20px;
-	height: 550px
+	height: 600px;
+	margin-left: 0px;
+	padding: 0px;
 }
 
 .badge-style{
@@ -108,4 +110,14 @@ p.text-td{
 	border: none;
 	margin: 0px;
 	padding: 0px;
+}
+.box-style-left{
+	border: none;
+	margin: 0px;
+	padding-left: 10px;
+}
+.box-style-right{
+	border: none;
+	margin: 0px;
+	padding-right: 10px;
 }
