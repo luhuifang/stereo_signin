@@ -11,15 +11,8 @@ from dash.dependencies import Input, Output, State
 from spatialTrancriptomeReport import app
 from apps.data.load_json import data_json,df_table,data_dict
 from apps.data.disposal_sun_data import get_sun_fig
+from apps.data.get_data import get_data,tran_data
 
-
-def tran_data(data):
-    if 'K' in data:
-        return Decimal(float(data.strip('K'))/1000).quantize(Decimal("0.00"))
-    elif 'M' in data:
-        return Decimal(float(data.strip('M'))).quantize(Decimal("0.00"))
-    else:
-        return Decimal(float(data)).quantize(Decimal("0.00"))
 
 layout = html.Div(children=[
         dbc.Navbar([
@@ -85,11 +78,9 @@ layout = html.Div(children=[
                             ]),
                         html.Div(className='row',children=[
                             html.Div(className='col-md-2',children=[
-                                dbc.Card(
-                                    dbc.CardBody([
-                                        html.H4('Select Sample:',className='text-center text-P')
-                                        ]),className=' card-ss'
-                                    ),
+                               
+                                html.H4('Select Sample:',className='text-P')
+                                        
                                 ]),
                             html.Div(className='col-md-10',children=[
                                 dcc.Dropdown(
@@ -133,12 +124,12 @@ layout = html.Div(children=[
                                     html.P("Ratio of bases whose quality value exceeds Q30 in UMI. ",className="text-P"),
                                     ])),id="collapse-1",className='collapse-type'),
                     html.Tbody([
-                        html.Tr([html.Td([html.P("Q10 Bases in Barcode",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q10_Barcode')])]), 
-                        html.Tr([html.Td([html.P("Q20 Bases in Barcode",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q20_Barcode')])]), 
-                        html.Tr([html.Td([html.P("Q30 Bases in Barcode",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q30_Barcode')])]),
-                        html.Tr([html.Td([html.P("Q10 Bases in UMI",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q10_UMI')])]), 
-                        html.Tr([html.Td([html.P("Q20 Bases in UMI",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q20_UMI')])]), 
-                        html.Tr([html.Td([html.P("Q30 Bases in UMI",className='col-md-8 text-td'),html.P(className='col-md-4 text-td text-right',id='Q30_UMI')])]),                       
+                        html.Tr([html.Td([html.P("Q10 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_Barcode')])]), 
+                        html.Tr([html.Td([html.P("Q20 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_Barcode')])]), 
+                        html.Tr([html.Td([html.P("Q30 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_Barcode')])]),
+                        html.Tr([html.Td([html.P("Q10 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_UMI')])]), 
+                        html.Tr([html.Td([html.P("Q20 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_UMI')])]), 
+                        html.Tr([html.Td([html.P("Q30 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_UMI')])]),                       
                         ])], bordered=True,className='card-mid'),
                 
                 ]),
@@ -191,9 +182,8 @@ layout = html.Div(children=[
                                     html.Tr([html.Td([html.P("Fraction Reads in Spots Under Tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Fraction_Reads_in_Spots_Under_Tissue')])]),                        
                                     ])], bordered=True,className='card-mid'), 
                             ]),
-                            html.Div(className='col-md-8 box-style-right',children=[
-                                dbc.Table.from_dataframe(df_table,
-                                    striped=True, hover=True,className='gridtable')
+                            html.Div(className='col-md-8 box-style-right',id = 'bin_table',children=[
+                                
                             ])
                         ]),                            
                     ]),
@@ -231,6 +221,17 @@ def sunburst_fig(values):
     if values:
         fig = get_sun_fig(values)
         return dcc.Graph(figure=fig)
+    else:
+        return ''
+
+@app.callback(
+    Output('bin_table','children'),
+    [Input('Sample_dropdown','value')]
+    )
+def sunburst_fig(values):
+    if values:
+        return dbc.Table.from_dataframe(df_table,
+        striped=True, hover=True,className='gridtable')
     else:
         return ''
 
@@ -364,31 +365,13 @@ def key_indic(values):
     [Input('Sample_dropdown','value')]
     )
 def data_set(values):
-    Contour_area = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Contour_area']
-    Number_of_DNB_under_tissue = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Number_of_DNB_under_tissue']
-    Ratio = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Ratio']
-    Total_Gene_type = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Total_Gene_type']
-    Raw_Reads = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Raw_reads']
-    Reads_under_tissue = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Reads_under_tissue']
-    Fraction_Reads_in_Spots_Under_Tissue = data_json["4.TissueCut"]["4.1.TissueCut_Total_Stat"][0]['Fraction_Reads_in_Spots_Under_Tissue']
-    raw_reads,mapped_reads,clean_reads,Q20_Barcode,Q30_Barcode,Q30_UMI,Q10_Barcode,Q10_UMI,Q20_UMI,Reference_Mapping_reads=0,0,0,0,0,0,0,0,0,0
     if values:
-        for value in values:
-            raw_reads +=  tran_data(data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Raw_Reads"])
-            mapped_reads += tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["mapped_reads"].split('(')[-2])
-            Q20_Barcode = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q20_bases_in_barcode"]
-            Q30_Barcode = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_barcode"]
-            Q30_UMI = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_umi"]
-            Q10_Barcode = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_barcode"]
-            Q10_UMI = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_umi"]
-            Q20_UMI = data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]['Q20_bases_in_umi']
-            clean_reads += tran_data(data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Clean_Reads"])
-            mapped_reads_ali = data_dict["2.Alignment"]["2.2.Uniquely_Mapped_Read"][value]["Mapped_Reads(%)"]
-            Unique_Mapped_Reads = tran_data(data_dict["2.Alignment"]["2.2.Uniquely_Mapped_Read"][value]['Mapped_Reads_Number']) 
-            Multi_Mapping_Reads = tran_data(data_dict["2.Alignment"]["2.3.Multi_Mapping_Read"][value]['Multiple_Loci'].split('(')[-2]) 
-            Chimeric_Reads = tran_data(data_dict["2.Alignment"]["2.5.Chimeric_Read"][value]['Number_Of_Chimeric_Reads'].split('(')[-2]) 
-            Reference_Mapping_reads += round(Unique_Mapped_Reads + Multi_Mapping_Reads + Chimeric_Reads,2)
-        return str(mapped_reads)+'M',str(clean_reads)+'M',Q20_Barcode,Q30_Barcode,Q30_UMI,Q10_Barcode,Q10_UMI,\
+        raw_reads,Barcode_Mapping,UnMapping,Filter_reads,Fail_Filter,clean_reads,Umi_Filter_Reads,Too_Long_Reads,Too_Short_Reads,\
+        Too_Many_N_Reads,Low_Quality_Reads,Reference_Mapping_reads,Unmapping_Read,DuPlication_Reads,Unique_Reads,Contour_area,\
+        Number_of_DNB_under_tissue,Ratio,Total_Gene_type,Raw_Reads,Reads_under_tissue,Fraction_Reads_in_Spots_Under_Tissue,\
+        Q20_Barcode,Q30_Barcode,Q10_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = get_data(values)
+
+        return str(Barcode_Mapping)+'M',str(clean_reads)+'M',Q20_Barcode,Q30_Barcode,Q30_UMI,Q10_Barcode,Q10_UMI,\
     Q20_UMI,Contour_area,Reads_under_tissue,Number_of_DNB_under_tissue,Ratio,Total_Gene_type,\
     Raw_Reads,Fraction_Reads_in_Spots_Under_Tissue,str(raw_reads)+'M',str(Reference_Mapping_reads)+'M'
     else:

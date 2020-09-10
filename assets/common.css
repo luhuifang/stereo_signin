@@ -115,9 +115,10 @@ h4.text-P{
     font-weight: 400;
     line-height: 1.5;
     color: #212529;
-    text-align: center;
+    text-align: right;
     background-color: #fff;
-    margin-top: -15px;
+    margin-top: 10px;
+
 }
 p.text-td{
 	font-family: DIN Next LT Pro;
@@ -179,6 +180,7 @@ table.table{
 	margin-bottom: 0px;
 }
 
+
 table.gridtable{
 	margin-top: 20px;	
 	border: 1px solid #ddd;
@@ -190,14 +192,12 @@ table.gridtable{
 table.gridtable th {
 	text-align:left;
 	border-top: 1px;
-	height:55px;
-/*	background-color:#A7C942;
-	color:#ffffff;*/
+	height:82.3px;
 	vertical-align:middle!important;
 
 }
 table.gridtable td {
-    height:89px;
+    height:82.3px;
     vertical-align:middle!important;
 	text-align: center;
 	padding: 15px;
