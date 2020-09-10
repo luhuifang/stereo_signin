@@ -84,7 +84,14 @@ layout = html.Div(children=[
                                 ),
                             ]),
                         html.Div(className='row',children=[
-                            html.Div(className='col-md-12',children=[
+                            html.Div(className='col-md-2',children=[
+                                dbc.Card(
+                                    dbc.CardBody([
+                                        html.H4('Select Sample:',className='text-center text-P')
+                                        ]),className=' card-ss'
+                                    ),
+                                ]),
+                            html.Div(className='col-md-10',children=[
                                 dcc.Dropdown(
                                     id="Sample_dropdown",
                                     options=[{'label':i["Sample_id"],'value':i["Sample_id"]} for i in data_json["1.Filter_and_Map"]["1.1.Adapter_Filter"]],
@@ -186,7 +193,7 @@ layout = html.Div(children=[
                             ]),
                             html.Div(className='col-md-8 box-style-right',children=[
                                 dbc.Table.from_dataframe(df_table,
-                                    striped=True, hover=True,className='card-mid text-center')
+                                    striped=True, hover=True,className='gridtable')
                             ])
                         ]),                            
                     ]),
@@ -262,13 +269,13 @@ def key_indic(values):
                         ),
                     dbc.Card(
                         dbc.CardBody([
-                                html.H4(children = DuPlication_Reads,id = 'deduplication_reads', className="card-title text-center text-green"),
+                                html.H4(children = str(DuPlication_Reads)+'M',id = 'deduplication_reads', className="card-title text-center text-green"),
                                 html.P("Deduplication",className="card-text text-center"),
                             ]),className=' card-sma'
                         ),
                     dbc.Card(
                         dbc.CardBody([
-                                html.H4(children = Unique_Reads,id = 'uniquely_reads', className="card-title text-center text-green"),
+                                html.H4(children = str(Unique_Reads)+'M',id = 'uniquely_reads', className="card-title text-center text-green"),
                                 html.P("Uniquely Reads",className="card-text text-center"),
                             ]),className=' card-sma'
                         ),]
@@ -381,9 +388,9 @@ def data_set(values):
             Multi_Mapping_Reads = tran_data(data_dict["2.Alignment"]["2.3.Multi_Mapping_Read"][value]['Multiple_Loci'].split('(')[-2]) 
             Chimeric_Reads = tran_data(data_dict["2.Alignment"]["2.5.Chimeric_Read"][value]['Number_Of_Chimeric_Reads'].split('(')[-2]) 
             Reference_Mapping_reads += round(Unique_Mapped_Reads + Multi_Mapping_Reads + Chimeric_Reads,2)
-        return mapped_reads,clean_reads,Q20_Barcode,Q30_Barcode,Q30_UMI,Q10_Barcode,Q10_UMI,\
+        return str(mapped_reads)+'M',str(clean_reads)+'M',Q20_Barcode,Q30_Barcode,Q30_UMI,Q10_Barcode,Q10_UMI,\
     Q20_UMI,Contour_area,Reads_under_tissue,Number_of_DNB_under_tissue,Ratio,Total_Gene_type,\
-    Raw_Reads,Fraction_Reads_in_Spots_Under_Tissue,raw_reads,Reference_Mapping_reads
+    Raw_Reads,Fraction_Reads_in_Spots_Under_Tissue,str(raw_reads)+'M',str(Reference_Mapping_reads)+'M'
     else:
         return '','','','','','','','','','','','','','','','',''
     

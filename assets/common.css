@@ -27,6 +27,13 @@
 	margin-left: -15px;
 }
 
+.card-ss{
+	height:36px;
+	padding: 2px 2px;
+	width:174px;
+	
+}
+
 .card-sma{
 	margin-bottom: 20px;
 	margin-top: 20px;
@@ -102,6 +109,16 @@ p.text-P{
     padding-left: 15px;
     margin: 0px;
 }
+h4.text-P{
+	font-family: DIN Next LT Pro;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: center;
+    background-color: #fff;
+    margin-top: -15px;
+}
 p.text-td{
 	font-family: DIN Next LT Pro;
     font-size: 1.5rem;
@@ -162,10 +179,28 @@ table.table{
 	margin-bottom: 0px;
 }
 
-table.text-center{
-	vertical-align: middle;
+table.gridtable{
+	margin-top: 20px;	
+	border: 1px solid #ddd;
+	box-shadow: 2px 2px 2px lightgrey;
+	border-collapse:collapse;
+	vertical-align:middle!important;
+}
+
+table.gridtable th {
+	text-align:left;
+	border-top: 1px;
+	height:55px;
+/*	background-color:#A7C942;
+	color:#ffffff;*/
+	vertical-align:middle!important;
+
+}
+table.gridtable td {
+    height:89px;
+    vertical-align:middle!important;
 	text-align: center;
+	padding: 15px;
+    
 }
-td{
-    vertical-align:middle;
-}
+
