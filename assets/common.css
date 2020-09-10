@@ -28,20 +28,40 @@
 }
 
 .card-sma{
+	margin-bottom: 20px;
 	margin-top: 20px;
-	height: 120px;
-	padding: 0px 14px;
+	height: 100px;
+	width: 172.2px;
+	padding: 2px 2px;
+	margin-left: 15px;
+	-moz-box-shadow:4px 2px 5px #333333; 
+	-webkit-box-shadow:4px 2px 5px #333333; 
+	box-shadow: 2px 2px 2px lightgrey;
+}
+
+.card-sma-1{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	height: 100px;
+	width: 250.5px;
+	padding: 2px 2px;
+	margin-left: 25px;
+	-moz-box-shadow:4px 2px 5px #333333; 
+	-webkit-box-shadow:4px 2px 5px #333333; 
+	box-shadow: 2px 2px 2px lightgrey;
 }
 .card-mid{
 	margin-top: 20px;
-	height: 330px;
-	padding: 0px 14px;
+	height: 500px;
+	padding: 0px 0px;
+	box-shadow: 2px 2px 2px lightgrey;
 }
 .card-big{
 	margin-top: 20px;
-	height: 600px;
+	height: 500px;
 	margin-left: 0px;
 	padding: 0px;
+	box-shadow: 2px 2px 2px lightgrey;
 }
 
 .badge-style{
@@ -92,6 +112,7 @@ p.text-td{
     background-color: #fff;
     padding-left: 5px;
     margin: 0px;
+    padding-top: 15px;
 }
 
 .card-body{
@@ -114,10 +135,37 @@ p.text-td{
 .box-style-left{
 	border: none;
 	margin: 0px;
-	padding-left: 10px;
+	padding-left: 15px;
+	padding-bottom: 0px;
 }
 .box-style-right{
 	border: none;
 	margin: 0px;
-	padding-right: 10px;
+	padding-right: 15px;
+	padding-bottom: 0px;
+}
+
+.text-sm{
+	font-family: DIN Next LT Pro;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 5px;
+    margin: 0px;
+    padding-top: 15px;
+}
+
+table.table{
+	margin-bottom: 0px;
+}
+
+table.text-center{
+	vertical-align: middle;
+	text-align: center;
+}
+td{
+    vertical-align:middle;
 }

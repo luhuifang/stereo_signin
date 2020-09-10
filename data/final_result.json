@@ -2,7 +2,7 @@
     "1.Filter_and_Map": {
         "1.1.Adapter_Filter": [
             {
-                "Sample_id": "V300062757_T67",
+                "Sample_id": "V300062757_T67_1",
                 "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
                 "total_reads": "238.59M",
                 "fixed_sequence_contianing_reads": "5.55K(0.00%)",
@@ -21,7 +21,7 @@
                 "umi_with_low_quality_base_reads": "63.26M(26.51%)"
             },
             {
-                "Sample_id": "V300062757_T67",
+                "Sample_id": "V300062757_T67_2",
                 "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
                 "total_reads": "231.64M",
                 "fixed_sequence_contianing_reads": "5.3K(0.00%)",
@@ -42,7 +42,7 @@
         ],
         "1.2.Filter_Stat": [
             {
-                "Sample_Name": "V300062757_T67",
+                "Sample_Name": "V300062757_T67_1",
                 "Raw_Reads": "77.89M",
                 "Clean_Reads": "68.95M",
                 "Low_Quality_Reads": "1.07M",
@@ -52,7 +52,7 @@
                 "Remarks": "/filter/V300062757_T67_L04_read_read_trim.html"
             },
             {
-                "Sample_Name": "V300062757_T67",
+                "Sample_Name": "V300062757_T67_2",
                 "Raw_Reads": "76.39M",
                 "Clean_Reads": "68.23M",
                 "Low_Quality_Reads": "968.42K",
@@ -86,25 +86,25 @@
         ],
         "2.1.Input_Read": [
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_1",
                 "Number_Of_Input_Reads": "68.23M",
                 "Average_Input_Read_Length": "50.0"
             },
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_2",
                 "Number_Of_Input_Reads": "68.95M",
                 "Average_Input_Read_Length": "50.0"
             }
         ],
         "2.2.Uniquely_Mapped_Read": [
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_1",
                 "Mapped_Reads_Number": "32.84M",
                 "Mapped_Reads(%)": "48.13%",
                 "Average_Mapped_Length": "49.14"
             },
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_2",
                 "Mapped_Reads_Number": "32.4M",
                 "Mapped_Reads(%)": "46.99%",
                 "Average_Mapped_Length": "49.12"
@@ -112,25 +112,25 @@
         ],
         "2.3.Multi_Mapping_Read": [
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_1",
                 "Multiple_Loci": "14.3M(20.95%)",
                 "Many_Loci": "3.02M(4.43%)"
             },
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_2",
                 "Multiple_Loci": "13.99M(20.29%)",
                 "Many_Loci": "2.9M(4.21%)"
             }
         ],
         "2.4.Unmapping_Read": [
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_1",
                 "Too_Many_Mismatches": "0.0(0.00%)",
                 "Too_Short": "17.73M(25.99%)",
                 "Other": "342.06K(0.50%)"
             },
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_2",
                 "Too_Many_Mismatches": "0.0(0.00%)",
                 "Too_Short": "19.33M(28.04%)",
                 "Other": "322.87K(0.47%)"
@@ -138,11 +138,11 @@
         ],
         "2.5.Chimeric_Read": [
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_1",
                 "Number_Of_Chimeric_Reads": "0.0(0.00%)"
             },
             {
-                "Sample_Id": "V300062757_T67",
+                "Sample_Id": "V300062757_T67_2",
                 "Number_Of_Chimeric_Reads": "0.0(0.00%)"
             }
         ]
