@@ -1,5 +1,6 @@
 import json
 import dash
+import base64
 
 from decimal import Decimal
 
@@ -108,40 +109,40 @@ layout = html.Div(children=[
                                 ),
                             
                         ], color="light",pill=True, className="ml-1 badge-style")])])])),
-                    dbc.Collapse(
-                                dbc.Card(dbc.CardBody([
-                                    html.H4("Q10 Bases in Barcode", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q10 in barcode. ",className="text-P"),
-                                    html.H4("Q20 Bases in Barcode", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q20 in barcode. ",className=" text-P"),
-                                    html.H4("Q30 Bases in Barcode", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q30 in barcode. ",className=" text-P"),
-                                    html.H4("Q10 Bases in UMI", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q10 in UMI. ",className="text-P"),
-                                    html.H4("Q20 Bases in UMI", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q20 in UMI. ",className="text-P"),
-                                    html.H4("Q30 Bases in UMI", className="card-title"),
-                                    html.P("Ratio of bases whose quality value exceeds Q30 in UMI. ",className="text-P"),
-                                    ])),id="collapse-1",className='collapse-type'),
-                    html.Tbody([
-                        html.Tr([html.Td([html.P("Q10 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_Barcode')])]), 
-                        html.Tr([html.Td([html.P("Q20 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_Barcode')])]), 
-                        html.Tr([html.Td([html.P("Q30 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_Barcode')])]),
-                        html.Tr([html.Td([html.P("Q10 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_UMI')])]), 
-                        html.Tr([html.Td([html.P("Q20 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_UMI')])]), 
-                        html.Tr([html.Td([html.P("Q30 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_UMI')])]),                       
-                        ])], bordered=True,className='card-mid'),
-                
-                ]),
-                html.Div(className='col-md-8 box-style-right',children=[
-                    dbc.Card(
-                        dbc.CardBody([
-                            html.Div(id='sunburst-fig',className='collapse-type',children=[
-                                ])
-                            ]),className='card-big'
-                        ),
-                    
-                        ]),
+                        dbc.Collapse(
+                                    dbc.Card(dbc.CardBody([
+                                        html.H4("Q10 Bases in Barcode", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q10 in barcode. ",className="text-P"),
+                                        html.H4("Q20 Bases in Barcode", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q20 in barcode. ",className=" text-P"),
+                                        html.H4("Q30 Bases in Barcode", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q30 in barcode. ",className=" text-P"),
+                                        html.H4("Q10 Bases in UMI", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q10 in UMI. ",className="text-P"),
+                                        html.H4("Q20 Bases in UMI", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q20 in UMI. ",className="text-P"),
+                                        html.H4("Q30 Bases in UMI", className="card-title"),
+                                        html.P("Ratio of bases whose quality value exceeds Q30 in UMI. ",className="text-P"),
+                                        ])),id="collapse-1",className='collapse-type'),
+                                    html.Tbody([
+                                        html.Tr([html.Td([html.P("Q10 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_Barcode')],className='row collapse-type')]), 
+                                        html.Tr([html.Td([html.P("Q20 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_Barcode')],className='row collapse-type')]), 
+                                        html.Tr([html.Td([html.P("Q30 Bases in Barcode",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_Barcode')],className='row collapse-type')]),
+                                        html.Tr([html.Td([html.P("Q10 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q10_UMI')],className='row collapse-type')]), 
+                                        html.Tr([html.Td([html.P("Q20 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q20_UMI')],className='row collapse-type')]), 
+                                        html.Tr([html.Td([html.P("Q30 Bases in UMI",className='col-md-7 text-td'),html.P(className='col-md-5 text-td text-right',id='Q30_UMI')],className='row collapse-type')]),                       
+                                        ])], bordered=True,className='card-mid'),
+                            
+                            ]),
+                        html.Div(className='col-md-8 box-style-right',children=[
+                            dbc.Card(
+                                dbc.CardBody([
+                                    html.Div(id='sunburst-fig',className='collapse-type',children=[
+                                        ])
+                                    ]),className='card-big'
+                                ),
+                            
+                                ]),
                     
                         html.Div(className='col-md-4 box-style-left',children=[
                             dbc.Table(children = [
@@ -173,24 +174,161 @@ layout = html.Div(children=[
                                                 html.P("Number of reads filtered with too long.",className="card-text text-P"),                                                
                                                 ])),id="collapse-2",),
                                 html.Tbody([
-                                    html.Tr([html.Td([html.P("Contour area",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Contour_area')])]), 
-                                    html.Tr([html.Td([html.P("Number of DNB under tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Number_of_DNB_under_tissue')])]), 
-                                    html.Tr([html.Td([html.P("Ratio",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Ratio')])]), 
-                                    html.Tr([html.Td([html.P("Total Gene type",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Total_Gene_type')])]), 
-                                    html.Tr([html.Td([html.P("Raw reads",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Raw_Reads')])]),
-                                    html.Tr([html.Td([html.P("Reads under tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Reads_under_tissue')])]), 
-                                    html.Tr([html.Td([html.P("Fraction Reads in Spots Under Tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Fraction_Reads_in_Spots_Under_Tissue')])]),                        
+                                    html.Tr([html.Td([html.P("Contour area",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Contour_area')],className='row collapse-type')]), 
+                                    html.Tr([html.Td([html.P("Number of DNB under tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Number_of_DNB_under_tissue')],className='row collapse-type')]), 
+                                    html.Tr([html.Td([html.P("Ratio",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Ratio')],className='row collapse-type')]), 
+                                    html.Tr([html.Td([html.P("Total Gene type",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Total_Gene_type')],className='row collapse-type')]), 
+                                    html.Tr([html.Td([html.P("Raw reads",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Raw_Reads')],className='row collapse-type')]),
+                                    html.Tr([html.Td([html.P("Reads under tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Reads_under_tissue')],className='row collapse-type')]), 
+                                    html.Tr([html.Td([html.P("Fraction Reads in Spots Under Tissue",className='col-md-8 text-sm'),html.P(className='col-md-4 text-sm text-right',id='Fraction_Reads_in_Spots_Under_Tissue')],className='row collapse-type')]),                        
                                     ])], bordered=True,className='card-mid'), 
                             ]),
-                            html.Div(className='col-md-8 box-style-right',id = 'bin_table',children=[
-                                
-                            ])
+                            html.Div(className='col-md-8 box-style-right',id = 'bin_table',children=[                   
+                            ]),
+                            
+                            # figure showing
+                            html.Div(className='col-md-12 box-style-left',children=[
+                                dbc.Card([
+                                    dbc.CardBody(
+                                        dbc.Tabs([
+                                            dbc.Tab(children=[
+                                                html.Div([
+                                                dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_20x20_umi_gene_counts.png', 'rb').read()).decode('ascii')),
+                                                            width='400px', height="400px",id='Bin-20-1-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-20"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_20x20_umi_gene_counts.png', 'rb').read()).decode('ascii')), 
+                                                                width='600px',height="600px")),],
+                                                        id="Bin-20-1-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-5 card-fig",),
+                                            dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_20x20_umi_gene.png', 'rb').read()).decode('ascii')),
+                                                            width='500px', height="400px",id='Bin-20-2-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-20"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_20x20_umi_gene.png', 'rb').read()).decode('ascii')), 
+                                                                width='700px',height="600px")),],
+                                                        id="Bin-20-2-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-6 card-fig",),],className='row'),],
+                                            label="Bin-20", tab_id="Bin-20",),
+
+                                            dbc.Tab(children=[
+                                                html.Div([
+                                                dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_50x50_umi_gene_counts.png', 'rb').read()).decode('ascii')),
+                                                            width='400px', height="400px",id='Bin-50-1-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-50"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_50x50_umi_gene_counts.png', 'rb').read()).decode('ascii')), 
+                                                                width='600px',height="600px")),],
+                                                        id="Bin-50-1-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-5 card-fig",),
+                                            dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_50x50_umi_gene.png', 'rb').read()).decode('ascii')),
+                                                            width='500px', height="400px",id='Bin-50-2-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-50"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_50x50_umi_gene.png', 'rb').read()).decode('ascii')), 
+                                                                width='700px',height="600px")),],
+                                                        id="Bin-50-2-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-6 card-fig",),],className='row'),],
+                                            label="Bin-50", tab_id="Bin-50"),
+                                            dbc.Tab(children=[
+                                                html.Div([
+                                                dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_100x100_umi_gene_counts.png', 'rb').read()).decode('ascii')),
+                                                            width='400px', height="400px",id='Bin-100-1-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-100"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_100x100_umi_gene_counts.png', 'rb').read()).decode('ascii')), 
+                                                                width='600px',height="600px")),],
+                                                        id="Bin-100-1-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-5 card-fig",),
+                                            dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_100x100_umi_gene.png', 'rb').read()).decode('ascii')),
+                                                            width='500px', height="400px",id='Bin-100-2-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-100"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_100x100_umi_gene.png', 'rb').read()).decode('ascii')), 
+                                                                width='700px',height="600px")),],
+                                                        id="Bin-100-2-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-6 card-fig",),],className='row'),],
+                                            label="Bin-100", tab_id="Bin-100"),
+                                            dbc.Tab(children=[
+                                                html.Div([
+                                                dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_150x150_umi_gene_counts.png', 'rb').read()).decode('ascii')),
+                                                            width='400px', height="400px",id='Bin-150-1-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-150"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_150x150_umi_gene_counts.png', 'rb').read()).decode('ascii')), 
+                                                                width='600px',height="600px")),],
+                                                        id="Bin-150-1-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-5 card-fig",),
+                                            dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_150x150_umi_gene.png', 'rb').read()).decode('ascii')),
+                                                            width='500px', height="400px",id='Bin-150-2-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-150"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_150x150_umi_gene.png', 'rb').read()).decode('ascii')), 
+                                                                width='700px',height="600px")),],
+                                                        id="Bin-150-2-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-6 card-fig",),],className='row'),],
+                                            label="Bin-150", tab_id="Bin-150"),
+                                            dbc.Tab(children=[
+                                                html.Div([
+                                                dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_200x200_umi_gene_counts.png', 'rb').read()).decode('ascii')),
+                                                            width='400px', height="400px",id='Bin-200-1-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-200"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/scatter_200x200_umi_gene_counts.png', 'rb').read()).decode('ascii')), 
+                                                                width='600px',height="600px")),],
+                                                        id="Bin-200-1-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-5 card-fig",),
+                                            dbc.Card(
+                                                dbc.CardBody([
+                                                    html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_200x200_umi_gene.png', 'rb').read()).decode('ascii')),
+                                                            width='500px', height="400px",id='Bin-200-2-img',n_clicks=0),
+                                                    dbc.Modal([
+                                                            dbc.ModalHeader("Bin-200"),
+                                                            dbc.ModalBody(html.Img(src='data:image/png;base64,{}'.format(base64.b64encode(open('./data/test_stat/violin_200x200_umi_gene.png', 'rb').read()).decode('ascii')), 
+                                                                width='700px',height="600px")),],
+                                                        id="Bin-200-2-modal",size="lg",),
+                                                    ]),className="mt-3 col-md-6 card-fig",),],className='row'),],
+                                            label="Bin-200", tab_id="Bin-200"),
+                                        ],
+                                        id="card-tabs",
+                                    ),className='card-tabs')],className='card-lg')
+                                ])
                         ]),                            
                     ]),
                 ])
             ]),
         ])
     ])
+
+for each_bin in ['Bin-20-1','Bin-20-2','Bin-50-1','Bin-50-2','Bin-100-1','Bin-100-2','Bin-150-1','Bin-150-2','Bin-200-1','Bin-200-2']:
+
+    @app.callback(
+        Output("{}-modal".format(each_bin), "is_open"),
+        [Input("{}-img".format(each_bin), "n_clicks"),],
+        [State("{}-modal".format(each_bin), "is_open")],
+    )
+    def toggle_modal(n1, is_open):
+        if n1:
+            return not is_open
+        return is_open
 
 
 @app.callback(
