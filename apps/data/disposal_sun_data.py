@@ -7,22 +7,15 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pandas.core.frame import DataFrame
 
-from apps.data.load_json import data_json,data_dict
-from apps.data.get_data import get_data
+from apps.data.get_data import GetData as GD
 
-
+GD = GD()
 def get_sun_fig(values):
+    
     Total_reads,Barcode_Mapping,UnMapping,Filter_reads,Fail_Filter,Clean_reads,Umi_Filter_Reads,Too_Long_Reads,Too_Short_Reads,\
-        Too_Many_N_Reads,Low_Quality_Reads,Reference_Mapping_reads,Unmapping_Read,DuPlication_Reads,Unique_Reads,Contour_area,\
-        Number_of_DNB_under_tissue,Ratio,Total_Gene_type,Raw_Reads,Reads_under_tissue,Fraction_Reads_in_Spots_Under_Tissue,\
-        Q20_Barcode,Q30_Barcode,Q10_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = get_data(values)
-
-    labels_color = {'Total_reads':'#F0FFFF','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Barcode_Mapping',
-    'Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
-    'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
-    'Reference_Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Reference_Mapping_reads',
-    'Fail_Filter':'Reference_Mapping_reads','Unique_Reads':'Reference_Mapping_reads'
-    }
+    Too_Many_N_Reads,Low_Quality_Reads,Unique_Mapped_Reads,Chimeric_Reads,Multi_Mapping_Reads,Reference_Mapping_reads,Unmapping_Read,DuPlication_Reads,Unique_Reads,Contour_area,\
+    Number_of_DNB_under_tissue,Ratio,Total_Gene_type,Raw_Reads,Reads_under_tissue,Fraction_Reads_in_Spots_Under_Tissue,\
+    Q20_Barcode,Q30_Barcode,Q10_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = GD.get_data(values)
 
     hovertext_dict = {'Total_reads':'Total number of sequencing reads',
     'Barcode_Mapping':'Number of reads from the second sequencing map back to the first time',
@@ -34,34 +27,45 @@ def get_sun_fig(values):
     'Too_Short_Reads':'Number of reads filtered which too short',
     'Too_Many_N_Reads':'Number of reads filtered that contain too many N',
     'Low_Quality_Reads':'Number of reads filtered due to low quality',
-    'Reference_Mapping_reads':'Uniquely mapped reads number',
+    'Unique_Mapped_Reads':'Uniquely mapped reads number',
+    'Chimeric_Reads':'A read aligns to two distinct portions of the genome with little or no overlap',
+    'Multi_Mapping_Reads':'More than one matching record on the reference',
     'Unmapping_Read':'Unmapped reads number',
     'DuPlication_Reads':'Number of reads of duplication',
-    'Fail_Filter':'Number of reads that failed to pass the q10 filter',
     'Unique_Reads':'Reads number of uniquely'
     }
 
-    parents_dict = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Barcode_Mapping',
-    'Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
-    'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
-    'Reference_Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Reference_Mapping_reads',
-    'Fail_Filter':'Reference_Mapping_reads','Unique_Reads':'Reference_Mapping_reads'
+    parents_dict = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads',
+    'Filter_reads':'Barcode_Mapping','Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads',
+    'Too_Long_Reads':'Filter_reads','Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads',
+    'Low_Quality_Reads':'Filter_reads','Unique_Mapped_Reads':'Clean_reads','Chimeric_Reads':'Clean_reads',
+    'Multi_Mapping_Reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Unique_Mapped_Reads',
+    'Unique_Reads':'Unique_Mapped_Reads'
     }
-    parents_dict_sort = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Barcode_Mapping',
-    'Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
-    'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
-    'Reference_Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads'
+    parents_dict_short = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads',
+    'Filter_reads':'Barcode_Mapping','Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads',
+    'Too_Long_Reads':'Filter_reads','Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads',
+    'Low_Quality_Reads':'Filter_reads','Unique_Mapped_Reads':'Clean_reads','Chimeric_Reads':'Clean_reads',
+    'Multi_Mapping_Reads':'Clean_reads','Unmapping_Read':'Clean_reads'
     }
     name_pro = []
     df = [['labels','parents','value','text']]
-    if len(values) == len(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"].keys()):
+    if len(values) == len(GD.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"].keys()):
         for k,v in parents_dict.items():
             df.append([k.replace('_',' '),v.replace('_',' '),str(eval(k)),hovertext_dict[k]])
-            name_pro.append(str(round(eval(k),2))+'M')
+            # name_pro.append(str(round(eval(k),2))+'M')
+            if k == 'Total_reads':
+                name_pro.append('{}M'.format(str(round(eval(k),2))))
+            else:
+                name_pro.append('{}M({}%)'.format(str(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
     else:
-        for k,v in parents_dict_sort.items():
+        for k,v in parents_dict_short.items():
             df.append([k.replace('_',' '),v.replace('_',' '),str(eval(k)),hovertext_dict[k]])
-            name_pro.append(str(round(eval(k),2))+'M')
+            # name_pro.append(str(round(eval(k),2))+'M')
+            if k == 'Total_reads':
+                name_pro.append('{}M'.format(str(round(eval(k),2))))
+            else:
+                name_pro.append('{}M({}%)'.format(str(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
     
     df = DataFrame(df)
     df.columns = df.loc[0,:]
@@ -82,8 +86,9 @@ def get_sun_fig(values):
         marker = {
             # 'colors':['#ff922b','#e64980','#a61e4d','#94d82d','#74b816','#c5f6fa','#99e9f2',
             # '#66d9e8','#3bc9db','#22b8cf','#15aabf','#1098ad','#91a7ff','#4c6ef5','#364fc7'],
-            'colors':['#CC99CC','#FF9999','#FF99CC','#9999CC','#CCCCFF','#CCFFFF','#99CCFF',
-            '#66CCFF','#6699CC','#99CCFF','#66CCCC','#CCFFCC','#99CC99','#669933','#336633'],
+            'colors':['#CC99CC','#FF9999','#FF99CC','#9999CC','#CCCCFF',
+            '#66CCFF','#99CCFF','#3399CC','#6699CC','#99CCFF','#66CCCC','#CCFFCC','#CCFFFF','#99CCCC',
+            '#336633','#669933'],
             # 'line':{'color':'green','width':2},
             'colorscale':'YlGnBu'},
         
