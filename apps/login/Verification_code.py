@@ -6,7 +6,6 @@ import redis
 import requests
 import json
 
-
 from random import Random
 from email.header import Header
 from email.mime.text import MIMEText
@@ -31,9 +30,7 @@ def random_str(randomlength=6):
     return str
 
 
-
-
-def Send_email(veri_email,Username):
+def Send_email(veri_email,Username=''):
 	if not conn_redis.get(veri_email):
 		veri_code = random_str()
 		conn_redis.set(veri_email,veri_code,ex=1800)
@@ -52,7 +49,7 @@ def Send_email(veri_email,Username):
 	                                'title': 'Register Email Verification',
 	                                'content': content,
 	                                'sender': 'zhouliangliang@genomics.cn',  #发件人邮箱
-	                                'auth': 'L4L4HfsW6vHxeP9', ##发件人密码
+	                                'auth': 'Zhou2633658', ##发件人密码
 	                        },
 	                        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
 	                        #headers = {'Content-Type': 'application/json'}

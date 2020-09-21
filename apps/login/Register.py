@@ -159,16 +159,16 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
         html.Div(id='Verification_code_div', className="form-group input_part",children=[
             html.Label('Verification code: ',id='Verification_code_label',className='label_font_size xrequired'),
             html.Div(className='row',children=[
-                html.Div(className='col-md-8 margin-left-15',children=[
+                html.Div(className='col-md-6 margin-left-15',children=[
                     dcc.Input(
                         id='Verification_code',
                         type='text',
                         placeholder='Enter Verification code',
-                        className="col-md-8 form-control input_part",
+                        className=" form-control input_part",
                         value=Verification_code,
                         )]),
-                html.Div(id='countdown_div',className='col-md-4',children=[
-                    html.Button(id='countdown',type='button',n_clicks=0,className="btn btn-default margin-left-15",children='Send verification code')
+                html.Div(id='countdown_div',className='col-md-6',children=[
+                    html.Button(id='countdown',type='button',n_clicks=0,className="btn btn-default ",children='Send verification code')
                 ])
             ])
         ]),
@@ -180,7 +180,11 @@ def formlayout(err_msg='', Username='', Password='',RePassword='',Realname='',Em
         ]),
         html.Div(className = 'row clearfix', children=[
             html.Button('Reset',id='clear_button',type='button',n_clicks=0,className="login_button col-sm-12 col-md-12 column")
+        ]),
+        html.Div(className='row',children=[
+            html.P(children = ['Already registered?',dcc.Link('Login', href='/Login',className='text-primary')],className='m-auto margin_top_15px')
         ])
+
     ])
 
 
@@ -205,14 +209,14 @@ def registerSuccessfulLayout():
     return html.Div(className='findPassWd_content', children = [
         html.Span('Register successful!'),
         html.Br(),
-        dcc.Link('OK', href='/Stereo-Draftsman/login'),
+        dcc.Link('OK', href='/Login'),
     ])
 
 def registerFailedLayout():
     return html.Div(className='findPassWd_content', children = [
         html.Span('Register failed, please try again later'),
         html.Br(),
-        dcc.Link('OK', href='/Stereo-Draftsman/register'),
+        dcc.Link('OK', href='/register'),
     ])
 
 @app.callback(

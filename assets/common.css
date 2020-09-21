@@ -21,8 +21,19 @@
 }
 .login_button:hover{
 	border-color: var(--stereo-blue-3);
+	text-decoration: underline;
 }
-
+.register_button{
+	margin-top: 10px;
+	display:block;
+	margin-left: 78px;
+	border: 1px solid var(--stereo-blue-4);
+	background-color: var(--stereo-blue-4);
+}
+.register_button:hover{
+	border-color: var(--stereo-blue-3);
+	text-decoration: underline;
+}
 .margin-left-15{
 	margin-left: -15px;
 }
@@ -224,3 +235,6 @@ table.gridtable td {
     
 }
 
+.margin_top_15px{
+	margin-top: 15px!important
+}
