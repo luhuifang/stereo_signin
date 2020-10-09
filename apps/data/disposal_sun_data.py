@@ -7,9 +7,11 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pandas.core.frame import DataFrame
 
+from apps.data.data_config import Data_Info
 from apps.data.get_data import GetData as GD
 
-GD = GD()
+GD = GD(Data_Info['data_path'])
+
 def get_sun_fig(values):
     
     Total_reads,Barcode_Mapping,UnMapping,Filter_reads,Fail_Filter,Clean_reads,Umi_Filter_Reads,Too_Long_Reads,Too_Short_Reads,\

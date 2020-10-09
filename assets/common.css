@@ -4,6 +4,9 @@
 .login_form input{
 	outline: none;
 }
+.cont{
+	margin:30px 50px;
+}
 
 .input_part{
 	margin-bottom: 8px;
@@ -13,6 +16,96 @@
 	border: 0px solid #ECECEC;
 }
 
+li.active {
+    background-color: #fff;
+}
+.side {
+	z-index: 10;
+    width: 250px;
+    float: left;
+    user-select: none;
+    background: #eaedf1;
+    padding-top: 70px;
+    transition-duration: .2s;
+    height: 100%;
+}
+.brand {
+    height: 70px;
+    line-height: 70px;
+    background: #d9dee4!important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 0 15px;
+    font-weight: 700;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+
+}
+.icon {
+    display: inline-block;
+    width: 30px;
+    float: left;
+    text-align: center;
+    font-size: 16px;
+}
+.text {
+    color: #222;
+    font-size: 16px;
+    height: 40px;
+    line-height: 40px;
+    
+}
+.content {
+    padding: 15px;
+    overflow-y: auto;
+    z-index: 0;
+    transition-duration: .2s;
+    height: 100%;
+}
+.search-word {
+    display: inline-block;
+    margin: 0 0 3px 4px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* 下拉内容 (默认隐藏) */
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+}
+
+/* 下拉菜单的链接 */
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+/* 鼠标移上去后修改下拉菜单链接颜色 */
+.dropdown-content a:hover {background-color: #f1f1f1}
+
+/* 在鼠标移上去后显示下拉菜单 */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* 当下拉内容显示后修改下拉按钮的背景颜色 */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41;
+}
+.input_class{
+	height:28px;
+}
 .login_button{
 	margin-top: 10px;
 	display:block;

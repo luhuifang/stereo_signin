@@ -7,8 +7,6 @@ import plotly.express as px
 import plotly.graph_objects as go
 from pandas.core.frame import DataFrame
 
-from apps.data.data_config import Data_Info
-
 
 class Vividict(dict):
     def __missing__(self, key):
@@ -16,8 +14,9 @@ class Vividict(dict):
         return value                        # faster to return than dict lookup
 
 class GetData:
-    def __init__(self):
-        with open(Data_Info['data_path'],'r') as read_json:
+    def __init__(self,data_path):
+        self.data_path = data_path
+        with open(self.data_path,'r') as read_json:
             self.data_json = json.load(read_json)
 
         self.df_table = pd.DataFrame(

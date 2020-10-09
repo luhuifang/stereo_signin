@@ -290,6 +290,8 @@ def update_username(username, new_pw, re_pw, email):
         return 'Username already exists, please re-enter!'
     elif email and u.checkEmailExists():
         return 'The email has been registered, You can retrieve your account, or use another email to register!'
+    elif username and not re.search(r'[a-zA-Z0-9_]*',username):
+        return 'The Username format is wrong, please re-enter!'
     elif new_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',new_pw):
         return 'The password length must be between 8 and 25 characters, and must contain  numbers, letters and special characters'
     elif re_pw and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',re_pw):
@@ -333,6 +335,8 @@ def update_account(n_clicks,
             err_msg = 'Username already exists, please re-enter!'
         elif user.checkEmailExists():
             err_msg = 'The email has been registered, You can retrieve your account, or use another email to register!'
+        elif username and not re.search(r'[a-zA-Z0-9_]*',username):
+            err_msg = 'The Username format is wrong, please re-enter!'
         elif not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',Password) and not re.search(r'^(?=.*[a-zA-Z])(?=.*[1-9])(?=.*[\W]).{8,25}$',RePassword):
             err_msg = 'The password input format is wrong, please input according to the rules!'
         elif Password != RePassword:

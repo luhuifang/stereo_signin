@@ -14,7 +14,7 @@ from apps.data.data_config import Data_Info
 from apps.data.disposal_sun_data import get_sun_fig
 from apps.data.get_data import GetData as GD
 
-GD = GD()
+GD = GD(Data_Info['data_path'])
 
 def figure_tab(bin_sizes):
     tab_sc = ''

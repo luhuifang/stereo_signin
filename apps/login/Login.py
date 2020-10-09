@@ -10,9 +10,6 @@ from dash.exceptions import PreventUpdate
 import apps.login.Verification_code as Ver
 from spatialTrancriptomeReport import app
 from apps.db.tableService.Users import Users
-from apps.db.tableService.UserRole import UserRole
-from apps.login.country_dict import options as Disoptions
-from apps.login.connect_redis import r as conn_redis
 from apps.login.Register import registerLayout
 
 

@@ -9,6 +9,7 @@ from apps.login.Register import registerLayout
 from apps.login.Login import loginLayout
 from apps.login.forgot import forgotLayout
 from apps.data.data import layout
+from apps.login.Manage_control import Managelayout
 
 app.layout = html.Div([
     dcc.Location(id = 'url', refresh = False),
@@ -31,6 +32,8 @@ def display_page(pathname):
         return loginLayout()
     elif pathname == '/forgot':
         return forgotLayout()
+    elif pathname == '/Manage_coltrol':
+        return Managelayout
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
@@ -42,4 +45,4 @@ def display_page(pathname):
         return '404'
 
 if __name__ == '__main__':
-    app.run_server(debug=True, host='0.0.0.0', port='8080')
+    app.run_server(debug=True, host='0.0.0.0', port='8050')
