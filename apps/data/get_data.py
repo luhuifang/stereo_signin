@@ -51,7 +51,7 @@ class GetData:
         elif 'M' in data:
             return Decimal(float(data.strip('M'))).quantize(Decimal("0.00"))
         else:
-            return Decimal(float(data)).quantize(Decimal("0.00"))
+            return Decimal(float(data)/1000000).quantize(Decimal("0.00"))
 
     def get_data(self,values):
         Reference_Mapping_reads,Chimeric_Reads,Multi_Mapping_Reads,Unique_Mapped_Reads,Unique_Mapped_Reads_RATE,\
@@ -114,24 +114,32 @@ class GetData:
             Clean_reads = Reference_Mapping_reads + Unmapping_Read
             Filter_reads = Umi_Filter_Reads + Too_Long_Reads + Too_Short_Reads + Low_Quality_Reads + Too_Many_N_Reads
             Barcode_Mapping = Filter_reads + Clean_reads
-            #Total reads Data
+
+            # Single total reads
+            Each_total_reads = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["mapped_reads"].split('(')[-2]) - self.tran_data(self.data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Raw_Reads"]) \
+            + self.tran_data(self.data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Too_Long_Reads"]) + self.tran_data(self.data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Too_Short_Reads"])\
+            + self.tran_data(self.data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Low_Quality_Reads"]) + self.tran_data(self.data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Too_Many_N_Reads"])\
+            + round(Unique_Mapped_Reads_single + Multi_Mapping_Reads_single + Chimeric_Reads_single,2) + Decimal(Input_read_num*Unmapping_RATE).quantize(Decimal("0.00"))\
+            + self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]) - self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["mapped_reads"].split('(')[-2])
+
+            # Total reads Data
             Total_reads = Barcode_Mapping + UnMapping
 
             # Barcode and Umi QC Data
-            Q10_Barcode_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_barcode"].replace('%',''))/100
-            Q20_Barcode_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q20_bases_in_barcode"].replace('%',''))/100
-            Q30_Barcode_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_barcode"].replace('%',''))/100
-            Q10_UMI_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_umi"].replace('%',''))/100
-            Q20_UMI_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]['Q20_bases_in_umi'].replace('%',''))/100
-            Q30_UMI_rate = self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_umi"].replace('%',''))/100
-            
-            Q10_Barcode += round(Q10_Barcode_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q20_Barcode += round(Q20_Barcode_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q30_Barcode += round(Q30_Barcode_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q10_UMI += round(Q10_UMI_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q20_UMI += round(Q20_UMI_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q30_UMI += round(Q30_UMI_rate*self.tran_data(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-        
+            Q10_Barcode_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_barcode"].replace('%',''))/100
+            Q20_Barcode_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q20_bases_in_barcode"].replace('%',''))/100
+            Q30_Barcode_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_barcode"].replace('%',''))/100
+            Q10_UMI_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_umi"].replace('%',''))/100
+            Q20_UMI_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]['Q20_bases_in_umi'].replace('%',''))/100
+            Q30_UMI_rate = Decimal(self.data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_umi"].replace('%',''))/100
+
+            Q10_Barcode += round(Q10_Barcode_rate*Each_total_reads,2)
+            Q20_Barcode += round(Q20_Barcode_rate*Each_total_reads,2)
+            Q30_Barcode += round(Q30_Barcode_rate*Each_total_reads,2)
+            Q10_UMI += round(Q10_UMI_rate*Each_total_reads,2)
+            Q20_UMI += round(Q20_UMI_rate*Each_total_reads,2)
+            Q30_UMI += round(Q30_UMI_rate*Each_total_reads,2)
+
         Q10_Barcode = '{}M({}%)'.format(Q10_Barcode,round(Q10_Barcode/Total_reads*100,2))
         Q20_Barcode = '{}M({}%)'.format(Q20_Barcode,round(Q20_Barcode/Total_reads*100,2))
         Q30_Barcode = '{}M({}%)'.format(Q30_Barcode,round(Q30_Barcode/Total_reads*100,2))
