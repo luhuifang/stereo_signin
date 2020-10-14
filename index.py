@@ -9,7 +9,7 @@ from apps.login.Register import registerLayout
 from apps.login.Login import loginLayout
 from apps.login.forgot import forgotLayout
 from apps.data.data import layout
-from apps.login.Manage_control import Managelayout
+from apps.login.Manage_control import Managelayout, detial_page
 
 app.layout = html.Div([
     dcc.Location(id = 'url', refresh = False),
@@ -22,8 +22,9 @@ app.layout = html.Div([
 ])
 
 @app.callback(Output('custom-auth-frame', 'children'),
-              [Input('url', 'pathname')])
-def display_page(pathname):
+              [Input('url', 'pathname'),
+              Input('url','search')])
+def display_page(pathname,search):
     if pathname == '/Register':
         return registerLayout()
     elif pathname == '/Data_analysis':
@@ -34,6 +35,9 @@ def display_page(pathname):
         return forgotLayout()
     elif pathname == '/Manage_coltrol':
         return Managelayout
+    elif pathname == '/Manage_coltrol/detail/':
+        order_id = search.split('=')[1]
+        return detial_page(order_id)
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
