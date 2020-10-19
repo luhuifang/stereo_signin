@@ -57,17 +57,17 @@ def get_sun_fig(values):
             df.append([k.replace('_',' '),v.replace('_',' '),str(eval(k)),hovertext_dict[k]])
             # name_pro.append(str(round(eval(k),2))+'M')
             if k == 'Total_reads':
-                name_pro.append('{}M'.format(str(round(eval(k),2))))
+                name_pro.append('{}'.format(GD.tran2human(round(eval(k),2))))
             else:
-                name_pro.append('{}M({}%)'.format(str(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
+                name_pro.append('{}({}%)'.format(GD.tran2human(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
     else:
         for k,v in parents_dict_short.items():
             df.append([k.replace('_',' '),v.replace('_',' '),str(eval(k)),hovertext_dict[k]])
             # name_pro.append(str(round(eval(k),2))+'M')
             if k == 'Total_reads':
-                name_pro.append('{}M'.format(str(round(eval(k),2))))
+                name_pro.append('{}'.format(GD.tran2human(round(eval(k),2))))
             else:
-                name_pro.append('{}M({}%)'.format(str(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
+                name_pro.append('{}({}%)'.format(GD.tran2human(round(eval(k),2)),round(eval(k)/eval(parents_dict[k])*100,2)))
     
     df = DataFrame(df)
     df.columns = df.loc[0,:]

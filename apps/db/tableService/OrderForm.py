@@ -3,7 +3,7 @@ from apps.db.tableService.TableServiceBase import TableServiceBase
 
 class Orders(TableServiceBase):
 	def __init__(self,orderid='',currentstatus='',chipplat='',createtime=''):
-		super().__init__('orderForm')
+		super().__init__('orderform')
 		self.orderid = orderid
 
 	def getAllData(self):
@@ -18,14 +18,27 @@ class Orders(TableServiceBase):
 		sql = 'select * from {table} where OrderID=%s'.format(table=self.tableName)
 		return self.getAllDataFromQuery(sql, args=(orderid,))
 
-	def getDataBySearch(self, orderid,ChipPlat,date):
-		if not date:
-			date = ''
-		orderid = '^' + str(orderid) + '.*'
+	def getDataBySearch(self, orderid,ChipPlat,DateStart,DateEnd):
+		orderid = str(orderid) + '.*'
 		ChipPlat = '^' + str(ChipPlat) + '.*'
-		date = '^' + date + '.*'
-		sql = 'select * from {table} where OrderID rlike %(orderid)s and ChipPlat rlike %(ChipPlat)s and CreateTime rlike %(date)s'.format(table=self.tableName)
-		value = {'orderid':orderid,'ChipPlat':ChipPlat,'date':date}
+		# Date = '^' + Date + '.*'
+		if not DateStart and not DateEnd:
+			Date = '.*'
+			sql = 'select * from {table} where OrderID rlike %(orderid)s and ChipPlat rlike %(ChipPlat)s and CreateTime rlike %(date)s'.format(table=self.tableName)
+			value = {'orderid':orderid,'ChipPlat':ChipPlat,'date':Date}
+		elif DateStart and not DateEnd:
+			Date = DateStart + ' 00:00:00'
+			sql = 'select * from {table} where OrderID rlike %(orderid)s and ChipPlat rlike %(ChipPlat)s and CreateTime >= %(date)s'.format(table=self.tableName)
+			value = {'orderid':orderid,'ChipPlat':ChipPlat,'date':Date}
+		elif DateEnd and not DateStart:
+			Date = DateEnd + ' 23:59:59'
+			sql = 'select * from {table} where OrderID rlike %(orderid)s and ChipPlat rlike %(ChipPlat)s and CreateTime < %(date)s'.format(table=self.tableName)
+			value = {'orderid':orderid,'ChipPlat':ChipPlat,'date':Date}
+		else:
+			DateStart = DateStart + ' 00:00:00'
+			DateEnd = DateEnd + ' 23:59:59'
+			sql = 'select * from {table} where OrderID rlike %(orderid)s and ChipPlat rlike %(ChipPlat)s and CreateTime between %(datestart)s and %(dateend)s'.format(table=self.tableName)
+			value = {'orderid':orderid,'ChipPlat':ChipPlat,'datestart':DateStart,'dateend':DateEnd}
 		return self.getAllDataFromQuery(sql, args=(value))
 
 	def setCurrentStatus(self, currentstatus):

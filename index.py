@@ -12,7 +12,7 @@ from apps.data.data import layout
 from apps.login.Manage_control import Managelayout, detial_page
 
 app.layout = html.Div([
-    dcc.Location(id = 'url', refresh = False),
+    dcc.Location(id = 'url', refresh = True),
     html.Div(id = 'custom-auth-frame', children=[
     	html.H1('Welcome!'),
     	html.Button('sign in'),
