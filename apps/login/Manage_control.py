@@ -48,7 +48,7 @@ def detial_page(order_id):
                 html.H5(f'Detail/{order_id}')
                 ],className='top-bar'),
             html.Div(className='container',children=[
-                html.Div(className='col',children=[
+                html.Div(className='detail-content text-center',children=[
                 html.H6('Order Informarion',className='header-format text-white'),
                 detial_page_content('OrderID',data.iloc[0]['OrderID']),
                 detial_page_content('LoginName',data.iloc[0]['LoginName']),
@@ -70,39 +70,48 @@ def detial_page(order_id):
                 detial_page_content('Accessory',data.iloc[0]['Accessory']),
                     ]),
             html.Div(className='text-center',children=[
-                dbc.Button("Confirm to next status", id = {'type':"detail_status",'index':f'{order_id}_status_detail'}, className="mr-1 all-button"),
+                dbc.Button("Confirm to next status", 
+                    id = {'type':"detail_status",'index':f'{order_id}_status_detail'}, className="mr-1 all-button"),
                 dbc.Modal([
                         dbc.ModalHeader("Confirm to next status"),
                         dbc.ModalBody(["Are you sure to change the order ", html.B(order_id), " to next status?"]),
                         dbc.ModalFooter([
-                            dbc.Button("Confirm", id={'type':"detail_status_confirm_button",'index':f"{order_id}_status_confirm_detail"},href= f'/Manage_coltrol/detail/?orderID={order_id}',className="ml-auto all-button"),
-                            dbc.Button("Cancel", id={'type':"detail_status_close_button",'index':f"{order_id}_status_close_detail"}, className="ml-auto maginRight all-button")]
-                            ),],id={'type':"status_model_detail",'index':f"{order_id}_status_modal_detail"}, centered=True,),
-                dbc.Button("End", id = {'type':"detail_end",'index':f'{order_id}_end_detail'}, className="mr-1 all-button"),
+                            dbc.Button("Confirm",
+                             id={'type':"detail_status_confirm_button",'index':f"{order_id}_status_confirm_detail"},href= f'/Manage_coltrol/detail/?orderID={order_id}',className="ml-auto all-button"),
+                            dbc.Button("Cancel",
+                             id={'type':"detail_status_close_button",'index':f"{order_id}_status_close_detail"}, className="ml-auto maginRight all-button")]
+                            ),],
+                        id={'type':"status_model_detail",'index':f"{order_id}_status_modal_detail"}, centered=True,),
+                dbc.Button("End", 
+                    id = {'type':"detail_end",'index':f'{order_id}_end_detail'}, className="mr-1 all-button"),
                 dbc.Modal([
                         dbc.ModalHeader(["End the orders"]),
                         dbc.ModalBody(["Are you sure to end the order ", html.B(order_id), "?"]),
                         dbc.ModalFooter([
-                            dbc.Button("Confirm", id={'type':"detail_end_confirm_button",'index':f"{order_id}_end_confirm_detail"},href= f'/Manage_coltrol/detail/?orderID={order_id}', className="ml-auto all-button"),
-                            dbc.Button("Cancel", id={'type':"detail_end_close_button",'index':f"{order_id}_end_close_detail"}, className="ml-auto maginRight all-button")]
-                            ),],id={'type':"end_model_detail",'index':f"{order_id}_end_modal_detail"},centered=True,),
-                dbc.Button("Back", id = f'back_{order_id}_button', className="mr-1 all-button",href='/Manage_coltrol'),
+                            dbc.Button("Confirm",
+                                id={'type':"detail_end_confirm_button",'index':f"{order_id}_end_confirm_detail"},href= f'/Manage_coltrol/detail/?orderID={order_id}', className="ml-auto all-button"),
+                            dbc.Button("Cancel", 
+                                id={'type':"detail_end_close_button",'index':f"{order_id}_end_close_detail"}, className="ml-auto maginRight all-button")]
+                            ),],
+                        id={'type':"end_model_detail",'index':f"{order_id}_end_modal_detail"},centered=True,),
+                dbc.Button("Back", 
+                    id = f'back_{order_id}_button', className="mr-1 all-button",href='/Manage_coltrol'),
                 ])]),
         ])
     return layout
 
 def detial_page_content(fieldName,content):
     layout = html.Div(className='row',children=[
-                html.Div(className='col-md-6 text-right',children=[
+                html.Div(className='col-md-5 text-right',children=[
                     html.A(fieldName+':')
                     ]),
-                html.Div(className='col-md-6 text-left',children=[
+                html.Div(className='col-md-7 text-left',children=[
                     html.A(content)
                     ])
                 ])
     return layout
 
-def tableShown(status,Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_count=1,PAGE_SIZE=5):
+def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_count=1,PAGE_SIZE=5):
     orders = Orders()
     Tbody = []
     statusDict = {}
@@ -114,7 +123,7 @@ def tableShown(status,Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_co
     if status == 'all_order':
         data = orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
     elif status == 'search':
-        data = orders.getDataBySearch(Orderid,ChipPlatType,DateStart,DateEnd).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+        data = orders.getDataBySearch(searchstatus,Orderid,ChipPlatType,DateStart,DateEnd).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
     else:
         data = orders.getDataByStatus(status).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
 
@@ -135,28 +144,35 @@ def tableShown(status,Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_co
             html.Td([html.Div([
                 html.Ul(className='operation',children=[
                     html.Li([
-                        dbc.Button(children=['Detail'],href=f'/Manage_coltrol/detail/?orderID={OrderID}',color="link",id=f'{OrderID}_detail',className='collapse-type'),
+                        dbc.Button(children=['Detail'],href=f'/Manage_coltrol/detail/?orderID={OrderID}',color="link",
+                            id=f'{OrderID}_detail',className='collapse-type'),
                         html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_status'),
-                        dbc.Button(children=['Confirm to next status'],color="link",className='a-type collapse-type',id={'type':"status",'index':f'{OrderID}_status'}),
+                        dbc.Button(children=['Confirm to next status'],color="link",className='a-type collapse-type',
+                            id={'type':"status",'index':f'{OrderID}_status'}),
                         dbc.Modal([
                             dbc.ModalHeader("Confirm to next status"),
                             dbc.ModalBody(["Are you sure to change the order ", html.B(OrderID), " to next status?"]),
                             dbc.ModalFooter([
-                                dbc.Button("Confirm", id={'type':"status_confirm_button",'index':f"{OrderID}_status_confirm"}, className="ml-auto all-button"),
-                                dbc.Button("Cancel", id={'type':"status_close_button",'index':f"{OrderID}_status_close"}, className="ml-auto maginRight all-button")]
+                                dbc.Button("Confirm", 
+                                    id={'type':"status_confirm_button",'index':f"{OrderID}_status_confirm"}, className="ml-auto all-button"),
+                                dbc.Button("Cancel", 
+                                    id={'type':"status_close_button",'index':f"{OrderID}_status_close"}, className="ml-auto maginRight all-button")]
                                 ),
                             ],
                             id={'type':"status_model",'index':f"{OrderID}_status_modal"},
                             centered=True,
                         ),
                         html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_end'),
-                        dbc.Button(children=['End'],className='a-type collapse-type',color="link ",id={'type':"end",'index':f'{OrderID}_end'}),
+                        dbc.Button(children=['End'],className='a-type collapse-type',color="link ",
+                            id={'type':"end",'index':f'{OrderID}_end'}),
                         dbc.Modal([
                             dbc.ModalHeader(["End the orders"]),
                             dbc.ModalBody(["Are you sure to end the order ", html.B(OrderID), "?"]),
                             dbc.ModalFooter([
-                                dbc.Button("Confirm", id={'type':"end_confirm_button",'index':f"{OrderID}_end_confirm"}, className="ml-auto all-button"),
-                                dbc.Button("Cancel", id={'type':"end_close_button",'index':f"{OrderID}_end_close"}, className="ml-auto maginRight all-button")]
+                                dbc.Button("Confirm", 
+                                    id={'type':"end_confirm_button",'index':f"{OrderID}_end_confirm"}, className="ml-auto all-button"),
+                                dbc.Button("Cancel", 
+                                    id={'type':"end_close_button",'index':f"{OrderID}_end_close"}, className="ml-auto maginRight all-button")]
                                 ),
                             ],
                             id={'type':"end_model",'index':f"{OrderID}_end_modal"},
@@ -166,41 +182,81 @@ def tableShown(status,Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_co
                     ])
                 ])])]),)
 
-    layout = html.Div(className='gridtable',children=[
-        html.Table(className='aps-table aps-ani-transition aps-widget order_form',children=[
-            html.Thead(
-                html.Tr([html.Th('OrderID'),html.Th('ChipPlat'),html.Th('Quantity'),html.Th('ContactName'),
-                    html.Th('CurrentStatus'),html.Th('NextStatus'),html.Th('CreateTime'),html.Th('Operation')])),
-            html.Tbody(Tbody)
-        ]),
-        html.Div(className='row previous-next-container', children=[
-            
-            dbc.Button(className='all-button',children=['first page'],id='first_page', disabled=True),
-            dbc.Button(className='all-button',children=['previous page'],id='previous_page', disabled=True),
-            dcc.Input(id='page_number',
-                    type='text',
-                    className="page-input",
-                    value=1,),
-            html.I('/',className='page-off',id = 'page_off',role=status),
-            html.Div(page_num,id='total_page_num',className='total-page-num'),
-            dcc.Dropdown(
-                id = 'page_size',
-                options=[{'label': v, 'value': v} for v in [5,10,20,50]],
-                value=PAGE_SIZE,
-                clearable=False,
-                className= 'page-size-select',
-                # style={'Height':'20px'},
-                ),
-            dbc.Button(className='all-button',children=['next page'],id='next_page'),
-            dbc.Button(className='all-button',children=['last page'],id='last_page'),
+    layout = html.Div(className='content',children=[
+                        html.Div(className='search-word',children=[
+                            html.Label('Order ID:',className='label_font_size'),
+                            dcc.Input(id='search_order_id',
+                                    type='text',
+                                    className="input_class",
+                                    minLength= 8,
+                                    maxLength= 25,
+                                    value=Orderid,
+                                    placeholder='Enter Order ID',)
+                            ]),
+                        html.Div(className='search-word',children=[
+                            html.Label('Order Type:',className='label_font_size'),
+                            dcc.Input(id='search_order_type',
+                                    type='text',
+                                    className="input_class",
+                                    minLength= 8,
+                                    maxLength= 25,
+                                    value=ChipPlatType,
+                                    placeholder='Enter Order Type',)
+                            ]),
+                        html.Div(className='search-word',children=[
+                            html.Label('Order Date:',className='label_font_size'),
+                            dcc.DatePickerRange(
+                                    id='search_date',
+                                    display_format='YYYY-MM-DD',
+                                    className='date_input_class',
+                                    clearable=True,
+                                    start_date_placeholder_text='Start Date',
+                                    end_date_placeholder_text='End Date',
+                                )
+                            ]),
+                        html.Div(className='search-word',children=[
+                            dbc.Button(children=['Search'],id='search_button',className='search-button'),]),
+                        html.Div(children=[
+                                    html.Div(className='gridtable',children=[
+                                        html.Table(className='aps-table aps-ani-transition aps-widget order_form',children=[
+                                            html.Thead(
+                                                html.Tr([html.Th('OrderID'),html.Th('ChipPlat'),html.Th('Quantity'),html.Th('ContactName'),
+                                                    html.Th('CurrentStatus'),html.Th('NextStatus'),html.Th('CreateTime'),html.Th('Operation')])),
+                                            html.Tbody(Tbody)
+                                        ]),
+                                        html.Div(className='row previous-next-container', children=[
+                                            
+                                            dbc.Button(className='all-button',children=['First'],id='first_page', disabled=True),
+                                            dbc.Button(className='all-button',children=['Prev'],id='previous_page', disabled=True),
+                                            dcc.Input(id='page_number',
+                                                    type='text',
+                                                    className="page-input",
+                                                    value=1,),
+                                            html.I('/',className='page-off',id = 'page_off',role=status),
+                                            html.Div(page_num,id='total_page_num',className='total-page-num'),
+                                            dcc.Dropdown(
+                                                id = 'page_size',
+                                                options=[{'label': v, 'value': v} for v in [5,10,20,50]],
+                                                value=PAGE_SIZE,
+                                                clearable=False,
+                                                className= 'page-size-select',
+                                                # style={'Height':'20px'},
+                                                ),
+                                            html.I('/',className='page-off',id = 'page_off'),
+                                            html.Div('page',className='each-page-num'),
+                                            dbc.Button(className='all-button',children=['Next'],id='next_page'),
+                                            dbc.Button(className='all-button',children=['Last'],id='last_page'),
 
-            ])
-        ],)
+                                            ])
+                                        ],),
+                                    ]), 
+                        ])
 
     return layout
 
 
 Managelayout = html.Div(id= 'main_div',children=[
+            dcc.Location(id = 'Url', refresh = False),
             dbc.Navbar([
                     html.Div(className='col-md-2',children=[
                         html.A(               
@@ -229,7 +285,7 @@ Managelayout = html.Div(id= 'main_div',children=[
                                     dbc.Navbar(className='brand',children=[dbc.NavbarBrand('Order review',className='box-style-left')]),
                                     html.Div(className='mennu',children=[
                                         html.A(id = 'all_order',href='/Manage_coltrol#status=all_order',children=[html.P(className='icon'),'All Order'],className="active text"),
-                                        html.A(id = 'need_check_order',href='/Manage_coltrol#status=need_check_order',children=[html.P(className='icon'),'Need Check Order'],className="text "),
+                                        html.A(id = 'need_check_order',href='/Manage_coltrol#status=Check_pending',children=[html.P(className='icon'),'Need Check Order'],className="text "),
                                         html.A(id = 'checked_order',href='/Manage_coltrol#status=Verified',children=[html.P(className='icon'),"Checked Order"],className="text "),
                                         html.A(id = 'Unpaid',href='/Manage_coltrol#status=Unpaid',children=[html.P(className='icon'),"Unpaid"],className="text "),
                                         html.A(id = 'Paid',href='/Manage_coltrol#status=Paid',children=[html.P(className='icon'),"Paid"],className="text "),
@@ -242,67 +298,91 @@ Managelayout = html.Div(id= 'main_div',children=[
                                 ]),className='side'
                             ),
                         ]),
-                    html.Div(className='col-md-10 col-xs-8',children=[
-                                html.Div(className='content',children=[
-                                    html.Div(className='search-word',children=[
-                                        html.Label('Order ID:',className='label_font_size'),
-                                        dcc.Input(id='search_order_id',
-                                                type='text',
-                                                className="input_class",
-                                                minLength= 8,
-                                                maxLength= 25,
-                                                value='',
-                                                placeholder='Enter Order ID',)
-                                        ]),
-                                    html.Div(className='search-word',children=[
-                                        html.Label('Order Type:',className='label_font_size'),
-                                        dcc.Input(id='search_order_type',
-                                                type='text',
-                                                className="input_class",
-                                                minLength= 8,
-                                                maxLength= 25,
-                                                value='',
-                                                placeholder='Enter Order Type',)
-                                        ]),
-                                    html.Div(className='search-word',children=[
-                                        html.Label('Order Date:',className='label_font_size'),
-                                        dcc.DatePickerRange(
-                                                id='search_date',
-                                                display_format='YYYY-MM-DD',
-                                                className='date_input_class'
-                                            )
-                                        ]),
-                                    html.Div(className='search-word',children=[
-                                        dbc.Button(children=['Search'],id='search_button',href='/Manage_coltrol#status=search',className='search-button'),]),
-                                    html.Div(id='order_table',children=tableShown('all_order'))
-                                    ]),   
-                        ])
+                    html.Div(id='order_table',className='col-md-10 col-xs-8',children=tableShown('all_order'),
+                                # html.Div(className='content',children=[
+                                #     html.Div(className='search-word',children=[
+                                #         html.Label('Order ID:',className='label_font_size'),
+                                #         dcc.Input(id='search_order_id',
+                                #                 type='text',
+                                #                 className="input_class",
+                                #                 minLength= 8,
+                                #                 maxLength= 25,
+                                #                 value='',
+                                #                 placeholder='Enter Order ID',)
+                                #         ]),
+                                #     html.Div(className='search-word',children=[
+                                #         html.Label('Order Type:',className='label_font_size'),
+                                #         dcc.Input(id='search_order_type',
+                                #                 type='text',
+                                #                 className="input_class",
+                                #                 minLength= 8,
+                                #                 maxLength= 25,
+                                #                 value='',
+                                #                 placeholder='Enter Order Type',)
+                                #         ]),
+                                #     html.Div(className='search-word',children=[
+                                #         html.Label('Order Date:',className='label_font_size'),
+                                #         dcc.DatePickerRange(
+                                #                 id='search_date',
+                                #                 display_format='YYYY-MM-DD',
+                                #                 className='date_input_class',
+                                #                 clearable=True,
+                                #             )
+                                #         ]),
+                                #     html.Div(className='search-word',children=[
+                                #         dbc.Button(children=['Search'],id='search_button',className='search-button'),]),
+                                #     html.Div(id='order_table',children=tableShown('all_order'))
+                                #     ]),   
+                        )
                     ]),
                 ])
 ])
 
 
-def page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size):
-    if current_status == 'all_order':
-        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'need_check_order':
-        return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'Verified':
-        return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'Unpaid':
-        return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'Paid':
-        return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'Wait_for_production':
-        return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'In_production':
-        return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'assigned':
-        return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'end':
-        return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',page_count=page_number,PAGE_SIZE=page_size),page_number
-    if current_status == 'search':
-        return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number
+def page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size):
+    print(href_content)
+    if href_content:
+        if href_content.split('=')[1] == 'all_order':
+            return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=all_order'
+        elif href_content.split('=')[1] == 'Check_pending':
+            return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Check_pending'
+        elif href_content.split('=')[1] == 'Verified':
+            return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Verified'
+        elif href_content.split('=')[1] == 'Unpaid':
+            return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Unpaid'
+        elif href_content.split('=')[1] == 'Paid':
+            return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Paid'
+        elif href_content.split('=')[1] == 'Wait_for_production':
+            return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Wait_for_production'
+        elif href_content.split('=')[1] == 'In_production':
+            return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=In_production'
+        elif href_content.split('=')[1] == 'assigned':
+            return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=assigned'
+        elif href_content.split('=')[1] == 'end':
+            return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=end'
+        else:
+            if href_content.split('=')[1].split('&')[0] == 'all_order':
+                return "active text",'text','text','text','text','text','text','text','text',tableShown('search','all_order',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'Check_pending':
+                return 'text',"active text",'text','text','text','text','text','text','text',tableShown('search','Check_pending',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'Verified':
+                return 'text',"text",'active text','text','text','text','text','text','text',tableShown('search','Verified',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'Unpaid':
+                return 'text',"text",'text','active text','text','text','text','text','text',tableShown('search','Unpaid',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'Paid':
+                return 'text',"text",'text','text','active text','text','text','text','text',tableShown('search','Paid',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'Wait_for_production':
+                return 'text',"text",'text','text','text','active text','text','text','text',tableShown('search','Wait_for_production',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'In_production':
+                return 'text',"text",'text','text','text','text','active text','text','text',tableShown('search','In_production',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'assigned':
+                return 'text',"text",'text','text','text','text','text','active text','text',tableShown('search','assigned',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            elif href_content.split('=')[1].split('&')[0] == 'end':
+                return 'text',"text",'text','text','text','text','text','text','active text',tableShown('search','end',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+
+        return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=search'
+    else:
+        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=all_order'
 
 @app.callback(
     [Output({'type':"status",'index':ALL}, "disabled"),
@@ -315,7 +395,7 @@ def status_button_disabled(status_id):
     res_status = []
     res_end = []
     for each_status_id in status_id:
-        order_id = each_status_id['index'].split('_')[0]
+        order_id = each_status_id['index'].split('_status')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if CurrentStatus != -1:
@@ -337,7 +417,7 @@ def status_button_disabled_detail(status_id):
     res_status = []
     res_end = []
     for each_status_id in status_id:
-        order_id = each_status_id['index'].split('_')[0]
+        order_id = each_status_id['index'].split('_status')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if CurrentStatus != -1:
@@ -361,7 +441,7 @@ def change_status_button(status_click, status_confirm, status_close, status_id, 
         raise PreventUpdate
     orders = Orders()
     for index in range(len(status_id)):
-        order_id = status_id[index]['index'].split('_')[0]
+        order_id = status_id[index]['index'].split('_status')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status","type":"status"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_close","type":"status_close_button"}.n_clicks':
@@ -394,7 +474,7 @@ def change_end_button(status_click, status_confirm, status_close, status_id, sta
         raise PreventUpdate
     orders = Orders()
     for index in range(len(status_id)):
-        order_id = status_id[index]['index'].split('_')[0]
+        order_id = status_id[index]['index'].split('_end')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end","type":"end"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_close","type":"end_close_button"}.n_clicks':
@@ -419,7 +499,7 @@ def change_status_button_detail(status_click, status_confirm, status_close, stat
         raise PreventUpdate
     orders = Orders()
     for index in range(len(status_id)):
-        order_id = status_id[index]['index'].split('_')[0]
+        order_id = status_id[index]['index'].split('_status')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_detail","type":"detail_status"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_close_detail","type":"detail_status_close_button"}.n_clicks':
@@ -451,7 +531,7 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
         raise PreventUpdate
     orders = Orders()
     for index in range(len(status_id)):
-        order_id = status_id[index]['index'].split('_')[0]
+        order_id = status_id[index]['index'].split('_end')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_detail","type":"detail_end"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_close_detail","type":"detail_end_close_button"}.n_clicks':
@@ -476,7 +556,7 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     # Output('refused_order','className'),
     Output('order_table','children'),
     Output('page_number','value'),
-    # Output('search_button','href')
+    Output('Url','href')
     ],
     [
     Input('all_order','n_clicks'),
@@ -488,7 +568,7 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     Input('In_production','n_clicks'),
     Input('assigned','n_clicks'),
     Input('finish_order','n_clicks'),
-    Input('url','hash'),
+    Input('Url','hash'),
     # Input('refused_order','n_clicks'),
     Input('search_button','n_clicks'),
     Input('first_page','n_clicks'),
@@ -508,80 +588,86 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     State('search_date','start_date'),
     State('search_date','end_date'),
     State('page_number','value'),
-    State('total_page_num','children'),]
+    State('total_page_num','children'),
+    State('Url','href')]
     )
 def table_shown(all_order,need_check_order,checked_order,Unpaid,Paid,Wait_for_production,In_production,\
     assigned,finish_order,hash_name,search_button,first_page,previous_page,next_page,last_page,\
     search_order_id_submit,search_order_type_submit,search_date_submit,page_number_submit,page_size,status_confirm_button,end_confirm_button,\
-    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num):
-    # print(dash.callback_context.triggered)
+    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num,href_content):
+    print(dash.callback_context.triggered)
     page_number = int(page_number)
-    # search_href = '?search?order_id={}&order_type={}&order_date={}-{}'.format(search_order_id,search_order_type,search_start_date,search_end_date)
     orders = Orders()
     if hash_name:
-        current_status = hash_name.split('=')[1]
+        current_status = hash_name.split('=')[1].split('&')[0]
     else:
         current_status = 'all_order'
+
+    search_href = '/Manage_coltrol#status={}&order_id={}&order_type={}&order_date={}-{}'.format(current_status,search_order_id,search_order_type,search_start_date,search_end_date)
     if not search_button and not first_page and not previous_page and not next_page and not last_page\
     and not dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit'\
     and not dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit'\
     and not dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit'\
     and not dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' \
     and not dash.callback_context.triggered[0]['prop_id'] == 'page_size.value' \
+    and not dash.callback_context.triggered[0]['prop_id'] == 'next_page.n_clicks'\
     and not dash.callback_context.triggered:
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(hash_name,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+
     if  dash.callback_context.triggered[0]['prop_id'] == 'all_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=all_order':
-        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',PAGE_SIZE=5),1
-    if dash.callback_context.triggered[0]['prop_id'] == 'need_check_order.n_clicks'or dash.callback_context.triggered[0]['value'] == '#status=need_check_order':
-        return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',PAGE_SIZE=5),1
+        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',PAGE_SIZE=5),1,'/Manage_coltrol#status=all_order'
+    if dash.callback_context.triggered[0]['prop_id'] == 'need_check_order.n_clicks'or dash.callback_context.triggered[0]['value'] == '#status=Check_pending':
+        return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',PAGE_SIZE=5),1,'/Manage_coltrol#status=Check_pending'
     if dash.callback_context.triggered[0]['prop_id'] == 'checked_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Verified':
-        return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',PAGE_SIZE=5),1
+        return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',PAGE_SIZE=5),1,'/Manage_coltrol#status=Verified'
     if dash.callback_context.triggered[0]['prop_id'] == 'Unpaid.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Unpaid':
-        return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',PAGE_SIZE=5),1
+        return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',PAGE_SIZE=5),1,'/Manage_coltrol#status=Unpaid'
     if dash.callback_context.triggered[0]['prop_id'] == 'Paid.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Paid':
-        return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',PAGE_SIZE=5),1
+        return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',PAGE_SIZE=5),1,'/Manage_coltrol#status=Paid'
     if dash.callback_context.triggered[0]['prop_id'] == 'Wait_for_production.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Wait_for_production':
-        return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',PAGE_SIZE=5),1
+        return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',PAGE_SIZE=5),1,'/Manage_coltrol#status=Wait_for_production'
     if dash.callback_context.triggered[0]['prop_id'] == 'In_production.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=In_production':
-        return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',PAGE_SIZE=5),1
+        return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',PAGE_SIZE=5),1,'/Manage_coltrol#status=In_production'
     if dash.callback_context.triggered[0]['prop_id'] == 'assigned.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=assigned':
-        return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',PAGE_SIZE=5),1
+        return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',PAGE_SIZE=5),1,'/Manage_coltrol#status=assigned'
     if dash.callback_context.triggered[0]['prop_id'] == 'finish_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=end':
-        return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',PAGE_SIZE=5),1
+        return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',PAGE_SIZE=5),1,'/Manage_coltrol#status=end'
     # if dash.callback_context.triggered[0]['prop_id'] == 'refused_order.n_clicks':
     #     return 'text',"text",'text','text','text','text','text','text','text','active text',tableShown('end'),1
     if dash.callback_context.triggered[0]['prop_id'] == 'search_button.n_clicks' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' or\
-        dash.callback_context.triggered[0]['value'] == '#status=search':
-        return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',search_order_id,search_order_type,search_start_date,search_end_date),1
-    
+        dash.callback_context.triggered[0]['value'] == '?status=search':
+        # return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',current_status,search_order_id,search_order_type,search_start_date,search_end_date),1,search_href
+        return page_on_status(href_content+'&order_id',search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+
     if dash.callback_context.triggered[0]['prop_id'] == 'page_size.value':
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
     if dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
         page_number = 1
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'previous_page.n_clicks':
         page_number -= 1
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'next_page.n_clicks':
         page_number += 1
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'last_page.n_clicks':
         page_number = int(total_page_num)
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit':
         if page_number > int(total_page_num):
-            return page_on_status(current_status,int(total_page_num),search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+            return page_on_status(href_content,search_href,int(total_page_num),search_order_id,search_order_type,search_start_date,search_end_date,page_size)
         elif page_number < 1:
-            return page_on_status(current_status,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+            return page_on_status(href_content,search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if status_confirm_button or end_confirm_button:
         # return "active text",'text','text','text','text','text','text','text','text',tableShown(current_status,PAGE_SIZE=page_size),1
-        return page_on_status(current_status,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
+    return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
 @app.callback(
     [Output('first_page','disabled'),

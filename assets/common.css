@@ -70,17 +70,18 @@ a.text:hover{
 }
 .content {
     padding: 15px;
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     z-index: 0;
     transition-duration: .2s;
     /*height: 100%;*/
 }
 .search-word {
     display: inline-block;
-    margin: 2px 0px 3px 4px;
+    /*margin: 2px 0px 3px 4px;*/
 }
 .search-button{
 	margin-left: 10px;
+	margin-bottom: 2px;
 	height: 40px;
 	border: 1px solid #1b5da2;
 	background-color: #1b5da2;
@@ -103,6 +104,7 @@ a.text:hover{
     background-color: #f9f9f9;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 2;
 }
 
 /* 下拉菜单的链接 */
@@ -111,6 +113,7 @@ a.text:hover{
     padding: 12px 16px;
     text-decoration: none;
     display: block;
+    z-index: 2;
 }
 /* 鼠标移上去后修改下拉菜单链接颜色 */
 .dropdown-content a:hover {background-color: #f1f1f1}
@@ -135,7 +138,7 @@ a.text:hover{
 	height:35px!important;
 	margin:0px 10px;
 	padding: 5px!important;
-	width: 300px;
+	width: 350px;
 	font-size: 15px;
 }
 .DateInput_input{
@@ -219,12 +222,18 @@ table.order_form{
 	text-decoration: underline!important;
 	cursor:pointer;
 }
+.detail-content{
+	width:650px;
+	/*background-color: grey;*/
+	margin: auto;		
+}
 .header-format{
+	margin: auto;	
+	/*margin-left: 250px;*/
 	margin-top:20px;
-	margin-left: 350px;
 	text-align: center;
 	height: 30px;
-	width: 400px;
+	width: 550px;
 	background-color: var(--stereo-blue-9);
 	padding: 3px;
 }
@@ -257,11 +266,19 @@ table.order_form{
 	font-size: 22px;
 	padding: 4px 0px;
 }
+.each-page-num{
+	height: 40px;
+	width: 50px;
+	margin-top: 5px;
+	/*margin-left: 5px;*/
+	font-size: 22px;
+	padding: 4px 4px;
+}
 .page-size-select{
 	height: 40px;
 	width: 50px;
-	z-index: 2;
-	margin:10px 0px;
+	/*z-index: 2;*/
+	margin:10px 5px 10px 0px;
 }
 
 .all-button{
