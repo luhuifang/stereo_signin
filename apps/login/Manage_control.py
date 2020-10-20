@@ -2,6 +2,7 @@ import dash
 import re
 import time
 import pandas as pd
+from datetime import date
 
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -111,7 +112,7 @@ def detial_page_content(fieldName,content):
                 ])
     return layout
 
-def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',DateEnd='',page_count=1,PAGE_SIZE=5):
+def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
     orders = Orders()
     Tbody = []
     statusDict = {}
@@ -194,7 +195,7 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',D
                                     placeholder='Enter Order ID',)
                             ]),
                         html.Div(className='search-word',children=[
-                            html.Label('Order Type:',className='label_font_size'),
+                            html.Label('Chip Plat:',className='label_font_size'),
                             dcc.Input(id='search_order_type',
                                     type='text',
                                     className="input_class",
@@ -210,8 +211,10 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',D
                                     display_format='YYYY-MM-DD',
                                     className='date_input_class',
                                     clearable=True,
-                                    start_date_placeholder_text='Start Date',
-                                    end_date_placeholder_text='End Date',
+                                    start_date=DateStart,
+                                    end_date = DateEnd,
+                                    # start_date_placeholder_text='Start Date',
+                                    # end_date_placeholder_text='End Date',
                                 )
                             ]),
                         html.Div(className='search-word',children=[
@@ -234,6 +237,9 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',D
                                                     value=1,),
                                             html.I('/',className='page-off',id = 'page_off',role=status),
                                             html.Div(page_num,id='total_page_num',className='total-page-num'),
+                                            
+                                            dbc.Button(className='all-button',children=['Next'],id='next_page'),
+                                            dbc.Button(className='all-button',children=['Last'],id='last_page'),
                                             dcc.Dropdown(
                                                 id = 'page_size',
                                                 options=[{'label': v, 'value': v} for v in [5,10,20,50]],
@@ -244,8 +250,6 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart='',D
                                                 ),
                                             html.I('/',className='page-off',id = 'page_off'),
                                             html.Div('page',className='each-page-num'),
-                                            dbc.Button(className='all-button',children=['Next'],id='next_page'),
-                                            dbc.Button(className='all-button',children=['Last'],id='last_page'),
 
                                             ])
                                         ],),
@@ -343,23 +347,23 @@ def page_on_status(href_content,search_href,page_number,search_order_id,search_o
     print(href_content)
     if href_content:
         if href_content.split('=')[1] == 'all_order':
-            return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=all_order'
+            return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'Check_pending':
-            return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Check_pending'
+            return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'Verified':
-            return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Verified'
+            return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'Unpaid':
-            return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Unpaid'
+            return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'Paid':
-            return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Paid'
+            return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'Wait_for_production':
-            return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=Wait_for_production'
+            return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'In_production':
-            return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=In_production'
+            return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'assigned':
-            return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=assigned'
+            return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         elif href_content.split('=')[1] == 'end':
-            return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=end'
+            return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
         else:
             if href_content.split('=')[1].split('&')[0] == 'all_order':
                 return "active text",'text','text','text','text','text','text','text','text',tableShown('search','all_order',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
@@ -610,7 +614,6 @@ def table_shown(all_order,need_check_order,checked_order,Unpaid,Paid,Wait_for_pr
     and not dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit'\
     and not dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' \
     and not dash.callback_context.triggered[0]['prop_id'] == 'page_size.value' \
-    and not dash.callback_context.triggered[0]['prop_id'] == 'next_page.n_clicks'\
     and not dash.callback_context.triggered:
         return page_on_status(hash_name,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 

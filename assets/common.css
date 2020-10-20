@@ -278,7 +278,7 @@ table.order_form{
 	height: 40px;
 	width: 50px;
 	/*z-index: 2;*/
-	margin:10px 5px 10px 0px;
+	margin:10px 5px 10px 10px;
 }
 
 .all-button{
