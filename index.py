@@ -34,7 +34,7 @@ def display_page(pathname,search):
     elif pathname == '/forgot':
         return forgotLayout()
     elif pathname == '/Manage_coltrol':
-        return Managelayout
+        return Managelayout()
     elif pathname == '/Manage_coltrol/detail/':
         order_id = search.split('=')[1]
         return detial_page(order_id)

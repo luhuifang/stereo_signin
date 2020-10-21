@@ -23,7 +23,6 @@ def detial_page(order_id):
     allstatus = orderstatus.getAllStatus()
     for eachstatus in allstatus.iloc:
         statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-    # statusDict = {8:'',1:'Check pending',2:'Verified',3:'Unpaid',4:'Paid',5:'Wait for production',6:'In production',7:'assigned',-1:'end'}
     layout = html.Div([
             dbc.Navbar([
                     html.Div(className='col-md-2',children=[
@@ -120,13 +119,12 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
     allstatus = orderstatus.getAllStatus()
     for eachstatus in allstatus.iloc:
         statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-    # statusDict = {8:'',1:'Check pending',2:'Verified',3:'Unpaid',4:'Paid',5:'Wait for production',6:'In production',7:'assigned',-1:'end'}
     if status == 'all_order':
         data = orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
     elif status == 'search':
         data = orders.getDataBySearch(searchstatus,Orderid,ChipPlatType,DateStart,DateEnd).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
     else:
-        data = orders.getDataByStatus(status).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+        data = orders.getDataByStatus(status.replace('_',' ')).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
 
     row_nums = data.shape[0]
     if row_nums/PAGE_SIZE == 0:
@@ -213,8 +211,6 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                                     clearable=True,
                                     start_date=DateStart,
                                     end_date = DateEnd,
-                                    # start_date_placeholder_text='Start Date',
-                                    # end_date_placeholder_text='End Date',
                                 )
                             ]),
                         html.Div(className='search-word',children=[
@@ -246,7 +242,6 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                                                 value=PAGE_SIZE,
                                                 clearable=False,
                                                 className= 'page-size-select',
-                                                # style={'Height':'20px'},
                                                 ),
                                             html.I('/',className='page-off',id = 'page_off'),
                                             html.Div('page',className='each-page-num'),
@@ -259,7 +254,22 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
     return layout
 
 
-Managelayout = html.Div(id= 'main_div',children=[
+def Managelayout():
+    statusDict = {}
+    menus = [html.A(id = {'index':'all_order','type':'menus_id'},children=[html.P(className='icon'),'All Order'],className="active text"),]
+    orderstatus = OrderStatus()
+    allstatus = orderstatus.getAllStatus()
+    for eachstatus in allstatus.iloc:
+        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
+    for i in statusDict.values():
+        if i == '' or i == 'end':
+            pass
+        else:
+            ii = i.replace(' ','_')
+            single_mennu = html.A(id = {'index':ii,'type':'menus_id'},children=[html.P(className='icon'), i],className="text")
+            menus.append(single_mennu)
+    menus.append(html.A(id = {'index':'end','type':'menus_id'},children=[html.P(className='icon'),"Finish Order"],className="text "))
+    return html.Div(id= 'main_div',children=[
             dcc.Location(id = 'Url', refresh = False),
             dbc.Navbar([
                     html.Div(className='col-md-2',children=[
@@ -287,56 +297,12 @@ Managelayout = html.Div(id= 'main_div',children=[
                         dbc.Card(
                             dbc.CardBody([
                                     dbc.Navbar(className='brand',children=[dbc.NavbarBrand('Order review',className='box-style-left')]),
-                                    html.Div(className='mennu',children=[
-                                        html.A(id = 'all_order',href='/Manage_coltrol#status=all_order',children=[html.P(className='icon'),'All Order'],className="active text"),
-                                        html.A(id = 'need_check_order',href='/Manage_coltrol#status=Check_pending',children=[html.P(className='icon'),'Need Check Order'],className="text "),
-                                        html.A(id = 'checked_order',href='/Manage_coltrol#status=Verified',children=[html.P(className='icon'),"Checked Order"],className="text "),
-                                        html.A(id = 'Unpaid',href='/Manage_coltrol#status=Unpaid',children=[html.P(className='icon'),"Unpaid"],className="text "),
-                                        html.A(id = 'Paid',href='/Manage_coltrol#status=Paid',children=[html.P(className='icon'),"Paid"],className="text "),
-                                        html.A(id = 'Wait_for_production',href='/Manage_coltrol#status=Wait_for_production',children=[html.P(className='icon'),"Wait for production"],className="text "),
-                                        html.A(id = 'In_production',href='/Manage_coltrol#status=In_production',children=[html.P(className='icon'),"In production"],className="text "),
-                                        html.A(id = 'assigned',href='/Manage_coltrol#status=assigned',children=[html.P(className='icon'),"Assigned"],className="text "),
-                                        html.A(id = 'finish_order',href='/Manage_coltrol#status=end',children=[html.P(className='icon'),"Finish Order"],className="text "),
-                                        # html.Li(id = 'refused_order',children=[html.P(className='icon'),"Refused Order"],className="text "),
-                                    ])
+                                    html.Div(className='mennu',children=menus
+                                    )
                                 ]),className='side'
                             ),
                         ]),
                     html.Div(id='order_table',className='col-md-10 col-xs-8',children=tableShown('all_order'),
-                                # html.Div(className='content',children=[
-                                #     html.Div(className='search-word',children=[
-                                #         html.Label('Order ID:',className='label_font_size'),
-                                #         dcc.Input(id='search_order_id',
-                                #                 type='text',
-                                #                 className="input_class",
-                                #                 minLength= 8,
-                                #                 maxLength= 25,
-                                #                 value='',
-                                #                 placeholder='Enter Order ID',)
-                                #         ]),
-                                #     html.Div(className='search-word',children=[
-                                #         html.Label('Order Type:',className='label_font_size'),
-                                #         dcc.Input(id='search_order_type',
-                                #                 type='text',
-                                #                 className="input_class",
-                                #                 minLength= 8,
-                                #                 maxLength= 25,
-                                #                 value='',
-                                #                 placeholder='Enter Order Type',)
-                                #         ]),
-                                #     html.Div(className='search-word',children=[
-                                #         html.Label('Order Date:',className='label_font_size'),
-                                #         dcc.DatePickerRange(
-                                #                 id='search_date',
-                                #                 display_format='YYYY-MM-DD',
-                                #                 className='date_input_class',
-                                #                 clearable=True,
-                                #             )
-                                #         ]),
-                                #     html.Div(className='search-word',children=[
-                                #         dbc.Button(children=['Search'],id='search_button',className='search-button'),]),
-                                #     html.Div(id='order_table',children=tableShown('all_order'))
-                                #     ]),   
                         )
                     ]),
                 ])
@@ -344,49 +310,37 @@ Managelayout = html.Div(id= 'main_div',children=[
 
 
 def page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size):
-    print(href_content)
-    if href_content:
-        if href_content.split('=')[1] == 'all_order':
-            return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'Check_pending':
-            return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'Verified':
-            return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'Unpaid':
-            return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'Paid':
-            return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'Wait_for_production':
-            return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'In_production':
-            return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'assigned':
-            return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
-        elif href_content.split('=')[1] == 'end':
-            return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',page_count=page_number,PAGE_SIZE=page_size),page_number,href_content
+    try:
+        status = href_content.split('=')[1]
+        search_status = href_content.split('=')[1].split('&')[0]
+    except:
+        status,search_status = '',''
+    ## 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
+    statusDict = {'all_order':'text'}
+    orderstatus = OrderStatus()
+    allstatus = orderstatus.getAllStatus()
+    for eachstatus in allstatus.iloc:
+        if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
+            pass
         else:
-            if href_content.split('=')[1].split('&')[0] == 'all_order':
-                return "active text",'text','text','text','text','text','text','text','text',tableShown('search','all_order',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'Check_pending':
-                return 'text',"active text",'text','text','text','text','text','text','text',tableShown('search','Check_pending',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'Verified':
-                return 'text',"text",'active text','text','text','text','text','text','text',tableShown('search','Verified',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'Unpaid':
-                return 'text',"text",'text','active text','text','text','text','text','text',tableShown('search','Unpaid',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'Paid':
-                return 'text',"text",'text','text','active text','text','text','text','text',tableShown('search','Paid',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'Wait_for_production':
-                return 'text',"text",'text','text','text','active text','text','text','text',tableShown('search','Wait_for_production',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'In_production':
-                return 'text',"text",'text','text','text','text','active text','text','text',tableShown('search','In_production',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'assigned':
-                return 'text',"text",'text','text','text','text','text','active text','text',tableShown('search','assigned',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
-            elif href_content.split('=')[1].split('&')[0] == 'end':
-                return 'text',"text",'text','text','text','text','text','text','active text',tableShown('search','end',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href
+            statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
+    statusDict['end'] = 'text'
+    ## 判断当前的点击在哪一个状态中
+    if status in statusDict:
+        class_name = []
+        res = []
+        statusDict[status] = "active text"
+        for i in statusDict:
+            class_name.append(statusDict[i])
+        return [class_name,tableShown(status,page_count=page_number,PAGE_SIZE=page_size),page_number,href_content]  
+    elif search_status in statusDict:
+        class_name = []
+        statusDict[search_status] = "active text"
+        for i in statusDict:
+            class_name.append(statusDict[i])
+        return [class_name,tableShown('search',search_status,search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,search_href]
 
-        return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=search'
-    else:
-        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=all_order'
+    return ["active text",'text','text','text','text','text','text','text','text'],tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number,'/Manage_coltrol#status=all_order'
 
 @app.callback(
     [Output({'type':"status",'index':ALL}, "disabled"),
@@ -459,7 +413,7 @@ def change_status_button(status_click, status_confirm, status_close, status_id, 
                 orders.updateNextStatus(-1,order_id)
             else:
                 orders.updateCurrentStatus(-1,order_id)
-                orders.updateNextStatus(8,order_id)
+                orders.updateNextStatus(1000,order_id)
             Send_email(order_id)
             status_modal[index] = not status_modal[index]
         
@@ -485,7 +439,7 @@ def change_end_button(status_click, status_confirm, status_close, status_id, sta
             status_modal[index] = not status_modal[index]
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm","type":"end_confirm_button"}.n_clicks':
             orders.updateCurrentStatus(-1,order_id)
-            orders.updateNextStatus(8,order_id)
+            orders.updateNextStatus(1000,order_id)
             Send_email(order_id)
             status_modal[index] = not status_modal[index]
     return status_modal
@@ -548,32 +502,14 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     return status_modal
 
 @app.callback(
-    [Output('all_order','className'),
-    Output('need_check_order','className'),
-    Output('checked_order','className'),
-    Output('Unpaid','className'),
-    Output('Paid','className'),
-    Output('Wait_for_production','className'),
-    Output('In_production','className'),
-    Output('assigned','className'),
-    Output('finish_order','className'),
-    # Output('refused_order','className'),
+    [
+    Output({'type':"menus_id",'index':ALL},'className'),
     Output('order_table','children'),
     Output('page_number','value'),
-    Output('Url','href')
-    ],
+    Output('Url','href')],
     [
-    Input('all_order','n_clicks'),
-    Input('need_check_order','n_clicks'),
-    Input('checked_order','n_clicks'),
-    Input('Unpaid','n_clicks'),
-    Input('Paid','n_clicks'),
-    Input('Wait_for_production','n_clicks'),
-    Input('In_production','n_clicks'),
-    Input('assigned','n_clicks'),
-    Input('finish_order','n_clicks'),
+    Input({'type':"menus_id",'index':ALL},'n_clicks'),
     Input('Url','hash'),
-    # Input('refused_order','n_clicks'),
     Input('search_button','n_clicks'),
     Input('first_page','n_clicks'),
     Input('previous_page','n_clicks'),
@@ -595,18 +531,35 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     State('total_page_num','children'),
     State('Url','href')]
     )
-def table_shown(all_order,need_check_order,checked_order,Unpaid,Paid,Wait_for_production,In_production,\
-    assigned,finish_order,hash_name,search_button,first_page,previous_page,next_page,last_page,\
+def table_shown(menus_id,hash_name,search_button,first_page,previous_page,next_page,last_page,\
     search_order_id_submit,search_order_type_submit,search_date_submit,page_number_submit,page_size,status_confirm_button,end_confirm_button,\
     search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num,href_content):
     print(dash.callback_context.triggered)
+    if dash.callback_context.triggered[0]['prop_id']:
+        click_status = re.search(r'{"index":"(.*)","type":"menus_id"',dash.callback_context.triggered[0]['prop_id'].split('.')[0])
+        if click_status:
+            click_status_propid = click_status.group(1)
+        else:
+            click_status_propid = ''
+    ## 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
+    statusDict = {'all_order':'text'}
+    orderstatus = OrderStatus()
+    allstatus = orderstatus.getAllStatus()
+    for eachstatus in allstatus.iloc:
+        if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
+            pass
+        else:
+            statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
+    statusDict['end'] = 'text'
+
     page_number = int(page_number)
     orders = Orders()
-    if hash_name:
-        current_status = hash_name.split('=')[1].split('&')[0]
-    else:
+    try:
+        current_status = href_content.split('=')[1].split('&')[0]
+    except:
         current_status = 'all_order'
-
+    print('hash_name:',hash_name)
+    ## 设置点击搜索按钮后URL内容
     search_href = '/Manage_coltrol#status={}&order_id={}&order_type={}&order_date={}-{}'.format(current_status,search_order_id,search_order_type,search_start_date,search_end_date)
     if not search_button and not first_page and not previous_page and not next_page and not last_page\
     and not dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit'\
@@ -616,33 +569,18 @@ def table_shown(all_order,need_check_order,checked_order,Unpaid,Paid,Wait_for_pr
     and not dash.callback_context.triggered[0]['prop_id'] == 'page_size.value' \
     and not dash.callback_context.triggered:
         return page_on_status(hash_name,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-    if  dash.callback_context.triggered[0]['prop_id'] == 'all_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=all_order':
-        return "active text",'text','text','text','text','text','text','text','text',tableShown('all_order',PAGE_SIZE=5),1,'/Manage_coltrol#status=all_order'
-    if dash.callback_context.triggered[0]['prop_id'] == 'need_check_order.n_clicks'or dash.callback_context.triggered[0]['value'] == '#status=Check_pending':
-        return 'text',"active text",'text','text','text','text','text','text','text',tableShown('Check pending',PAGE_SIZE=5),1,'/Manage_coltrol#status=Check_pending'
-    if dash.callback_context.triggered[0]['prop_id'] == 'checked_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Verified':
-        return 'text',"text",'active text','text','text','text','text','text','text',tableShown('Verified',PAGE_SIZE=5),1,'/Manage_coltrol#status=Verified'
-    if dash.callback_context.triggered[0]['prop_id'] == 'Unpaid.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Unpaid':
-        return 'text',"text",'text','active text','text','text','text','text','text',tableShown('Unpaid',PAGE_SIZE=5),1,'/Manage_coltrol#status=Unpaid'
-    if dash.callback_context.triggered[0]['prop_id'] == 'Paid.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Paid':
-        return 'text',"text",'text','text','active text','text','text','text','text',tableShown('Paid',PAGE_SIZE=5),1,'/Manage_coltrol#status=Paid'
-    if dash.callback_context.triggered[0]['prop_id'] == 'Wait_for_production.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=Wait_for_production':
-        return 'text',"text",'text','text','text','active text','text','text','text',tableShown('Wait for production',PAGE_SIZE=5),1,'/Manage_coltrol#status=Wait_for_production'
-    if dash.callback_context.triggered[0]['prop_id'] == 'In_production.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=In_production':
-        return 'text',"text",'text','text','text','text','active text','text','text',tableShown('In production',PAGE_SIZE=5),1,'/Manage_coltrol#status=In_production'
-    if dash.callback_context.triggered[0]['prop_id'] == 'assigned.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=assigned':
-        return 'text',"text",'text','text','text','text','text','active text','text',tableShown('assigned',PAGE_SIZE=5),1,'/Manage_coltrol#status=assigned'
-    if dash.callback_context.triggered[0]['prop_id'] == 'finish_order.n_clicks' or dash.callback_context.triggered[0]['value'] == '#status=end':
-        return 'text',"text",'text','text','text','text','text','text','active text',tableShown('end',PAGE_SIZE=5),1,'/Manage_coltrol#status=end'
-    # if dash.callback_context.triggered[0]['prop_id'] == 'refused_order.n_clicks':
-    #     return 'text',"text",'text','text','text','text','text','text','text','active text',tableShown('end'),1
+    if click_status_propid in statusDict:
+        class_name = []
+        statusDict[click_status_propid] = "active text"
+        for i in statusDict:
+            class_name.append(statusDict[i])
+        return [class_name,tableShown(click_status_propid,PAGE_SIZE=5),1,f'/Manage_coltrol#status={click_status_propid}']
+        
     if dash.callback_context.triggered[0]['prop_id'] == 'search_button.n_clicks' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' or\
         dash.callback_context.triggered[0]['value'] == '?status=search':
-        # return 'text',"text",'text','text','text','text','text','text','text',tableShown('search',current_status,search_order_id,search_order_type,search_start_date,search_end_date),1,search_href
         return page_on_status(href_content+'&order_id',search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
     if dash.callback_context.triggered[0]['prop_id'] == 'page_size.value':
@@ -666,9 +604,9 @@ def table_shown(all_order,need_check_order,checked_order,Unpaid,Paid,Wait_for_pr
         elif page_number < 1:
             return page_on_status(href_content,search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
         return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+    
     if status_confirm_button or end_confirm_button:
-        # return "active text",'text','text','text','text','text','text','text','text',tableShown(current_status,PAGE_SIZE=page_size),1
-        return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        return page_on_status('/Manage_coltrol#status=all_order',search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
     return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
