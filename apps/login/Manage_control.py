@@ -182,6 +182,7 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                 ])])]),)
 
     layout = html.Div(className='content',children=[
+                    html.Div(className='operation',children=[
                         html.Div(className='search-word',children=[
                             html.Label('Order ID:',className='label_font_size'),
                             dcc.Input(id='search_order_id',
@@ -214,7 +215,9 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                                 )
                             ]),
                         html.Div(className='search-word',children=[
-                            dbc.Button(children=['Search'],id='search_button',className='search-button'),]),
+                            dbc.Button(children=['Search'],id='search_button',className='search-button'),
+                            ]),
+                        ]),
                         html.Div(children=[
                                     html.Div(className='gridtable',children=[
                                         html.Table(className='aps-table aps-ani-transition aps-widget order_form',children=[
@@ -224,7 +227,6 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                                             html.Tbody(Tbody)
                                         ]),
                                         html.Div(className='row previous-next-container', children=[
-                                            
                                             dbc.Button(className='all-button',children=['First'],id='first_page', disabled=True),
                                             dbc.Button(className='all-button',children=['Prev'],id='previous_page', disabled=True),
                                             dcc.Input(id='page_number',
@@ -246,10 +248,10 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
                                             html.I('/',className='page-off',id = 'page_off'),
                                             html.Div('page',className='each-page-num'),
 
-                                            ])
-                                        ],),
-                                    ]), 
-                        ])
+                                        ])
+                                    ]),
+                                ]), 
+                ])
 
     return layout
 
