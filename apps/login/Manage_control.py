@@ -471,7 +471,7 @@ def change_status_button_detail(status_click, status_confirm, status_close, stat
                 orders.updateNextStatus(-1,order_id)
             else:
                 orders.updateCurrentStatus(-1,order_id)
-                orders.updateNextStatus(8,order_id)
+                orders.updateNextStatus(1000,order_id)
             Send_email(order_id)
             status_modal[index] = not status_modal[index]
     return status_modal
@@ -496,7 +496,7 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
             status_modal[index] = not status_modal[index]
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm_detail","type":"detail_end_confirm_button"}.n_clicks':
             orders.updateCurrentStatus(-1,order_id)
-            orders.updateNextStatus(8,order_id)
+            orders.updateNextStatus(1000,order_id)
             Send_email(order_id)
             status_modal[index] = not status_modal[index]
     return status_modal
