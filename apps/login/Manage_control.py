@@ -15,7 +15,6 @@ from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
 
-
 def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
     orders = Orders()
     Tbody = []
@@ -43,8 +42,10 @@ def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None
         OrderID=i['OrderID']; Quantity = i['Quantity']; ChipPlat=i['ChipPlat']; ContactName=i['ContactName']
         CurrentStatus=statusDict[i['CurrentStatus']]; NextStatus=statusDict[i['NextStatus']]; CreateTime=i['CreateTime']
         
-        Tbody.append(html.Tr([html.Td(OrderID), html.Td(ChipPlat), html.Td(Quantity), html.Td(ContactName)
-            , html.Td(CurrentStatus), html.Td(NextStatus), html.Td(CreateTime), 
+        Tbody.append(html.Tr([html.Td(OrderID), html.Td(ChipPlat), html.Td(Quantity), html.Td(ContactName), 
+            html.Td(id={'type':'CurrentStatus_td','index':f'{OrderID}_CurrentStatus'},children=CurrentStatus),
+            html.Td(id={'type':'NextStatus_td','index':f'{OrderID}_NextStatus'},children=NextStatus), 
+            html.Td(CreateTime), 
             html.Td([html.Div([
                 html.Ul(className='operation',children=[
                     html.Li([
@@ -286,33 +287,68 @@ def status_button_disabled(status_id):
     State({'type':"status_model",'index':ALL}, "is_open")]
 )
 def change_status_button(status_click, status_confirm, status_close, status_id, status_modal):
+    for index in range(len(status_id)):
+        order_id = status_id[index]['index'].split('_status')[0]
+        if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status","type":"status"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_close","type":"status_close_button"}.n_clicks':
+            status_modal[index] = not status_modal[index]
+        if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_confirm","type":"status_confirm_button"}.n_clicks':
+            status_modal[index] = not status_modal[index]
+        
+    return status_modal
+
+@app.callback(
+    [Output({'type':"CurrentStatus_td",'index':ALL}, "children"),
+    Output({'type':"NextStatus_td",'index':ALL}, "children"),],
+    [
+    Input({'type':"status_confirm_button",'index':ALL}, "n_clicks"),
+    Input({'type':"end_confirm_button",'index':ALL}, "n_clicks"),],
+    [State({'type':"status",'index':ALL}, "id"),]
+)
+def change_td_status(status_confirm,end_confirm,status_id):
+    if not dash.callback_context.triggered:
+        raise PreventUpdate
+    print(dash.callback_context.triggered)
+    currentstatus_res = []
+    nextstatus_res = []
+    statusDict = {}
     orderstatus = OrderStatus()
     allstatus = orderstatus.getAllStatus()
     statusID_list = [eachstatus['OrderStatusID'] for eachstatus in allstatus.iloc][2:]
     last_status_id = statusID_list[-1]
-    if not dash.callback_context.triggered:
-        raise PreventUpdate
+    for eachstatus in allstatus.iloc:
+        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
     orders = Orders()
     for index in range(len(status_id)):
         order_id = status_id[index]['index'].split('_status')[0]
         CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
         NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
-        if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status","type":"status"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_close","type":"status_close_button"}.n_clicks':
-            status_modal[index] = not status_modal[index]
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_status_confirm","type":"status_confirm_button"}.n_clicks':
             if CurrentStatus != last_status_id and NextStatus != last_status_id:
-                orders.updateCurrentStatus(int(statusID_list[statusID_list.index(CurrentStatus)+1]),order_id)
-                orders.updateNextStatus(int(statusID_list[statusID_list.index(NextStatus)+1]),order_id)
+                CurrentStatus = int(statusID_list[statusID_list.index(CurrentStatus)+1])
+                NextStatus = int(statusID_list[statusID_list.index(NextStatus)+1])
+                orders.updateCurrentStatus(CurrentStatus,order_id)
+                orders.updateNextStatus(NextStatus,order_id)
             elif  NextStatus == last_status_id:
-                orders.updateCurrentStatus(int(statusID_list[statusID_list.index(CurrentStatus)+1]),order_id)
+                CurrentStatus = int(statusID_list[statusID_list.index(CurrentStatus)+1])
+                NextStatus = -1
+                orders.updateCurrentStatus(CurrentStatus,order_id)
                 orders.updateNextStatus(-1,order_id)
             else:
                 orders.updateCurrentStatus(-1,order_id)
                 orders.updateNextStatus(-2,order_id)
+                CurrentStatus = -1
+                NextStatus = -2
             Send_email(order_id)
-            status_modal[index] = not status_modal[index]
-        
-    return status_modal
+        if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm","type":"end_confirm_button"}.n_clicks':
+            orders.updateCurrentStatus(-1,order_id)
+            orders.updateNextStatus(-2,order_id)
+            CurrentStatus = -1
+            NextStatus = -2
+            Send_email(order_id)
+        currentstatus_res.append(statusDict[CurrentStatus])
+        nextstatus_res.append(statusDict[NextStatus])
+
+    return currentstatus_res,nextstatus_res
 
 @app.callback(
     Output({'type':"end_model",'index':ALL}, "is_open"),
@@ -325,21 +361,13 @@ def change_status_button(status_click, status_confirm, status_close, status_id, 
 def change_end_button(status_click, status_confirm, status_close, status_id, status_modal):
     if not dash.callback_context.triggered:
         raise PreventUpdate
-    orders = Orders()
     for index in range(len(status_id)):
         order_id = status_id[index]['index'].split('_end')[0]
-        CurrentStatus = int(orders.getDataByOrderID(order_id).iloc[0]['CurrentStatus'])
-        NextStatus = int(orders.getDataByOrderID(order_id).iloc[0]['NextStatus'])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end","type":"end"}.n_clicks' or dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_close","type":"end_close_button"}.n_clicks':
             status_modal[index] = not status_modal[index]
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm","type":"end_confirm_button"}.n_clicks':
-            orders.updateCurrentStatus(-1,order_id)
-            orders.updateNextStatus(-2,order_id)
-            Send_email(order_id)
             status_modal[index] = not status_modal[index]
     return status_modal
-
-
 
 @app.callback(
     [
@@ -452,37 +480,14 @@ def table_shown(menus_id,search_button,first_page,previous_page,next_page,last_p
             return page_on_status(href_content,search_href,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
         return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     
-    if dash.callback_context.triggered[0]['prop_id']:
-        if re.search(r'{"index":"\d+_end_confirm","type":"end_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]) or\
-        re.search(r'{"index":"\d+_status_confirm","type":"status_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]):
-            print('ok')
-            return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+    # if dash.callback_context.triggered[0]['prop_id']:
+    #     if re.search(r'{"index":"\d+_end_confirm","type":"end_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]) or\
+    #     re.search(r'{"index":"\d+_status_confirm","type":"status_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]):
+    #         print('ok')
+    #         return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
     return page_on_status(href_content,search_href,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
 
-
-# @app.callback(
-#     Output('page_body','children'),
-#     [Input({'type':"Detail_button",'index':ALL}, "n_clicks"),Input('Url','search')],
-#     [State({'type':"Detail_button",'index':ALL}, "id"),
-#     ])
-# def detail_page_update(Detail_button,search_content,detail_button_id):
-#     if not dash.callback_context.triggered:
-#         raise PreventUpdate
-#     if not search_content:
-#         raise PreventUpdate
-#     print(search_content)
-#     order_id = search_content.split('=')[1]
-#     # print('ok',123,Detail_button)
-#     print(dash.callback_context.triggered)
-#     # if re.search(r'{"index":"(\d+)_detail","type":"Detail_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]):
-#     #     order_id = re.search(r'{"index":"(\d+)_detail","type":"Detail_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0])
-#     #     if order_id:
-#     #         order_id = order_id[1]
-#     #     print(order_id)
-#     return detial_page(order_id)
-#     # else:
-#     #     return Managelayout()
 
 @app.callback(
     [Output('first_page','disabled'),

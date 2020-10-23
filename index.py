@@ -42,7 +42,7 @@ def display_page(pathname,hash,search):
     elif pathname == '/Manager_console':
         return manager_page()
     elif pathname == '/Manager_console/detail/':
-        order_id = search.split('=')[1].split('&')[0]
+        order_id = search.split('=')[1]
         return detail_page(order_id)
     elif pathname == '/':
     	return html.Div( children=[
