@@ -9,22 +9,28 @@ from apps.login.Register import registerLayout
 from apps.login.Login import loginLayout
 from apps.login.forgot import forgotLayout
 from apps.data.data import layout
-from apps.login.Manage_control import Managelayout, detial_page
+from apps.login.Manage_control import manager_page
+from apps.login.detail_page import detail_page
 
-app.layout = html.Div([
+def page_layout():
+    return html.Div([
     dcc.Location(id = 'url', refresh = False),
     html.Div(id = 'custom-auth-frame', children=[
-    	html.H1('Welcome!'),
-    	html.Button('sign in'),
+        dcc.Interval('graph-update', interval = 100, n_intervals = 0),
+        html.H1('Welcome!'),
+        html.Button('sign in'),
         html.Button('data analysis'),
         html.Button('Login')
     ])
 ])
 
+app.layout = page_layout
+
 @app.callback(Output('custom-auth-frame', 'children'),
               [Input('url', 'pathname'),
+              Input('url','hash'),
               Input('url','search')])
-def display_page(pathname,search):
+def display_page(pathname,hash,search):
     if pathname == '/Register':
         return registerLayout()
     elif pathname == '/Data_analysis':
@@ -33,11 +39,11 @@ def display_page(pathname,search):
         return loginLayout()
     elif pathname == '/forgot':
         return forgotLayout()
-    elif pathname == '/Manage_coltrol':
-        return Managelayout()
-    elif pathname == '/Manage_coltrol/detail/':
-        order_id = search.split('=')[1]
-        return detial_page(order_id)
+    elif pathname == '/Manager_console':
+        return manager_page()
+    elif pathname == '/Manager_console/detail/':
+        order_id = search.split('=')[1].split('&')[0]
+        return detail_page(order_id)
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
