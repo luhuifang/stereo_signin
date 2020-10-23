@@ -18,6 +18,9 @@ class Users(TableServiceBase, UserMixin):
 		elif userid:
 			self.UserID = userid
 			self.LoginName = self.getUserNameById(userid)
+		elif email:
+			self.LoginName = self.getUserNameByEmail(email)
+			self.UserID = self.getUserIdByEmail(email)
 		else:
 			self.UserID = userid
 			self.LoginName = username
@@ -43,18 +46,33 @@ class Users(TableServiceBase, UserMixin):
 			self.City = u['City'][0]
 			self.Organization = u['Organization'][0]
 			self.UserRoleID = u['UserRoleID'][0]
+	
+	def getUsersByOrg(self, org):
+		sql = 'select * from {table} where Organization=%s'.format(table=self.tableName)
+		return self.getAllDataFromQuery(sql, args=(org,))
 
 	def checkExists(self):
 		return self.exists(LoginName=self.LoginName)
+	
+	def existsEmail(self, email):
+		return self.exists(Email=email)
 
 	def getUserIdByName(self, username):
 		sql = 'select UserID from {table} where LoginName=%s'.format(table=self.tableName)
 		return self._getSingleField(sql, args=(username,))
+	
+	def getUserIdByEmail(self, email):
+		sql = 'select UserID from {table} where Email=%s'.format(table=self.tableName)
+		return self._getSingleField(sql, args=(email,))
 
 	def getUserNameById(self, userid):
 		sql = 'select LoginName from {table} where UserID=%s'.format(table=self.tableName)
 		return self._getSingleField(sql, args=(userid,))
 
+	def getUserNameByEmail(self, email):
+		sql = 'select LoginName from {table} where Email=%s'.format(table=self.tableName)
+		return self._getSingleField(sql, args=(email,))
+	
 	def getUserByName(self, username):
 		sql = 'select * from {table} where LoginName=%s'.format(table=self.tableName)
 		return self.getAllDataFromQuery(sql, args=(username,))
@@ -119,6 +137,9 @@ class Users(TableServiceBase, UserMixin):
 
 	def existsUser(self):
 		return self.exists(LoginName=self.LoginName)
+	
+	def setLoginName(self, username):
+		self.LoginName = username
 
 	def setRealName(self, realname):
 		self.RealName = realname
@@ -199,6 +220,10 @@ class Users(TableServiceBase, UserMixin):
 	def getFieldById(self, userid, fieldname):
 		sql = 'select {field} from {table} where UserID=%s'.format(field=fieldname, table=self.tableName)
 		return self._getSingleField(sql, args=(userid,))
+	
+	def getAllByRoleId(self, userRoleID):
+		sql = 'select * from {table} where UserRoleID=%s'.format(table=self.tableName)
+		return self.getAllDataFromQuery(sql, args=(userRoleID,))
 
 	def __getPasswd(self):
 		sql = 'select LoginPasswd from {table} where LoginName=%s'.format(table=self.tableName)
