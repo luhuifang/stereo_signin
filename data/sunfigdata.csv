@@ -1,0 +1,79 @@
+﻿Rate,Annotation,Filter and deduplication,Alignment reference reads,Filiter stat,Adapter Filter,total read
+13.61283507,,unpass filiter,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+19.35249929,EXONIC,DUPLICATION,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+0.026594901,INTRONIC,DUPLICATION,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+2.988855673,INTERGENIC,DUPLICATION,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+18.13785018,TRANSCRIPTOME,DUPLICATION,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+3.07074213,ANTISENSE,DUPLICATION,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+1.12200271,EXONIC,UNIQUE,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+0.001541897,INTRONIC,UNIQUE,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+0.173285327,INTERGENIC,UNIQUE,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+1.051580819,TRANSCRIPTOME,UNIQUE,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+0.17803287,ANTISENSE,UNIQUE,Unique_Mapped_Reads_1,Clean reads_1,Mapping_1,Total reads_1
+13.29040349,,unpass filiter,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+18.89411888,EXONIC,DUPLICATION,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+0.025964979,INTRONIC,DUPLICATION,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+2.918062084,INTERGENIC,DUPLICATION,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+17.70823977,TRANSCRIPTOME,DUPLICATION,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+2.99800899,ANTISENSE,DUPLICATION,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+1.095427121,EXONIC,UNIQUE,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+0.001505375,INTRONIC,UNIQUE,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+0.169180916,INTERGENIC,UNIQUE,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+1.026673232,TRANSCRIPTOME,UNIQUE,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+0.17381601,ANTISENSE,UNIQUE,Unique_Mapped_Reads_2,Clean reads_2,Mapping_2,Total reads_2
+7.178345194,,unpass filiter,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+10.20499547,EXONIC,DUPLICATION,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.014024072,INTRONIC,DUPLICATION,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+1.576088863,INTERGENIC,DUPLICATION,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+9.564484471,TRANSCRIPTOME,DUPLICATION,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+1.61926938,ANTISENSE,DUPLICATION,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.59165653,EXONIC,UNIQUE,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.000813076,INTRONIC,UNIQUE,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.091377137,INTERGENIC,UNIQUE,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.554521529,TRANSCRIPTOME,UNIQUE,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+0.09388062,ANTISENSE,UNIQUE,Multi_Mapping_1,Clean reads_1,Mapping_1,Total reads_1
+6.92945064,,unpass filiter,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+9.85115796,EXONIC,DUPLICATION,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.013537816,INTRONIC,DUPLICATION,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+1.52144118,INTERGENIC,DUPLICATION,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+9.23285538,TRANSCRIPTOME,DUPLICATION,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+1.5631245,ANTISENSE,DUPLICATION,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.57114204,EXONIC,UNIQUE,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.000784884,INTRONIC,UNIQUE,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.08820882,INTERGENIC,UNIQUE,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.53529462,TRANSCRIPTOME,UNIQUE,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0.0906255,ANTISENSE,UNIQUE,Multi_Mapping_2,Clean reads_2,Mapping_2,Total reads_2
+0,,unpass filiter,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,EXONIC,DUPLICATION,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,INTRONIC,DUPLICATION,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,INTERGENIC,DUPLICATION,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,TRANSCRIPTOME,DUPLICATION,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,ANTISENSE,DUPLICATION,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,EXONIC,UNIQUE,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,INTRONIC,UNIQUE,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,INTERGENIC,UNIQUE,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,TRANSCRIPTOME,UNIQUE,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,ANTISENSE,UNIQUE,Chimeric_1,Clean reads_1,Mapping_1,Total reads_1
+0,,unpass filiter,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,EXONIC,DUPLICATION,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,INTRONIC,DUPLICATION,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,INTERGENIC,DUPLICATION,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,TRANSCRIPTOME,DUPLICATION,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,ANTISENSE,DUPLICATION,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,EXONIC,UNIQUE,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,INTRONIC,UNIQUE,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,INTERGENIC,UNIQUE,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,TRANSCRIPTOME,UNIQUE,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+0,ANTISENSE,UNIQUE,Chimeric_2,Clean reads_2,Mapping_2,Total reads_2
+18.074127,,,Unmapping_Read_1,Clean reads_1,Mapping_1,Total reads_1
+19.657645,,,Unmapping_Read_2,Clean reads_2,Mapping_2,Total reads_2
+1.07,,,Low_Quality_Reads_1,Filiter reads_1,Mapping_1,Total reads_1
+0.96842,,,Low_Quality_Reads_2,Filiter reads_2,Mapping_2,Total reads_2
+8,,,Too_Many_N_Reads_1,Filiter reads_1,Mapping_1,Total reads_1
+2,,,Too_Many_N_Reads_2,Filiter reads_2,Mapping_2,Total reads_2
+7.87,,,Too_Short_Reads_1,Filiter reads_1,Mapping_1,Total reads_1
+7.19,,,Too_Short_Reads_2,Filiter reads_2,Mapping_2,Total reads_2
+0,,,Too_Long_Reads_1,Filiter reads_1,Mapping_1,Total reads_1
+0,,,Too_Long_Reads_2,Filiter reads_2,Mapping_2,Total reads_2
+148.05,,,,,UnMapping_1,Total reads_2
+143.45,,,,,UnMapping_2,Total reads_2

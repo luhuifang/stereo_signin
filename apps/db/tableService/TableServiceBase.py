@@ -1,5 +1,5 @@
 from apps.db.tableService.ConnectMYSQL import ConnectMYSQL
-from db.database_settings import MYSQL_LOCAL as MYSQL
+from apps.db.database_settings import MYSQL_LOCAL as MYSQL
 
 class TableServiceBase(object):
 	def __init__(self, tableName):
@@ -23,10 +23,6 @@ class TableServiceBase(object):
 		del all_field['tableName']
 		del all_field['dbName']
 		return all_field
-	
-	def getNonNullField(self):
-		all_field = self.getAllField()
-		return {k:v for k,v in all_field.items() if v}
 
 	def getAllData(self):
 		return self.DB.fetchAll(self.tableName, db_name=self.dbName)
@@ -43,5 +39,3 @@ class TableServiceBase(object):
 
 	def getTableColumns(self):
 		return self.searchColumnNames(table_name=self.tableName, table_schema=self.dbName)
-	
-	

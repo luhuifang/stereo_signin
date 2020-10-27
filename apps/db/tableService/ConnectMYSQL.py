@@ -34,7 +34,6 @@ class ConnectMYSQL(object):
 			query = 'select * from {0}'.format(table)
 		try:
 			data = self.searchDB(query, args)
-
 			conditions = {'table_name':table}
 			if db_name is not None:
 				conditions['table_schema'] = db_name

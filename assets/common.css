@@ -5,14 +5,15 @@
 	outline: none;
 }
 
-.input_part{
-	margin-bottom: 8px;
-	font-size: 13px;
+.top-bar {
+    margin-top: 4px;
+    height: 36px;
+    line-height: 36px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 10px;
+    position: relative;
+    padding: 25px;
 }
-.input_part input{
-	border: 0px solid #ECECEC;
-}
-
 .login_button{
 	margin-top: 10px;
 	display:block;
@@ -21,4 +22,194 @@
 }
 .login_button:hover{
 	border-color: var(--stereo-blue-3);
+	text-decoration: underline;
+}
+
+.register_button{
+	margin-top: 10px;
+	display:block;
+	margin-left: 78px;
+	border: 1px solid var(--stereo-blue-4);
+	background-color: var(--stereo-blue-4);
+}
+.register_button:hover{
+	border-color: var(--stereo-blue-3);
+	text-decoration: underline;
+}
+.margin-left-15{
+	margin-left: -15px;
+}
+
+.card-ss{
+	height:36px;
+	padding: 2px 2px;
+	width:174px;
+}
+
+.card-sma{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	height: 100px;
+	width: 172.2px;
+	padding: 2px 2px;
+	margin-left: 15px;
+	-moz-box-shadow:4px 2px 5px #333333; 
+	-webkit-box-shadow:4px 2px 5px #333333; 
+	box-shadow: 2px 2px 2px lightgrey;
+}
+
+.card-sma-1{
+	margin-bottom: 20px;
+	margin-top: 20px;
+	height: 100px;
+	width: 250.5px;
+	padding: 2px 2px;
+	margin-left: 25px;
+	-moz-box-shadow:4px 2px 5px #333333; 
+	-webkit-box-shadow:4px 2px 5px #333333; 
+	box-shadow: 2px 2px 2px lightgrey;
+}
+.card-mid{
+	margin-top: 20px;
+	height: 500px;
+	padding: 0px 0px;
+	box-shadow: 2px 2px 2px lightgrey;
+}
+.card-big{
+	margin-top: 20px;
+	height: 500px;
+	margin-left: 0px;
+	padding: 0px;
+	box-shadow: 2px 2px 2px lightgrey;
+}
+
+.card-lg{
+	margin-top: 20px;
+	height: 550px;
+	margin-left: 0px;
+	padding: 0px;
+	box-shadow: 2px 2px 2px lightgrey;
+}
+
+.card-tabs{
+	margin: 15px;
+	padding: 20px;
+	
+}
+
+
+
+.button-style{
+	background-color: white;
+	border: 1px solid black;
+	border-radius: 50%;
+	font-size: 12px;
+	padding: 0px 5px;
+}
+.button-style:hover {
+    background-color: black; 
+    color: white;
+}
+h4.card-title{
+	font-weight:700;
+	font-size:25px;
+	font-size: 1.2em;
+	font-weight: bold;
+	padding-left: 10px;
+	margin-top: 10px;
+
+}
+p.text-P{
+	font-family: DIN Next LT Pro;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 15px;
+    margin: 0px;
+}
+h4.text-P{
+	font-family: DIN Next LT Pro;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: right;
+    background-color: #fff;
+    margin-top: 10px;
+
+}
+p.text-td{
+	font-family: DIN Next LT Pro;
+    font-size: 1.0rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 5px;
+    margin: 0px;
+    padding-top: 15px;
+}
+
+
+.card-fig{
+	margin:15px;
+}
+
+.text-green{
+	color: green
+}
+
+.table-space{
+	border-spacing: 10px;
+}
+
+.text-sm{
+	font-family: DIN Next LT Pro;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    text-align: left;
+    background-color: #fff;
+    padding-left: 5px;
+    margin: 0px;
+    padding-top: 15px;
+}
+
+table.table{
+	margin-bottom: 0px;
+}
+
+
+table.gridtable{
+	margin-top: 20px;	
+	border: 1px solid #ddd;
+	box-shadow: 2px 2px 2px lightgrey;
+	border-collapse:collapse;
+	vertical-align:middle!important;
+}
+
+table.gridtable th {
+	text-align:left;
+	border-top: 1px;
+	font-size: 0.85rem;
+	height:94.7px;
+	vertical-align:middle!important;
+
+}
+table.gridtable td {
+    height:94.7px;
+    font-size: 0.95rem;
+    vertical-align:middle!important;
+	text-align: center;
+	padding: 15px;
+    
+}
+
+.margin_top_15px{
+	margin-top: 15px!important
 }
