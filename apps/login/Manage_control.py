@@ -16,244 +16,237 @@ from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
 
-def tableShown(status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
-    orders = Orders()
-    Tbody = []
-    statusDict = {}
-    orderstatus = OrderStatus()
-    allstatus = orderstatus.getAllStatus()
-    for eachstatus in allstatus.iloc:
-        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-    if status == 'all_order':
-        data = orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
-    elif status == 'search':
-        data = orders.getDataBySearch(searchstatus,Orderid,ChipPlatType,DateStart,DateEnd).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
-    else:
-        data = orders.getDataByStatus(status.replace('_',' ')).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+class ManagerControl():
+    def __init__(self, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
+        self.searchstatus = searchstatus
+        self.Orderid = Orderid
+        self.ChipPlatType = ChipPlatType
+        self.DateStart = DateStart
+        self.DateEnd = DateEnd
+        self.page_count = page_count
+        self.PAGE_SIZE = PAGE_SIZE
+        self.orders = Orders()
+        self.orderstatus = OrderStatus()
+        self.allstatus = self.orderstatus.getAllStatus()
+        self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+        self.statusDict2Name = {}
+        self.statusDict2ID = {}
+        for self.eachstatus in self.allstatus.iloc:
+            self.statusDict2ID[self.eachstatus['OrderStatusName']] = self.eachstatus['OrderStatusID']
+            self.statusDict2Name[self.eachstatus['OrderStatusID']] = self.eachstatus['OrderStatusName']
 
-    row_nums = data.shape[0]
-    if row_nums/PAGE_SIZE == 0:
-        page_num = 1
-    elif row_nums/PAGE_SIZE > row_nums//PAGE_SIZE:
-        page_num = row_nums//PAGE_SIZE + 1
-    elif row_nums/PAGE_SIZE == row_nums//PAGE_SIZE:
-        page_num = row_nums//PAGE_SIZE
-
-    for i in data.iloc[int(PAGE_SIZE*int(page_count))-PAGE_SIZE:int(PAGE_SIZE*int(page_count))].iloc:
-        OrderID=i['OrderID']; Quantity = i['Quantity']; ChipPlat=i['ChipPlat']; ContactName=i['ContactName']
-        CurrentStatus=statusDict[i['CurrentStatus']]; NextStatus=statusDict[i['NextStatus']]; CreateTime=i['CreateTime']
-        
-        Tbody.append(html.Tr([html.Td(OrderID), html.Td(ChipPlat), html.Td(Quantity), html.Td(ContactName), 
-            html.Td(id={'type':'CurrentStatus_td','index':f'{OrderID}_CurrentStatus'},children=CurrentStatus),
-            html.Td(id={'type':'NextStatus_td','index':f'{OrderID}_NextStatus'},children=NextStatus), 
-            html.Td(CreateTime), 
-            html.Td([html.Div([
-                html.Ul(className='operation',children=[
-                    html.Li([
-                        dbc.Button(children=['Detail'],color="link",
-                            href=f'/Manager_console/detail/?orderID={OrderID}',
-                            id={'type':'Detail_button','index':f'{OrderID}_detail'},className='collapse-type'),
-                        html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_status'),
-                        dbc.Button(children=['Confirm to next status'],color="link",className='a-type collapse-type',
-                            id={'type':"status",'index':f'{OrderID}_status'}),
-                        dbc.Modal([
-                            dbc.ModalHeader("Confirm to next status"),
-                            dbc.ModalBody(["Are you sure to change the order ", html.B(OrderID), " to next status?"]),
-                            dbc.ModalFooter([
-                                dbc.Button("Confirm", 
-                                    id={'type':"status_confirm_button",'index':f"{OrderID}_status_confirm"}, className="ml-auto all-button"),
-                                dbc.Button("Cancel", 
-                                    id={'type':"status_close_button",'index':f"{OrderID}_status_close"}, className="ml-auto maginRight all-button")]
-                                ),
-                            ],
-                            id={'type':"status_model",'index':f"{OrderID}_status_modal"},
-                            centered=True,
-                        ),
-                        html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_end'),
-                        dbc.Button(children=['End'],className='a-type collapse-type',color="link ",
-                            id={'type':"end",'index':f'{OrderID}_end'}),
-                        dbc.Modal([
-                            dbc.ModalHeader(["End the orders"]),
-                            dbc.ModalBody(["Are you sure to end the order ", html.B(OrderID), "?"]),
-                            dbc.ModalFooter([
-                                dbc.Button("Confirm", 
-                                    id={'type':"end_confirm_button",'index':f"{OrderID}_end_confirm"}, className="ml-auto all-button"),
-                                dbc.Button("Cancel", 
-                                    id={'type':"end_close_button",'index':f"{OrderID}_end_close"}, className="ml-auto maginRight all-button")]
-                                ),
-                            ],
-                            id={'type':"end_model",'index':f"{OrderID}_end_modal"},
-                            centered=True,
-                        ),
-                        ])
-                    ])
-                ])])]),)
-
-    layout = html.Div(className='content',children=[
-                    html.Div(className='operation',children=[
-                        html.Div(className='search-word',children=[
-                            html.Label('Order ID:',className='label_font_size'),
-                            dcc.Input(id='search_order_id',
-                                    type='text',
-                                    className="input_class",
-                                    minLength= 8,
-                                    maxLength= 25,
-                                    value=Orderid,
-                                    placeholder='Enter Order ID',)
-                            ]),
-                        html.Div(className='search-word',children=[
-                            html.Label('Chip Plat:',className='label_font_size'),
-                            dcc.Input(id='search_order_type',
-                                    type='text',
-                                    className="input_class",
-                                    minLength= 8,
-                                    maxLength= 25,
-                                    value=ChipPlatType,
-                                    placeholder='Enter Order Type',)
-                            ]),
-                        html.Div(className='search-word',children=[
-                            html.Label('Order Date:',className='label_font_size'),
-                            dcc.DatePickerRange(
-                                    id='search_date',
-                                    display_format='YYYY-MM-DD',
-                                    className='date_input_class',
-                                    clearable=True,
-                                    start_date=DateStart,
-                                    end_date = DateEnd,
-                                )
-                            ]),
-                        html.Div(className='search-word',children=[
-                            dbc.Button(children=['Search'],id='search_button',
-                                href=f'/Manager_console#status={status}&order_id={Orderid}&order_type={ChipPlatType}&order_date={DateStart}-{DateEnd}',className='search-button'),
-                            ]),
-                        ]),
-                        html.Div(children=[
-                                    html.Div(className='',children=[
-                                        html.Table(className='aps-table aps-ani-transition aps-widget order_form',children=[
-                                            html.Thead(
-                                                html.Tr([html.Th('OrderID'),html.Th('ChipPlat'),html.Th('Quantity'),html.Th('ContactName'),
-                                                    html.Th('CurrentStatus'),html.Th('NextStatus'),html.Th('CreateTime'),html.Th('Operation')])),
-                                            html.Tbody(Tbody)
-                                        ]),
-                                        html.Div(className='row previous-next-container', children=[
-                                            dbc.Button(className='all-button',children=['First'],id='first_page', disabled=True),
-                                            dbc.Button(className='all-button',children=['Prev'],id='previous_page', disabled=True),
-                                            dcc.Input(id='page_number',
-                                                    type='text',
-                                                    className="page-input",
-                                                    value=1,),
-                                            html.I('/',className='page-off',id = 'page_off',role=status),
-                                            html.Div(page_num,id='total_page_num',className='total-page-num'),
-                                            
-                                            dbc.Button(className='all-button',children=['Next'],id='next_page'),
-                                            dbc.Button(className='all-button',children=['Last'],id='last_page'),
-                                            dcc.Dropdown(
-                                                id = 'page_size',
-                                                options=[{'label': v, 'value': v} for v in [5,10,20,50]],
-                                                value=PAGE_SIZE,
-                                                clearable=False,
-                                                className= 'page-size-select',
-                                                ),
-                                            html.I('/',className='page-off'),
-                                            html.Div('page',className='each-page-num'),
-
-                                        ])
-                                    ]),
-                                ]), 
-                ])
-
-    return layout
-
-def manager_page():
-    return html.Div([
-            # dcc.Location(id = 'Url', refresh = False),
-            dbc.Navbar([
-                    html.Div(className='col-md-2',children=[
-                        html.A(               
-                            dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
-                    href="#",
-                    ),]),
-                    html.Div(className='col-md-2 offset-md-8',children=[
-                        html.Div(className='dropdown',children=[
-                            html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
-                            html.Div(className='dropdown-content',children=[
-                                html.A(children=['sssss'],href='#'),
-                                html.A(children=['sssss'],href='/')
-                                ])
-                            ]),   
-                        ]),           
-                ],
-                color='#153057',
-                dark=True,
-                className='row'
-                ),
-            html.Div(id="page_body",children=Managelayout())
-        ])
-
-def Managelayout():
-    statusDict = {}
-    menus = [dbc.Button(id = {'index':'all_order','type':'menus_id'},
-        href='#all_order',color='link',
-        children=[html.P(className='icon'),'All Order'],className="text"),]
-    orderstatus = OrderStatus()
-    allstatus = orderstatus.getAllStatus()
-    for eachstatus in allstatus.iloc:
-        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-    for i in statusDict.values():
-        if i == '' or i == 'end':
-            pass
+    def data_get(self, status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None):
+        self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+        if status == 'all_order':
+            self.data = self.data
+        elif status == 'search':
+            self.data = self.orders.getDataBySearch(searchstatus,Orderid,ChipPlatType,DateStart,DateEnd).loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
         else:
-            ii = i.replace(' ','_')
-            single_mennu = dbc.Button(id = {'index':ii,'type':'menus_id'},
-                href=f'#{ii}',color='link',
-                children=[html.P(className='icon'), i],className="text")
-            menus.append(single_mennu)
-    menus.append(dbc.Button(id = {'index':'end','type':'menus_id'},
-        href='#end',color='link',
-        children=[html.P(className='icon'),"Finish Order"],className="text"))
-    return html.Div(id= 'main_div',children=[
-                html.Form(className='con',children=[
-                    html.Div(className='row',children=[
-                        html.Div(className='col-md-2 col-xs-4',children=[
-                            dbc.Card(
-                                dbc.CardBody([
-                                        dbc.Navbar(className='brand',children=[dbc.NavbarBrand('Order review',className='box-style-left')]),
-                                        html.Div(className='mennu',children=getOrderMenu()
-                                        )
-                                    ]),className='side'
-                                ),
+            self.data = self.data[self.data['CurrentStatus']==self.statusDict2ID[status.replace('_',' ')]]
+        return self.data
+
+    def tableShown(self, data, Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
+        self.Orderid = Orderid
+        self.ChipPlatType = ChipPlatType
+        self.DateStart = DateStart
+        self.DateEnd = DateEnd
+        self.page_count = page_count
+        self.PAGE_SIZE = PAGE_SIZE
+        self.data = data
+        Tbody = []
+        row_nums = self.data.shape[0]
+        if row_nums/self.PAGE_SIZE == 0:
+            total_page_num = 1
+        elif row_nums/self.PAGE_SIZE > row_nums//self.PAGE_SIZE:
+            total_page_num = row_nums//self.PAGE_SIZE + 1
+        elif row_nums/self.PAGE_SIZE == row_nums//self.PAGE_SIZE:
+            total_page_num = row_nums//self.PAGE_SIZE
+
+        for i in self.data.iloc[int(self.PAGE_SIZE*int(self.page_count))-self.PAGE_SIZE:int(self.PAGE_SIZE*int(self.page_count))].iloc:
+            OrderID=i['OrderID']; Quantity = i['Quantity']; ChipPlat=i['ChipPlat']; ContactName=i['ContactName']
+            CurrentStatus=self.statusDict2Name[i['CurrentStatus']]; NextStatus=self.statusDict2Name[i['NextStatus']]; CreateTime=i['CreateTime']
+            
+            Tbody.append(html.Tr([html.Td(OrderID), html.Td(ChipPlat), html.Td(Quantity), html.Td(ContactName), 
+                html.Td(id={'type':'CurrentStatus_td','index':f'{OrderID}_CurrentStatus'},children=CurrentStatus),
+                html.Td(id={'type':'NextStatus_td','index':f'{OrderID}_NextStatus'},children=NextStatus), 
+                html.Td(CreateTime), 
+                html.Td([html.Div([
+                    html.Ul(className='operation',children=[
+                        html.Li([
+                            dbc.Button(children=['Detail'],color="link",
+                                href=f'/Manager_console/detail/?orderID={OrderID}',
+                                id={'type':'Detail_button','index':f'{OrderID}_detail'},className='collapse-type'),
+                            html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_status'),
+                            dbc.Button(children=['Confirm to next status'],color="link",className='a-type collapse-type',
+                                id={'type':"status",'index':f'{OrderID}_status'}),
+                            dbc.Modal([
+                                dbc.ModalHeader("Confirm to next status"),
+                                dbc.ModalBody(["Are you sure to change the order ", html.B(OrderID), " to next status?"]),
+                                dbc.ModalFooter([
+                                    dbc.Button("Confirm", 
+                                        id={'type':"status_confirm_button",'index':f"{OrderID}_status_confirm"}, className="ml-auto all-button"),
+                                    dbc.Button("Cancel", 
+                                        id={'type':"status_close_button",'index':f"{OrderID}_status_close"}, className="ml-auto maginRight all-button")]
+                                    ),
+                                ],
+                                id={'type':"status_model",'index':f"{OrderID}_status_modal"},
+                                centered=True,
+                            ),
+                            html.I('|',className='cut-off-rule',id=f'{OrderID}_cut_end'),
+                            dbc.Button(children=['End'],className='a-type collapse-type',color="link ",
+                                id={'type':"end",'index':f'{OrderID}_end'}),
+                            dbc.Modal([
+                                dbc.ModalHeader(["End the orders"]),
+                                dbc.ModalBody(["Are you sure to end the order ", html.B(OrderID), "?"]),
+                                dbc.ModalFooter([
+                                    dbc.Button("Confirm", 
+                                        id={'type':"end_confirm_button",'index':f"{OrderID}_end_confirm"}, className="ml-auto all-button"),
+                                    dbc.Button("Cancel", 
+                                        id={'type':"end_close_button",'index':f"{OrderID}_end_close"}, className="ml-auto maginRight all-button")]
+                                    ),
+                                ],
+                                id={'type':"end_model",'index':f"{OrderID}_end_modal"},
+                                centered=True,
+                            ),
+                            ])
+                        ])
+                    ])])]),)
+
+        layout = html.Div(className='content',children=[
+                        html.Div(className='operation',children=[
+                            html.Div(className='search-word',children=[
+                                html.Label('Order ID:',className='label_font_size'),
+                                dcc.Input(id='search_order_id',
+                                        type='text',
+                                        className="input_class",
+                                        minLength= 8,
+                                        maxLength= 25,
+                                        value=self.Orderid,
+                                        placeholder='Enter Order ID',)
+                                ]),
+                            html.Div(className='search-word',children=[
+                                html.Label('Chip Plat:',className='label_font_size'),
+                                dcc.Input(id='search_order_type',
+                                        type='text',
+                                        className="input_class",
+                                        minLength= 8,
+                                        maxLength= 25,
+                                        value=self.ChipPlatType,
+                                        placeholder='Enter Order Type',)
+                                ]),
+                            html.Div(className='search-word',children=[
+                                html.Label('Order Date:',className='label_font_size'),
+                                dcc.DatePickerRange(
+                                        id='search_date',
+                                        display_format='YYYY-MM-DD',
+                                        className='date_input_class',
+                                        clearable=True,
+                                        start_date=self.DateStart,
+                                        end_date = self.DateEnd,
+                                    )
+                                ]),
+                            html.Div(className='search-word',children=[
+                                dbc.Button(children=['Search'],id='search_button',
+                                    className='search-button'),
+                                ]),
                             ]),
-                        html.Div(id='order_table',className='col-md-10 col-xs-8',children=tableShown('all_order'),
-                            )
-                        ]),
+                            html.Div(children=[
+                                        html.Div(className='',children=[
+                                            html.Table(className='aps-table aps-ani-transition aps-widget order_form',children=[
+                                                html.Thead(
+                                                    html.Tr([html.Th('OrderID'),html.Th('ChipPlat'),html.Th('Quantity'),html.Th('ContactName'),
+                                                        html.Th('CurrentStatus'),html.Th('NextStatus'),html.Th('CreateTime'),html.Th('Operation')])),
+                                                html.Tbody(Tbody)
+                                            ]),
+                                            html.Div(className='row previous-next-container', children=[
+                                                dbc.Button(className='all-button',children=['First'],id='first_page', disabled=True),
+                                                dbc.Button(className='all-button',children=['Prev'],id='previous_page', disabled=True),
+                                                dcc.Input(id='page_number',
+                                                        type='text',
+                                                        className="page-input",
+                                                        value=1,
+                                                        ),
+                                                html.I('/',className='page-off',id = 'page_off'),
+                                                html.Div(total_page_num,id='total_page_num',className='total-page-num'),
+                                                
+                                                dbc.Button(className='all-button',children=['Next'],id='next_page'),
+                                                dbc.Button(className='all-button',children=['Last'],id='last_page'),
+                                                dcc.Dropdown(
+                                                    id = 'page_size',
+                                                    options=[{'label': v, 'value': v} for v in [1,2,5,10,20,50]],
+                                                    value=self.PAGE_SIZE,
+                                                    clearable=False,
+                                                    className= 'page-size-select',
+                                                    ),
+                                                html.I('/',className='page-off'),
+                                                html.Div('page',className='each-page-num'),
+
+                                            ])
+                                        ]),
+                                    ]), 
                     ])
+
+        return layout
+ 
+    def manager_page(self):
+        return html.Div([
+                dbc.Navbar([
+                        html.Div(className='col-md-2',children=[
+                            html.A(               
+                                dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
+                        href="#",
+                        ),]),
+                        html.Div(className='col-md-2 offset-md-8',children=[
+                            html.Div(className='dropdown',children=[
+                                html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
+                                html.Div(className='dropdown-content',children=[
+                                    html.A(children=['sssss'],href='#'),
+                                    html.A(children=['sssss'],href='/')
+                                    ])
+                                ]),   
+                            ]),           
+                    ],
+                    color='#153057',
+                    dark=True,
+                    className='row'
+                    ),
+                html.Div(id="page_body",children=self.Managelayout())
             ])
 
+    def Managelayout(self):
+        menus = [html.A(id = {'index':'all_order','type':'menus_id'},
+            href='#all_order',
+            children=[html.P(className='icon'),'All Order'],className="active text"),]
+        for i in self.statusDict2Name.values():
+            if i == '' or i == 'end':
+                pass
+            else:
+                ii = i.replace(' ','_')
+                single_mennu = html.A(id = {'index':ii,'type':'menus_id'},
+                    href=f'#{ii}',
+                    children=[html.P(className='icon'), i],className="text")
+                menus.append(single_mennu)
+        menus.append(html.A(id = {'index':'end','type':'menus_id'},
+            href='#end',
+            children=[html.P(className='icon'),"Finish Order"],className="text"))
+        return html.Div(id= 'main_div',children=[
+                    html.Form(className='con',children=[
+                        html.Div(className='row',children=[
+                            html.Div(className='col-md-2 col-xs-4',children=[
+                                dbc.Card(
+                                    dbc.CardBody([
+                                            dbc.Navbar(className='brand',children=[dbc.NavbarBrand('Order review',className='box-style-left')]),
+                                            html.Div(className='mennu',children=menus
+                                            )
+                                        ]),className='side'
+                                    ),
+                                ]),
+                            html.Div(id='order_table',className='col-md-10 col-xs-8',children=self.tableShown(self.data),
+                                )
+                            ]),
+                        ])
+                ])
 
-def page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size):
-    try:
-        status = href_content.split('#')[1]
-        search_status = href_content.split('#')[1].split('&')[0]
-    except:
-        status,search_status = '',''
-    ## 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
-    statusDict = {'all_order':'text'}
-    orderstatus = OrderStatus()
-    allstatus = orderstatus.getAllStatus()
-    for eachstatus in allstatus.iloc:
-        if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
-            continue
-        else:
-            statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
-    statusDict['end'] = 'text'
-    ## 判断当前的点击在哪一个状态中
-    print(status)
-    if status in statusDict:
-        return tableShown(status,page_count=page_number,PAGE_SIZE=page_size),page_number
-    elif search_status in statusDict:
-        return tableShown('search',search_status,search_order_id,search_order_type,search_start_date,search_end_date,page_count=page_number,PAGE_SIZE=page_size),page_number
-
-    return tableShown('all_order',page_count=page_number,PAGE_SIZE=page_size),page_number
 
 @app.callback(
     [Output({'type':"status",'index':ALL}, "disabled"),
@@ -307,16 +300,15 @@ def change_status_button(status_click, status_confirm, status_close, status_id, 
 def change_td_status(status_confirm,end_confirm,status_id):
     if not dash.callback_context.triggered:
         raise PreventUpdate
-    # print(dash.callback_context.triggered)
     currentstatus_res = []
     nextstatus_res = []
-    statusDict = {}
+    statusDict2Name = {}
     orderstatus = OrderStatus()
     allstatus = orderstatus.getAllStatus()
     statusID_list = [eachstatus['OrderStatusID'] for eachstatus in allstatus.iloc][2:]
     last_status_id = statusID_list[-1]
     for eachstatus in allstatus.iloc:
-        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
+        statusDict2Name[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
     orders = Orders()
     for index in range(len(status_id)):
         order_id = status_id[index]['index'].split('_status')[0]
@@ -345,8 +337,8 @@ def change_td_status(status_confirm,end_confirm,status_id):
             CurrentStatus = -1
             NextStatus = -2
             Send_email(order_id)
-        currentstatus_res.append(statusDict[CurrentStatus])
-        nextstatus_res.append(statusDict[NextStatus])
+        currentstatus_res.append(statusDict2Name[CurrentStatus])
+        nextstatus_res.append(statusDict2Name[NextStatus])
 
     return currentstatus_res,nextstatus_res
 
@@ -369,37 +361,6 @@ def change_end_button(status_click, status_confirm, status_close, status_id, sta
             status_modal[index] = not status_modal[index]
     return status_modal
 
-def getOrderMenu():
-    statusDict = {}
-    count=0
-    menus = [dbc.Button('All Order', id={"type":"order_menu", 'id':count}, href=f'#all_order', color='link', block=True)]
-    orderstatus = OrderStatus()
-    allstatus = orderstatus.getAllStatus()
-    for eachstatus in allstatus.iloc:
-        statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-    for s_name in statusDict.values():
-        if s_name == '' or s_name == 'end':
-            continue
-        count+=1
-        menus.append(dbc.Button(s_name, id={"type":"order_menu", 'id':count},
-            href='#{0}'.format(s_name.replace(' ', '_')),color='link',block=True))
-    count+=1
-    menus.append(dbc.Button('Finish Order', id={"type":"order_menu", 'id':count},href=f'#end', color='link', block=True))
-    return dbc.ButtonGroup(menus, vertical=True, style={'width':'100%'})
-
-@app.callback(
-    Output({"type":"order_menu", 'id':ALL},'active'),
-    [Input('url', 'hash')],
-    [State({"type":"order_menu", 'id':ALL},'n_clicks')]
-)
-def click_menu(url_hash, menu_n):
-    print(dash.callback_context.triggered)
-    active=[False]*len(menu_n)
-    if url_hash:
-        idx = url_hash.lstrip("#").split("_", 1)[0]
-        if idx.isdigit():
-            active[eval(idx)] =True
-    return active
 
 @app.callback(
     [Output('order_table','children'),
@@ -423,247 +384,57 @@ def click_menu(url_hash, menu_n):
     State('search_date','end_date'),
     State('page_number','value'),
     State('total_page_num','children'),
-    State({'type':"detail_end_confirm_button",'index':ALL}, "n_clicks"),
-    State({'type':"detail_status_confirm_button",'index':ALL}, "n_clicks"),
-    State({'type':"back_button",'index':ALL}, "n_clicks")]
+    ]
     )
 def shown_table(url_hash,search_button,first_page,previous_page,next_page,last_page,\
     search_order_id_submit,search_order_type_submit,search_date_submit,page_number_submit,page_size,\
-    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num,\
-    detail_end_confirm_button,detail_status_confirm_button,back_button):
+    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num):
+    print(dash.callback_context.triggered)
+    managercontrol = ManagerControl()
+    if url_hash:
+        current_status = url_hash.strip('#')
+    else:
+        current_status = 'all_order'
+    page_number = int(page_number)
+    data = managercontrol.data_get(current_status)
+
     if dash.callback_context.triggered[0]['prop_id'] == 'search_button.n_clicks' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit' or\
         dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit' or\
-        dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' or\
-        dash.callback_context.triggered[0]['value'] == '?status=search':
-        return page_on_status(url_hash+'&order_id',1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-    if dash.callback_context.triggered[0]['prop_id'] == 'page_size.value':
-        return page_on_status(url_hash,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
+        dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit':
+        data = managercontrol.data_get('search',current_status,search_order_id,search_order_type,search_start_date,search_end_date)
+        page_number = 1
+    
+    if search_order_id or search_order_type or search_start_date or search_end_date and \
+    dash.callback_context.triggered[0]['prop_id'] != 'url.hash':
+        data = managercontrol.data_get('search',current_status,search_order_id,search_order_type,search_start_date,search_end_date)
+    
+    if dash.callback_context.triggered[0]['prop_id'] == 'url.hash':
+        page_number = 1
+        data = managercontrol.data_get(current_status)
+        search_order_id,search_order_type,search_start_date,search_end_date = '','',None,None
+        
     if dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
         page_number = 1
-        return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'previous_page.n_clicks':
-        page_number -= 1
-        return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        if page_number <= 1:
+            page_number = 1
+        else:
+            page_number -= 1
     if dash.callback_context.triggered[0]['prop_id'] == 'next_page.n_clicks':
-        page_number += 1
-        return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+        if page_number >= total_page_num:
+            page_number = total_page_num
+        else:
+            page_number += 1
     if dash.callback_context.triggered[0]['prop_id'] == 'last_page.n_clicks':
         page_number = int(total_page_num)
-        return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
     if dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit':
         if page_number > int(total_page_num):
-            return page_on_status(url_hash,int(total_page_num),search_order_id,search_order_type,search_start_date,search_end_date,page_size)
+            page_number = int(total_page_num)
         elif page_number < 1:
-            return page_on_status(url_hash,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-        return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-    
-    return page_on_status(url_hash,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-
-# #buttonGroup
-# def getOrderMenu():
-#     statusDict = {}
-#     count=0
-#     menus=[dbc.Button('All Order', id={"type":"order_menu", 'id':count}, 
-#         href='#all_order', 
-#         color='link', block=True)]
-#     orderstatus = OrderStatus()
-#     allstatus = orderstatus.getAllStatus()
-#     for eachstatus in allstatus.iloc:
-#         statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
-#     for s_name in statusDict.values():
-#         if s_name == '' or s_name == 'end':
-#             continue
-#         count += 1
-#         menus.append(dbc.Button(s_name, id={"type":"order_menu", 'id':count},
-#             href='#{0}'.format(s_name.replace(' ', '_')),
-#              color='link', block=True))
-#     count += 1
-#     menus.append(dbc.Button('Finish Order', id={"type":"order_menu", 'id':count},
-#         href='#end_order', 
-#         color='link', block=True))
-#     return dbc.ButtonGroup(menus, vertical=True, style={'width':'100%'})
-
-# @app.callback(
-#     Output({"type":"order_menu", 'id':ALL},'active'),
-#     [Input('url','url_hash')]
-#     [State({"type":"order_menu", 'id':ALL},'n_clicks')]
-# )
-# def click_menu(url_hash,menu_n):
-#     if not dash.callback_context.triggered:
-#         raise PreventUpdate
-#     print(dash.callback_context.triggered)
-#     triggered = dash.callback_context.triggered[0]
-#     active = [False]*len(menu_n)
-#     idx = json.loads(triggered['prop_id'].replace('.n_clicks',''))['id']
-#     active[idx]=True
-#     return active
-
-# @app.callback(
-#     Output({'type':"menus_id",'index':ALL},'active'),
-#     [Input('url','hash')],
-#     [State({'type':"menus_id",'index':ALL},'n_clicks')]
-#     )
-# def change_menus_class(url_hash,menus_id):
-#     print(url_hash)
-#     # if not dash.callback_context.triggered:
-#     #     raise PreventUpdate
-#     print(dash.callback_context.triggered)
-#     # if dash.callback_context.triggered[0]['prop_id']:
-#     #     click_status = re.search(r'{"index":"(.*)","type":"menus_id"',dash.callback_context.triggered[0]['prop_id'].split('.')[0])
-#     #     if click_status:
-#     #         click_status_propid = click_status.group(1)
-#     #     else:
-#     #         click_status_propid = ''
-#     #         raise PreventUpdate
-#     click_status_propid = url_hash.strip('#')
-#     # 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
-#     statusDict = {'all_order':False}
-#     orderstatus = OrderStatus()
-#     allstatus = orderstatus.getAllStatus()
-#     for eachstatus in allstatus.iloc:
-#         if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
-#             pass
-#         else:
-#             statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = False
-#     statusDict['end'] = False
-#     # if click_status_propid in statusDict:
-#     class_name = []
-#     statusDict[click_status_propid] = True
-#     # print(statusDict)
-#     for i in statusDict:
-#         class_name.append(statusDict[i])
-#     # print(class_name)
-#     return class_name
-
-
-# @app.callback(
-#     [
-#     Output({'type':"menus_id",'index':ALL},'className'),
-#     Output('order_table','children'),
-#     Output('page_number','value'),
-#     # Output('url','href')
-#     ],
-#     [
-#     Input({'type':"menus_id",'index':ALL},'n_clicks'),
-#     Input('url','href'),
-#     Input('search_button','n_clicks'),
-#     Input('first_page','n_clicks'),
-#     Input('previous_page','n_clicks'),
-#     Input('next_page','n_clicks'),
-#     Input('last_page','n_clicks'),
-#     Input('search_order_id','n_submit'),
-#     Input('search_order_type','n_submit'),
-#     Input('search_date','n_submit'),
-#     Input('page_number','n_submit'),
-#     Input('page_size','value'),
-#     # Input({'type':"status_confirm_button",'index':ALL}, "n_clicks"),
-#     # Input({'type':"end_confirm_button",'index':ALL}, "n_clicks"),
-#     ],
-#     [State('search_order_id','value'),
-#     State('search_order_type','value'),
-#     State('search_date','start_date'),
-#     State('search_date','end_date'),
-#     State('page_number','value'),
-#     State('total_page_num','children'),
-#     # State('url','href'),
-#     State({'type':"detail_end_confirm_button",'index':ALL}, "n_clicks"),
-#     State({'type':"detail_status_confirm_button",'index':ALL}, "n_clicks"),
-#     State({'type':"back_button",'index':ALL}, "n_clicks")]
-#     )
-# def table_shown(menus_id,href_content,search_button,first_page,previous_page,next_page,last_page,\
-#     search_order_id_submit,search_order_type_submit,search_date_submit,page_number_submit,page_size,\
-#     # status_confirm_button,end_confirm_button,\
-#     search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num,\
-#     detail_end_confirm_button,detail_status_confirm_button,back_button):
-#     if not search_button and not first_page and not previous_page and not next_page and not last_page\
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit'\
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit'\
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit'\
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' \
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'page_size.value' \
-#     and not dash.callback_context.triggered[0]['prop_id'] == 'search_button.n_clicks' \
-#     and not dash.callback_context.triggered:
-#         print('123')
-#         # raise PreventUpdate
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-#     print(dash.callback_context.triggered)
-#     print(href_content)
-#     if dash.callback_context.triggered[0]['prop_id']:
-#         click_status = re.search(r'{"index":"(.*)","type":"menus_id"',dash.callback_context.triggered[0]['prop_id'].split('.')[0])
-#         if click_status:
-#             click_status_propid = click_status.group(1)
-#         else:
-#             click_status_propid = ''
-#     ## 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
-#     statusDict = {'all_order':'text'}
-#     orderstatus = OrderStatus()
-#     allstatus = orderstatus.getAllStatus()
-#     for eachstatus in allstatus.iloc:
-#         if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
-#             pass
-#         else:
-#             statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
-#     statusDict['end'] = 'text'
-
-#     page_number = int(page_number)
-#     orders = Orders()
-#     try:
-#         current_status = href_content.split('#')[1].split('&')[0]
-#     except:
-#         current_status = 'all_order'
-#     # print('hash_name:',hash_name)
-#     ## 设置点击搜索按钮后URL内容
-#     # = '/Manager_console#status={}&order_id={}&order_type={}&order_date={}-{}'.format(current_status,search_order_id,search_order_type,search_start_date,search_end_date)
-#     if click_status_propid in statusDict:
-#         class_name = []
-#         statusDict[click_status_propid] = "active text"
-#         for i in statusDict:
-#             class_name.append(statusDict[i])
-#         return [class_name,tableShown(click_status_propid,PAGE_SIZE=5),1]
-
-    
-#     if dash.callback_context.triggered[0]['prop_id'] == 'search_button.n_clicks' or\
-#         dash.callback_context.triggered[0]['prop_id'] == 'search_order_id.n_submit' or\
-#         dash.callback_context.triggered[0]['prop_id'] == 'search_order_type.n_submit' or\
-#         dash.callback_context.triggered[0]['prop_id'] == 'search_date.n_submit' or\
-#         dash.callback_context.triggered[0]['value'] == '?status=search':
-#         return page_on_status(href_content+'&order_id',1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-#     if dash.callback_context.triggered[0]['prop_id'] == 'page_size.value':
-#         return page_on_status(href_content,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-#     if dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
-#         page_number = 1
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#     if dash.callback_context.triggered[0]['prop_id'] == 'previous_page.n_clicks':
-#         page_number -= 1
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#     if dash.callback_context.triggered[0]['prop_id'] == 'next_page.n_clicks':
-#         page_number += 1
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#     if dash.callback_context.triggered[0]['prop_id'] == 'last_page.n_clicks':
-#         page_number = int(total_page_num)
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#     if dash.callback_context.triggered[0]['prop_id'] == 'page_number.n_submit':
-#         if page_number > int(total_page_num):
-#             return page_on_status(href_content,int(total_page_num),search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#         elif page_number < 1:
-#             return page_on_status(href_content,1,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-#         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-    
-#     # if dash.callback_context.triggered[0]['prop_id']:
-#     #     if re.search(r'{"index":"\d+_end_confirm","type":"end_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]) or\
-#     #     re.search(r'{"index":"\d+_status_confirm","type":"status_confirm_button"',dash.callback_context.triggered[0]['prop_id'].split('.')[0]):
-#     #         print('ok')
-#     #         return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
-#     return page_on_status(href_content,page_number,search_order_id,search_order_type,search_start_date,search_end_date,page_size)
-
+            page_number = 1
+    return managercontrol.tableShown(data=data,page_count=page_number,Orderid=search_order_id,ChipPlatType=search_order_type,\
+        DateStart=search_start_date,DateEnd=search_end_date,PAGE_SIZE=page_size),page_number
 
 @app.callback(
     [Output('first_page','disabled'),
@@ -683,4 +454,25 @@ def change_page_button_status(page_number,total_page_num):
     else:
         return False, False, False, False
 
+@app.callback(
+        Output({'type':"menus_id",'index':ALL},'className'),
+        [Input('url','hash')],
+        )
+def change_menus_class(url_hash):
+    if not url_hash:
+        raise PreventUpdate
+    click_status_propid = url_hash.strip('#')
+    # 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
+    statusDict = {'all_order':'text'}
+    orderstatus = OrderStatus()
+    allstatus = orderstatus.getAllStatus()
+    for eachstatus in allstatus.iloc:
+        if eachstatus['OrderStatusName'] == 'end' or eachstatus['OrderStatusName'] == '' :
+            pass
+        else:
+            statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
+    statusDict['end'] = 'text'
+    if click_status_propid in statusDict:
+        statusDict[click_status_propid] = 'active text'
 
+    return [statusDict[i] for i in statusDict]

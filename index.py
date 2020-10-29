@@ -9,7 +9,7 @@ from apps.login.Register import registerLayout
 from apps.login.Login import loginLayout
 from apps.login.forgot import forgotLayout
 from apps.data.data import layout
-from apps.login.Manage_control import manager_page
+from apps.login.Manage_control import ManagerControl
 from apps.login.Customer_control import Managelayout
 from apps.login.detail_page import detail_page
 
@@ -17,7 +17,7 @@ def page_layout():
     return html.Div([
     dcc.Location(id = 'url', refresh = False),
     html.Div(id = 'custom-auth-frame', children=[
-        dcc.Interval('graph-update', interval = 100, n_intervals = 0),
+        # dcc.Interval('graph-update', interval = 100, n_intervals = 0),
         html.H1('Welcome!'),
         html.Button('sign in'),
         html.Button('data analysis'),
@@ -25,13 +25,12 @@ def page_layout():
     ])
 ])
 
-app.layout = page_layout
+app.layout = page_layout()
 
 @app.callback(Output('custom-auth-frame', 'children'),
-              [Input('url', 'pathname'),
-              Input('url','hash'),
-              Input('url','search')])
-def display_page(pathname,hash,search):
+              [Input('url', 'pathname')],
+              [State('url','search')])
+def display_page(pathname,search):
     if pathname == '/Register':
         return registerLayout()
     elif pathname == '/Data_analysis':
@@ -41,7 +40,8 @@ def display_page(pathname,hash,search):
     elif pathname == '/forgot':
         return forgotLayout()
     elif pathname == '/Manager_console':
-        return manager_page()
+        managercontrol = ManagerControl()
+        return managercontrol.manager_page()
     elif pathname == '/Customer_console':
         return Managelayout()
     elif pathname == '/Manager_console/detail/':
