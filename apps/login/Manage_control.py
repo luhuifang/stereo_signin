@@ -1,6 +1,5 @@
 import dash
 import re
-import time
 import json
 import pandas as pd
 from datetime import date
@@ -36,7 +35,7 @@ class ManagerControl():
             self.statusDict2Name[self.eachstatus['OrderStatusID']] = self.eachstatus['OrderStatusName']
 
     def data_get(self, status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None):
-        self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
+        # self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime']]
         if status == 'all_order':
             self.data = self.data
         elif status == 'search':
@@ -411,8 +410,8 @@ def shown_table(url_hash,search_button,first_page,previous_page,next_page,last_p
     
     if dash.callback_context.triggered[0]['prop_id'] == 'url.hash':
         page_number = 1
-        data = managercontrol.data_get(current_status)
-        search_order_id,search_order_type,search_start_date,search_end_date = '','',None,None
+        # data = managercontrol.data_get(current_status)
+        # search_order_id,search_order_type,search_start_date,search_end_date = '','',None,None
         
     if dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
         page_number = 1
