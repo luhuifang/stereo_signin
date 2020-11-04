@@ -138,6 +138,10 @@ def Datainfo_content(productData):
                     ]),
                 ]))
         for eachProduct in productData.iloc:
+            user = Users(userid=eachProduct['SharedUser'])
+            groups = Groups(GroupName=eachProduct['SharedGroup'])
+            username = user.getName()
+            groupsname = groups.getName()
             datainfo_layout.append(html.Div(className='row',children=[
                 html.Div(className='col-md-2 all-text',children=[
                     html.A(eachProduct['SN'],id='snID',className='all-text')
@@ -146,14 +150,14 @@ def Datainfo_content(productData):
                     dcc.Input(id='assignUser',
                             type='text',
                             className="custodetial-input",
-                            value=eachProduct['SharedUser'],
+                            value=username,
                             placeholder='Enter LoginName',)
                     ]),
                 html.Div(className='col-md-4 datainfo-text',children=[
                     dcc.Input(id='assignGroup',
                             type='text',
                             className="custodetial-input",
-                            value=eachProduct['SharedGroup'],
+                            value=groupsname,
                             placeholder='Enter GroupName',)
                     ]),
                 html.Div(className='col-md-2',children=[
@@ -266,19 +270,21 @@ def assignSubmit(n_clicks,snID,assignUser,assignGroup):
     product = Product(snID)
     user = Users(username=assignUser)
     groups = Groups(GroupName=assignGroup)
+    userID = user.getId()
+    GroupID = groups.getId()
     if not assignUser and not assignGroup:
         err_msg = 'Username and Groupname does not exists, please re-enter!'
     elif assignUser and not assignGroup:
         if not user.checkExists():
             err_msg = 'Username does not exists, please re-enter!'
         else:
-            product.updateSharedUser(assignUser)
+            product.updateSharedUser(userID)
             err_msg = 'successfully added'
     elif not assignUser and assignGroup:
         if not groups.checkExists():
             err_msg = 'Groupname does not exists, please re-enter!'
         else:
-            product.updateSharedGroup(assignGroup)
+            product.updateSharedGroup(GroupID)
             err_msg = 'successfully added'
     elif assignUser and assignGroup:
         if user.checkExists() and not groups.checkExists():
@@ -288,8 +294,8 @@ def assignSubmit(n_clicks,snID,assignUser,assignGroup):
         elif not user.checkExists() and not groups.checkExists():
             err_msg = 'Username and Groupname does not exists, please re-enter!'
         else:
-            product.updateSharedUser(assignUser)
-            product.updateSharedGroup(assignGroup)
+            product.updateSharedUser(userID)
+            product.updateSharedGroup(GroupID)
             err_msg = 'successfully added'
     # print(err_msg)
     return assignUser,assignGroup,err_msg
