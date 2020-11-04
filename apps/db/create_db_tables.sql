@@ -189,6 +189,7 @@ create table `Team`(
     `IsDelete` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`GroupID`),
     UNIQUE KEY `GroupID_UNIQUE` (`GroupID`),
+    UNIQUE KEY `GroupName_UNIQUE` (`GroupName`),
     CONSTRAINT fk_team_users FOREIGN KEY(`CreateUserID`) REFERENCES Users(`UserID`) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT fk_team_users2 FOREIGN KEY(`CreateUserName`) REFERENCES Users(`LoginName`) ON DELETE CASCADE ON UPDATE CASCADE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -244,8 +245,8 @@ create table `Product`(
     PRIMARY KEY (`ProductID`),
     UNIQUE KEY `ProductID_UNIQUE` (`ProductID`),
     CONSTRAINT fk_product_chip FOREIGN KEY(`SN`) REFERENCES firstSequences(`no`) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT fk_product_users FOREIGN KEY(`SharedUser`) REFERENCES Users(`UserID`) ON DELETE SET NULL ON UPDATE CASCADE,
-    CONSTRAINT fk_product_team FOREIGN KEY(`SharedGroup`) REFERENCES Team(`GroupID`) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_product_users FOREIGN KEY(`SharedUser`) REFERENCES Users(`LoginName`) ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_product_team FOREIGN KEY(`SharedGroup`) REFERENCES Team(`GroupName`) ON DELETE SET NULL ON UPDATE CASCADE,
     CONSTRAINT fk_product_order FOREIGN KEY(`OrderID`) REFERENCES orderForm(`OrderID`) ON DELETE SET NULL ON UPDATE CASCADE
 )ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
@@ -318,6 +319,7 @@ create table `orderForm`(
     `ContractNo`    varchar(32) DEFAULT NULL,
     `Accessory` varchar(1000) DEFAULT NULL,
     `LoginName` varchar(100) DEFAULT NULL,
+    `isdelete` boolean not null default 0,
     PRIMARY KEY(`OrderID`),
     UNIQUE KEY `OrderID_UNIQUE` (`OrderID`),
     CONSTRAINT fk_order_status FOREIGN KEY(`CurrentStatus`) REFERENCES orderStatus(`OrderStatusID`) ON DELETE SET NULL ON UPDATE CASCADE,

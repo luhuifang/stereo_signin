@@ -51,6 +51,9 @@ class Groups(TableServiceBase):
 					self.CreateUserName = g['CreateUserName'][0]
 				self.IsDelete = g['IsDelete'][0]
 
+	def checkExists(self):
+		return self.exists(GroupName=self.GroupName)
+
 
 	def isDelete(self):
 		if self.isExists():

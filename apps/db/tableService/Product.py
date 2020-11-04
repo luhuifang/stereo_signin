@@ -3,7 +3,7 @@ import warnings
 from apps.db.tableService.TableServiceBase import TableServiceBase
 
 class Product(TableServiceBase):
-	def __init__(self, sn):
+	def __init__(self, sn=''):
 		super().__init__('Product')
 		self.SN = sn
 		self._checkExists(sn)

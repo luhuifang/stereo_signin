@@ -222,7 +222,7 @@ ul.operation{
 }
 .page-input{
     height: 40px;
-    width: 30px;
+    width: 50px;
     margin-top: 10px;
     margin-left: 10px;
     border: 0px;
@@ -238,7 +238,7 @@ ul.operation{
 }
 .total-page-num{
     height: 40px;
-    width: 30px;
+    width: 50px;
     margin-top: 10px;
     margin-left: 10px;
     font-size: 22px;
@@ -309,4 +309,71 @@ ul.operation{
     padding: 0px;
     border:0px;
     background-color: white;
+}
+
+/*modify order page*/
+.modify_input{
+    outline-style: none ;
+    border-bottom: 1px solid #dbdbdb; 
+    border-top: 0px;
+    border-left: 0px;
+    border-right: 0px;
+    border-radius: 3px;
+    height:30px!important;
+    margin:5px 10px;
+    width: 200px;
+    font-size: 15px;
+    margin: 1px;
+    /*-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)*/
+}
+.modify-text-right{
+    text-align: right!important;
+    vertical-align: middle;
+    padding-top:4px; 
+    margin: 5px 0px;
+}
+
+.modify-text-left{
+    text-align: left!important;
+    vertical-align: middle;
+    padding-top:4px;
+    margin: 5px 0px;
+
+}
+
+.datainfo-text{
+    text-align: center;
+    padding-top: 10px;
+    margin-left: 0px;
+    
+}
+.custodetial-input{
+    outline-style: none ;
+    height:35px!important;
+    margin:0px 10px;
+    width: 200px;
+    font-size: 10px;
+    margin: 1px;
+    /*-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)*/
+}
+div.all-text{
+    padding-top: 15px;
+}
+
+.custoSubmit-button{
+    margin-top: 10px;
+    margin-left: 10px;
+    height: 37px;
+    text-align: center;
+    border: 1px solid var(--stereo-blue-9);
+    background-color: var(--stereo-blue-9);
+}
+
+.custoSubmit-button:hover{
+    background-color: var(--stereo-blue-9);
+}
+.custoSubmit-button:focus{
+    background-color: var(--stereo-blue-9);
 }
