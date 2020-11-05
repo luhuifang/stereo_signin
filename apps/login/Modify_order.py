@@ -27,32 +27,14 @@ class ModifyPage():
         for eachstatus in self.allstatus.iloc:
             self.statusDict[eachstatus['OrderStatusID']] = eachstatus['OrderStatusName']
     
-    def modify_page(self):
-        layout = html.Div([
-                # dbc.Navbar([
-                #         html.Div(className='col-md-2',children=[
-                #             html.A(               
-                #                 dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
-                #         href="#",
-                #         ),]),
-                #         html.Div(className='col-md-2 offset-md-8',children=[
-                #             html.Div(className='dropdown',children=[
-                #                 html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
-                #                 html.Div(className='dropdown-content',children=[
-                #                     html.A(children=['sssss'],href='#'),
-                #                     html.A(children=['sssss'],href='/')
-                #                     ])
-                #                 ]),   
-                #             ]),           
-                #     ],
-                #     color='#153057',
-                #     dark=True,
-                #     className='row'
-                #     ),
-                dbc.Navbar([
-                    html.H5(f'Modify Order/{self.order_id}')
-                    ],className='top-bar'),
-                html.Div(className='container',id='modify_div',children=[
+    def headContent(self):
+        return dbc.Navbar([
+                    html.H5(f'Modify Order/{self.order_id}',id='head_title')
+                    ],className='top-bar')
+
+    def bodyContent(self):
+        return html.Div(className='container',id='modify_div',children=[
+                html.Div(id='modify_div2',children=[
                     html.Div(className='detail-content text-center',children=[
                     html.H6('Order Information',className='header-format text-white'),
                     self.modify_orderinfo_content('OrderID',self.data.iloc[0]['OrderID']),
@@ -86,7 +68,34 @@ class ModifyPage():
                         id = {'index':f'back_{self.order_id}_button','type':'back_button'}, 
                         className="mr-1 all-button",href='/Customer_console'),
                     ])
-                ]),
+                ])
+            ])
+
+
+    def modify_page(self):
+        layout = html.Div(id='Modifypage',children=[
+                # dbc.Navbar([
+                #         html.Div(className='col-md-2',children=[
+                #             html.A(               
+                #                 dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
+                #         href="#",
+                #         ),]),
+                #         html.Div(className='col-md-2 offset-md-8',children=[
+                #             html.Div(className='dropdown',children=[
+                #                 html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
+                #                 html.Div(className='dropdown-content',children=[
+                #                     html.A(children=['sssss'],href='#'),
+                #                     html.A(children=['sssss'],href='/')
+                #                     ])
+                #                 ]),   
+                #             ]),           
+                #     ],
+                #     color='#153057',
+                #     dark=True,
+                #     className='row'
+                #     ),
+                self.headContent(),
+                self.bodyContent()
             ])
         return layout
 
@@ -116,11 +125,18 @@ class ModifyPage():
                     ])
         return layout
 
-    def modifySuccessfulLayout(self):
+    def modifySuccessfulLayout(self,order_id):
         return html.Div(className='findPassWd_content', children = [
             html.Span('modify successful!'),
             html.Br(),
-            dcc.Link('Back', href='/Customer_console'),
+            dbc.Button('Back',id='backModify',color='link', href=f'/Customer_console/Modify_order/?orderID={order_id}'),
+        ])
+
+    def forbidmodifyLayout(self,order_id):
+        return html.Div(className='findPassWd_content', children = [
+            html.Span(f'Order {order_id} is prohibited to modify!'),
+            html.Br(),
+            dbc.Button('Back',id='backModify',color='link', href=f'/Customer_console'),
         ])
 
 @app.callback(
@@ -156,16 +172,46 @@ def submit_modify(n_clicks,customerinfo,customerinfoID):
         raise PreventUpdate
     order_id = json.loads(dash.callback_context.triggered[0]['prop_id'].split('.')[0])['index'].split('_submit_confirm_modify')[0]
     modifypage = ModifyPage(order_id)
-
+    CurrentStatus = modifypage.CurrentStatus
+    
     new_customerinfo = {}
     for index in range(len(customerinfo)):
         new_customerinfo[customerinfoID[index]['index']]=customerinfo[index]
+        
+    if CurrentStatus <= 3 and CurrentStatus != -1:
+        modifypage.orders.updateByContactName(new_customerinfo['ContactName'])
+        modifypage.orders.updateByZipCode(new_customerinfo['ZipCode'])
+        modifypage.orders.updateByAddress(new_customerinfo['Address'])
+        modifypage.orders.updateByEmail(new_customerinfo['Email'])
+        modifypage.orders.updateByPhone(new_customerinfo['Phone'])
+        modifypage.orders.updateByResearchInterests(new_customerinfo['ResearchInterests'])
+        modifypage.orders.updateByOrganization(new_customerinfo['Organization'])
+        return modifypage.modifySuccessfulLayout(order_id)
+    else:
+        return modifypage.forbidmodifyLayout(order_id)
 
-    modifypage.orders.updateByContactName(new_customerinfo['ContactName'])
-    modifypage.orders.updateByZipCode(new_customerinfo['ZipCode'])
-    modifypage.orders.updateByAddress(new_customerinfo['Address'])
-    modifypage.orders.updateByEmail(new_customerinfo['Email'])
-    modifypage.orders.updateByPhone(new_customerinfo['Phone'])
-    modifypage.orders.updateByResearchInterests(new_customerinfo['ResearchInterests'])
-    modifypage.orders.updateByOrganization(new_customerinfo['Organization'])
-    return modifypage.modifySuccessfulLayout()
+@app.callback(
+    Output('Modifypage','children'),
+    [Input('backModify','n_clicks')],
+    [State('url','search')]
+    )
+def backmodifypage(n_clicks,url_search):
+    if not dash.callback_context.triggered or not dash.callback_context.triggered[0]['value']:
+        raise PreventUpdate
+    order_id = url_search.split('=')[1]
+    modifypage = ModifyPage(order_id)
+
+    return modifypage.headContent(),modifypage.bodyContent()
+
+@app.callback(
+    Output('modify_div2','children'),
+    [Input('head_title','children')]
+    )
+def forbidmodify(head_title):
+    order_id = head_title.split('/')[1]
+    modifypage = ModifyPage(order_id)
+    CurrentStatus = modifypage.CurrentStatus
+    if CurrentStatus <= 3 and CurrentStatus != -1:
+        raise PreventUpdate
+    else:
+        return modifypage.forbidmodifyLayout(order_id)
