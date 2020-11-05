@@ -14,6 +14,7 @@ from apps.login.Customer_control import CustomerControl
 from apps.login.detail_page import detail_page
 from apps.login.CustomerDetailPage import customer_detail_page
 from apps.login.Modify_order import ModifyPage
+from apps.db.tableService.OrderForm import Orders
 
 def page_layout():
     return html.Div([
@@ -49,14 +50,26 @@ def display_page(pathname,search):
         return customercontrol.Managelayout()
     elif pathname == '/Manager_console/detail/':
         order_id = search.split('=')[1]
-        return detail_page(order_id)
+        orders = Orders(order_id)
+        if orders.checkExists():
+            return detail_page(order_id)
+        else:
+            return '404'
     elif pathname == '/Customer_console/detail/':
         order_id = search.split('=')[1]
-        return customer_detail_page(order_id)
+        orders = Orders(order_id)
+        if orders.checkExists():
+            return customer_detail_page(order_id)
+        else:
+            return '404'    
     elif pathname == '/Customer_console/Modify_order/':
         order_id = search.split('=')[1]
-        modifypage = ModifyPage(order_id)
-        return modifypage.modify_page()
+        orders = Orders(order_id)
+        if orders.checkExists():
+            modifypage = ModifyPage(order_id)
+            return modifypage.modify_page()
+        else:
+            return '404' 
     elif pathname == '/':
     	return html.Div( children=[
     	html.H1('Welcome!'),
