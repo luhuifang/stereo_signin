@@ -1,8 +1,11 @@
 import dash
 import re
 import time
+import flask
+import hashlib
 import pandas as pd
 from datetime import date
+
 
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -11,12 +14,18 @@ from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
+from apps.login.Login import loginLayout
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
+from apps.login.PageHeader import Headcontent
+from apps.login.token_verification import get_payload,validate_token,create_token,veri_token
+
 
 class CustomerControl():
-    def __init__(self, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
+    def __init__(self,searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
+        user_name,Is_true = veri_token()
+        self.loginName = user_name
         self.searchstatus = searchstatus
         self.Orderid = Orderid
         self.ChipPlatType = ChipPlatType
@@ -27,7 +36,7 @@ class CustomerControl():
         self.orders = Orders()
         self.orderstatus = OrderStatus()
         self.allstatus = self.orderstatus.getAllStatus()
-        self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime','isdelete']]
+        self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime','isdelete','LoginName']]
         self.statusDict2Name = {}
         self.statusDict2ID = {}
         for self.eachstatus in self.allstatus.iloc:
@@ -35,6 +44,7 @@ class CustomerControl():
             self.statusDict2Name[self.eachstatus['OrderStatusID']] = self.eachstatus['OrderStatusName']
 
     def data_get(self, status, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None):
+        self.data = self.data[self.data['LoginName']==self.loginName]
         self.data = self.data[self.data['isdelete']==False]
         if status == 'all_order':
             self.data = self.data
@@ -219,15 +229,20 @@ class CustomerControl():
                                 dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
                         href="#",
                         ),]),
-                        html.Div(className='col-md-2 offset-md-8',children=[
+                        html.Div(className='col-md-2 offset-md-6',children=[
                             html.Div(className='dropdown',children=[
-                                html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
+                                html.A(children=["Notifications",
+                                    dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
                                 html.Div(className='dropdown-content',children=[
                                     html.A(children=['sssss'],href='#'),
                                     html.A(children=['sssss'],href='/')
-                                    ])
-                                ]),   
-                            ]),           
+                                    ]),
+                                ]), 
+                            ]), 
+                        html.Div(className='col-md-3',id='customer_center',children=[
+                            html.A(self.loginName,id='loginedName'),
+                            dbc.Button('log off',color='link',id='custor_login_out')
+                            ])           
                     ],
                     color='#153057',
                     dark=True,
@@ -235,8 +250,16 @@ class CustomerControl():
                     )
 
     def Managelayout(self):
-        return html.Div(id= 'custo_main_div',children=[self.Headcontent(),self.bodycontent()])
+        return html.Div(id='is_login',children=[
+            html.Div(id= 'custo_main_div',children=[self.Headcontent(),self.bodycontent()])
+            ])
 
+    def loginOutSuccessfulLayout(self):
+        return html.Div(className='findPassWd_content', children = [
+            html.Span('Login out successful!'),
+            html.Br(),
+            dcc.Link('OK', href='/'),
+        ])
 
 @app.callback(
     [Output({'type':"custo_modify",'index':ALL}, "disabled"),
@@ -427,4 +450,19 @@ def change_page_button_status(page_number,total_page_num):
         return True, True, True, True
     else:
         return False, False, False, False
+
+@app.callback(
+    Output('is_login','children'),
+    [Input('custor_login_out','n_clicks')]
+    )
+def is_loginIn(n_clicks):
+    if not dash.callback_context.triggered:
+        raise PreventUpdate
+    customercontrol = CustomerControl()
+    payload = get_payload()
+    token = create_token(payload,exp_time=604800) ## not exp, 7days
+    auth_T = hashlib.md5(token).hexdigest()
+    dash.callback_context.response.set_cookie('T', auth_T, httponly = True)
+
+    return customercontrol.loginOutSuccessfulLayout()
 

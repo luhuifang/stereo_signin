@@ -1,5 +1,6 @@
 import dash
 import re
+import hashlib
 import pandas as pd
 
 import dash_core_components as dcc
@@ -11,6 +12,9 @@ import apps.login.Verification_code as Ver
 from spatialTrancriptomeReport import app
 from apps.db.tableService.Users import Users
 from apps.login.Register import registerLayout
+from apps.login.connect_redis import r
+from apps.login.token_verification import get_payload,validate_token,create_token
+# from apps.login.Customer_control import CustomerControl
 
 
 def formlayout(err_msg='', Username='', Password=''):
@@ -80,11 +84,11 @@ def loginCommonLayout(children):
 def loginLayout():
     return loginCommonLayout(formlayout())
 
-def loginSuccessfulLayout():
+def loginSuccessfulLayout(pathname):
     return html.Div(className='findPassWd_content', children = [
         html.Span('Login successful!'),
         html.Br(),
-        dcc.Link('OK', href='/'),
+        dcc.Link('OK', href=pathname),
     ])
 
 def loginFailedLayout():
@@ -96,22 +100,49 @@ def loginFailedLayout():
 
 @app.callback(
     Output('login_content', 'children'),
-    [Input('login_button', 'n_clicks')],
+    [Input('login_button', 'n_clicks'),
+    Input('login_Username','n_submit'),
+    Input('login_Password','n_submit')],
     [State('login_Username','value'),
     State('login_Password','value')]
     )
-def login_in(n_clicks,Username,Password):
-    if not n_clicks :
+def login_in(n_clicks,login_Username,login_Password,Username,Password):
+    if not dash.callback_context.triggered:
         raise PreventUpdate
     if Username and Password:
         u = Users(username=Username)
         if  u.checkExists() and u.verifyPassword(Password):
-            return loginSuccessfulLayout()
+            user_id = u.getId()
+            payload = get_payload(user_id,org=u.Organization,login_flag='logined')
+            token = create_token(payload,exp_time=604800) ## not exp, 7days
+            auth_T = hashlib.md5(token).hexdigest()
+            r.set(auth_T, token, ex=3600)
+            # print('payload',payload,'auth_T',auth_T,'\ntoken',token,'\nUsername',Username,'\nuserID',user_id)
+            dash.callback_context.response.set_cookie('T', auth_T, httponly = True)
+            userRoleid = u.UserRoleID
+            if userRoleid == 1 or userRoleid == 2:
+                return loginSuccessfulLayout('/Customer_console')
+            elif userRoleid == 8:
+                return loginSuccessfulLayout('/Manager_console')
         else:
             err_msg = 'The account password is wrong, please confirm whether it is entered correctly!'
-        print(u.checkExists(),u.verifyPassword(Password))
+        # print(u.checkExists(),u.verifyPassword(Password))
     else:
-        raise PreventUpdate
+        err_msg = 'The username and password cannot be empty!'
     
     return formlayout(err_msg=err_msg, Username='', Password='')
 
+
+
+# if user.verifyPassword(passwd): ## successful
+#     user_id = user.getId()
+#     payload = get_payload(user_id, org=user.Organization, login_flag='logined')
+#     token = generate_token_from_payload(payload, exp_time=604800) ## not exp, 7days
+#     auth_T = hashlib.md5(token).hexdigest()
+#     r.set(auth_T, token, ex=3600)
+#     if black_count is not None:
+#         r.delete(username)
+#         href = '/Stereo-Draftsman/report/index'
+#         dash.callback_context.response.set_cookie('T', auth_T, httponly = True)
+
+#     return ['', href, True]

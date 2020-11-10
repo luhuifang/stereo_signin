@@ -1,6 +1,7 @@
 import dash
 import re
 import json
+import hashlib
 import pandas as pd
 from datetime import date
 
@@ -14,9 +15,13 @@ from spatialTrancriptomeReport import app
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
+from apps.login.token_verification import get_payload,validate_token,create_token,veri_token
+
 
 class ManagerControl():
     def __init__(self, searchstatus='',Orderid='',ChipPlatType='',DateStart=None,DateEnd=None,page_count=1,PAGE_SIZE=5):
+        user_name,Is_true = veri_token()
+        self.loginName = user_name
         self.searchstatus = searchstatus
         self.Orderid = Orderid
         self.ChipPlatType = ChipPlatType
@@ -131,7 +136,7 @@ class ManagerControl():
                                         minLength= 8,
                                         maxLength= 25,
                                         value=self.ChipPlatType,
-                                        placeholder='Enter Order Type',)
+                                        placeholder='Enter Chip Plat',)
                                 ]),
                             html.Div(className='search-word',children=[
                                 html.Label('Order Date:',className='label_font_size'),
@@ -188,22 +193,26 @@ class ManagerControl():
         return layout
  
     def manager_page(self):
-        return html.Div([
+        return html.Div(id='manager_login',children=[
                 dbc.Navbar([
                         html.Div(className='col-md-2',children=[
                             html.A(               
                                 dbc.NavbarBrand("Stereo", className="ml-3 text-center"),                            
-                        href="#",
+                        href="/",
                         ),]),
-                        html.Div(className='col-md-2 offset-md-8',children=[
+                        html.Div(className='col-md-2 offset-md-6',children=[
                             html.Div(className='dropdown',children=[
-                                html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='#'),
+                                html.A(children=["Notifications",dbc.Badge(children=['4'],color = 'light',className='ml-1')],id = 'Notifications',href='/'),
                                 html.Div(className='dropdown-content',children=[
-                                    html.A(children=['sssss'],href='#'),
+                                    html.A(children=['sssss'],href='/'),
                                     html.A(children=['sssss'],href='/')
-                                    ])
+                                    ]),
                                 ]),   
-                            ]),           
+                            ]), 
+                         html.Div(className='col-md-3',id='customer_center',children=[
+                            html.A(self.loginName,id='loginedName'),
+                            dbc.Button('log off',color='link',id='manager_login_out')
+                            ])           
                     ],
                     color='#153057',
                     dark=True,
@@ -215,7 +224,7 @@ class ManagerControl():
     def Managelayout(self):
         menus = [html.A(id = {'index':'all_order','type':'menus_id'},
             href='#all_order',
-            children=[html.P(className='icon'),'All Order'],className="active text"),]
+            children=[html.P(className='icon'),'All Order'],className="text"),]
         for i in self.statusDict2Name.values():
             if i == '' or i == 'end':
                 pass
@@ -245,6 +254,13 @@ class ManagerControl():
                             ]),
                         ])
                 ])
+
+    def loginOutSuccessfulLayout(self):
+        return html.Div(className='findPassWd_content', children = [
+            html.Span('Login out successful!'),
+            html.Br(),
+            dcc.Link('OK', href='/'),
+        ])
 
 
 @app.callback(
@@ -383,17 +399,21 @@ def change_end_button(status_click, status_confirm, status_close, status_id, sta
     State('search_date','end_date'),
     State('page_number','value'),
     State('total_page_num','children'),
+    State('url','href')
     ]
     )
 def shown_table(url_hash,search_button,first_page,previous_page,next_page,last_page,\
     search_order_id_submit,search_order_type_submit,search_date_submit,page_number_submit,page_size,\
-    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num):
+    search_order_id,search_order_type,search_start_date,search_end_date,page_number,total_page_num,url_href):
     print(dash.callback_context.triggered)
-    managercontrol = ManagerControl()
-    if url_hash:
-        current_status = url_hash.strip('#')
+    if not url_hash:
+        if url_href.split('/')[-1].strip('#') == 'Manager_console':
+            current_status = 'all_order'
+        else:
+            raise PreventUpdate
     else:
-        current_status = 'all_order'
+        current_status = url_hash.strip('#')
+    managercontrol = ManagerControl()
     page_number = int(page_number)
     data = managercontrol.data_get(current_status)
 
@@ -408,13 +428,13 @@ def shown_table(url_hash,search_button,first_page,previous_page,next_page,last_p
     dash.callback_context.triggered[0]['prop_id'] != 'url.hash':
         data = managercontrol.data_get('search',current_status,search_order_id,search_order_type,search_start_date,search_end_date)
     
-    if dash.callback_context.triggered[0]['prop_id'] == 'url.hash':
+    if dash.callback_context.triggered[0]['prop_id'] == 'url.hash'or \
+    dash.callback_context.triggered[0]['prop_id'] == 'page_size.value' or\
+    dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
         page_number = 1
         # data = managercontrol.data_get(current_status)
         # search_order_id,search_order_type,search_start_date,search_end_date = '','',None,None
         
-    if dash.callback_context.triggered[0]['prop_id'] == 'first_page.n_clicks':
-        page_number = 1
     if dash.callback_context.triggered[0]['prop_id'] == 'previous_page.n_clicks':
         if page_number <= 1:
             page_number = 1
@@ -458,8 +478,7 @@ def change_page_button_status(page_number,total_page_num):
         [Input('url','hash')],
         )
 def change_menus_class(url_hash):
-    if not url_hash:
-        raise PreventUpdate
+    
     click_status_propid = url_hash.strip('#')
     # 读取数据库状态表，并转换为以状态名为key的字典，字典value值为菜单的className
     statusDict = {'all_order':'text'}
@@ -471,7 +490,24 @@ def change_menus_class(url_hash):
         else:
             statusDict[eachstatus['OrderStatusName'].replace(' ','_')] = 'text'
     statusDict['end'] = 'text'
-    if click_status_propid in statusDict:
+    if not url_hash:
+        return [statusDict[i] for i in statusDict]
+    elif click_status_propid in statusDict:
         statusDict[click_status_propid] = 'active text'
 
     return [statusDict[i] for i in statusDict]
+
+@app.callback(
+    Output('manager_login','children'),
+    [Input('manager_login_out','n_clicks')]
+    )
+def is_loginIn(n_clicks):
+    if not dash.callback_context.triggered:
+        raise PreventUpdate
+    managercontrol = ManagerControl()
+    payload = get_payload()
+    token = create_token(payload,exp_time=604800) ## not exp, 7days
+    auth_T = hashlib.md5(token).hexdigest()
+    dash.callback_context.response.set_cookie('T', auth_T, httponly = True)
+
+    return managercontrol.loginOutSuccessfulLayout()

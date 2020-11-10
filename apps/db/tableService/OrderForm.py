@@ -5,7 +5,7 @@ from apps.db.tableService.OrderStatus import OrderStatus
 class Orders(TableServiceBase):
     def __init__(self, OrderID='', ChipPlat='', ContactName='', ZipCode='', Address='', Quantity = '',
                 Email='', Phone='', CurrentStatus='', NextStatus='', ContractNo='', LoginName='',
-                Org='', Res=''):
+                Org='', Res='', isdelete = ''):
         super().__init__('orderForm')
 
         self.OrderID = OrderID
@@ -24,6 +24,7 @@ class Orders(TableServiceBase):
             self.LoginName = order['LoginName'][0]
             self.Organization = order['Organization'][0]
             self.ResearchInterests = order['ResearchInterests'][0]
+            self.isdelete = order['isdelete'][0]
         else:
             self.ContactName = ContactName
             self.ChipPlat = ChipPlat
@@ -38,6 +39,7 @@ class Orders(TableServiceBase):
             self.LoginName = LoginName
             self.Organization = Org
             self.ResearchInterests = Res
+            self.isdelete = isdelete
         self.statusDict={}
         self.orderstatus = OrderStatus()
         self.allstatus = self.orderstatus.getAllStatus()

@@ -17,6 +17,7 @@ from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.db.tableService.Product import Product
 from apps.login.notificationEmail import Send_email
+from apps.login.Login import loginLayout
 
 
 def customer_detail_page(order_id):

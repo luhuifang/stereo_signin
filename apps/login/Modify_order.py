@@ -203,15 +203,15 @@ def backmodifypage(n_clicks,url_search):
 
     return modifypage.headContent(),modifypage.bodyContent()
 
-@app.callback(
-    Output('modify_div2','children'),
-    [Input('head_title','children')]
-    )
-def forbidmodify(head_title):
-    order_id = head_title.split('/')[1]
-    modifypage = ModifyPage(order_id)
-    CurrentStatus = modifypage.CurrentStatus
-    if CurrentStatus <= 3 and CurrentStatus != -1:
-        raise PreventUpdate
-    else:
-        return modifypage.forbidmodifyLayout(order_id)
+# @app.callback(
+#     Output('modify_div2','children'),
+#     [Input('head_title','children')]
+#     )
+# def forbidmodify(head_title):
+#     order_id = head_title.split('/')[1]
+#     modifypage = ModifyPage(order_id)
+#     CurrentStatus = modifypage.CurrentStatus
+#     if CurrentStatus <= 3 and CurrentStatus != -1:
+#         raise PreventUpdate
+#     else:
+#         return modifypage.forbidmodifyLayout(order_id)
