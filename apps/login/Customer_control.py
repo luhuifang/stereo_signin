@@ -13,7 +13,9 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
+
 from spatialTrancriptomeReport import app
+from apps.login.UserActionLog import logit_detail
 from apps.login.Login import loginLayout
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
@@ -37,6 +39,7 @@ class CustomerControl():
         self.orderstatus = OrderStatus()
         self.allstatus = self.orderstatus.getAllStatus()
         self.data = self.orders.getAllData().loc[:,['OrderID','ChipPlat','Quantity','ContactName','CurrentStatus','NextStatus','CreateTime','isdelete','LoginName']]
+        self.data = self.data[self.data['LoginName']==self.loginName]
         self.statusDict2Name = {}
         self.statusDict2ID = {}
         for self.eachstatus in self.allstatus.iloc:
@@ -314,7 +317,6 @@ def change_cancel_button(status_click, status_confirm, status_close, status_id, 
     ]
     )
 def cancel_order(n_clicks,status_id,custo_cancel):
-    # print(dash.callback_context.triggered)
     if not dash.callback_context.triggered or not dash.callback_context.triggered[0]['value']:
         raise PreventUpdate
     customercontrol = CustomerControl()
@@ -324,6 +326,7 @@ def cancel_order(n_clicks,status_id,custo_cancel):
             order = Orders(order_id)
             order.updateByisdelete(True)
 
+    logit_detail('Cancel the order',order_id)
     return customercontrol.Headcontent(),customercontrol.bodycontent() 
 
 
@@ -456,7 +459,8 @@ def change_page_button_status(page_number,total_page_num):
     [Input('custor_login_out','n_clicks')]
     )
 def is_loginIn(n_clicks):
-    if not dash.callback_context.triggered:
+    print(dash.callback_context.triggered)
+    if not dash.callback_context.triggered or not dash.callback_context.triggered[0]['value']:
         raise PreventUpdate
     customercontrol = CustomerControl()
     payload = get_payload()

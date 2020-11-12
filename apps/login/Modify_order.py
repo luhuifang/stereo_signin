@@ -11,6 +11,7 @@ from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
+from apps.login.UserActionLog import logit_detail
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
@@ -179,6 +180,7 @@ def submit_modify(n_clicks,customerinfo,customerinfoID):
         new_customerinfo[customerinfoID[index]['index']]=customerinfo[index]
         
     if CurrentStatus <= 3 and CurrentStatus != -1:
+        logit_detail('Modify the order',order_id)
         modifypage.orders.updateByContactName(new_customerinfo['ContactName'])
         modifypage.orders.updateByZipCode(new_customerinfo['ZipCode'])
         modifypage.orders.updateByAddress(new_customerinfo['Address'])

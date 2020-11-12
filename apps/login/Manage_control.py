@@ -12,6 +12,7 @@ from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
+from apps.login.UserActionLog import logit_detail
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
@@ -346,14 +347,17 @@ def change_td_status(status_confirm,end_confirm,status_id):
                 CurrentStatus = -1
                 NextStatus = -2
             Send_email(order_id)
+            logit_detail('Change the order status',order_id,statusDict2Name[CurrentStatus])
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm","type":"end_confirm_button"}.n_clicks':
             orders.updateCurrentStatus(-1,order_id)
             orders.updateNextStatus(-2,order_id)
             CurrentStatus = -1
             NextStatus = -2
             Send_email(order_id)
+            logit_detail('Change the order status',order_id,statusDict2Name[CurrentStatus])
         currentstatus_res.append(statusDict2Name[CurrentStatus])
         nextstatus_res.append(statusDict2Name[NextStatus])
+
 
     return currentstatus_res,nextstatus_res
 

@@ -24,7 +24,7 @@ from apps.login.Modify_order import ModifyPage
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.Users import Users
 from apps.login.token_verification import get_payload,validate_token,create_token,veri_token
-
+from apps.login.UserActionLog import logit
 
 def loginOutSuccessfulLayout():
         return html.Div(className='findPassWd_content', children = [
@@ -89,6 +89,7 @@ app.layout = page_layout()
     Output('main_center','children'),
     [Input('notifications','href')],
     )
+@logit()
 def per_center(href):
     user_name,Is_true = veri_token()
     if Is_true:
@@ -99,11 +100,13 @@ def per_center(href):
         return html.Div(children=[
             dbc.Button('login',href='/Login',color='link'),
             dbc.Button('Register',href='/Register',color='link')])
-        
+
+    
 @app.callback(
     Output('login_out_notice','children'),
     [Input('login_out','n_clicks')]
     )
+@logit() 
 def is_loginIn(n_clicks):
     print(dash.callback_context.triggered)
     if not dash.callback_context.triggered or not dash.callback_context.triggered[0]['value']:
@@ -119,6 +122,7 @@ def is_loginIn(n_clicks):
 @app.callback(Output('custom-auth-frame', 'children'),
               [Input('url', 'pathname'),],
               [State('url','search')])
+@logit() 
 def display_page(pathname,search):
     user_name,Is_true = veri_token()
     if pathname == '/Register':

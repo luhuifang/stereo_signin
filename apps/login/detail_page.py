@@ -11,6 +11,7 @@ from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
+from apps.login.UserActionLog import logit_detail
 from apps.db.tableService.OrderForm import Orders
 from apps.db.tableService.OrderStatus import OrderStatus
 from apps.login.notificationEmail import Send_email
@@ -116,7 +117,8 @@ def detail_page(order_id):
                             ),],
                         id={'type':"end_model_detail",'index':f"{order_id}_end_modal_detail"},centered=True,),
                 dbc.Button("Back", 
-                    id = {'index':f'back_{order_id}_button','type':'back_button'}, className="mr-1 all-button",href='/Manager_console'),
+                    id = {'index':f'back_{order_id}_button','type':'back_button'}, 
+                    className="mr-1 all-button",href='/Manager_console'),
                 ])]),
         ])
     return layout
@@ -180,6 +182,7 @@ def change_end_button_detail(status_click, status_confirm, status_close, status_
     Input({'type':"detail_end_confirm_button",'index':ALL}, "n_clicks"),],
     [State({'type':"detail_status",'index':ALL}, "id"),]
 )
+
 def change_detail_status(status_confirm,end_confirm,status_id):
     res_status = []
     res_end = []
@@ -215,12 +218,14 @@ def change_detail_status(status_confirm,end_confirm,status_id):
                 NextStatus = -2
                 orders.updateCurrentStatus(-1,order_id)
                 orders.updateNextStatus(-2,order_id)
+            logit_detail('Change the order status',order_id,statusDict[CurrentStatus])
             Send_email(order_id)
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_end_confirm_detail","type":"detail_end_confirm_button"}.n_clicks':
             CurrentStatus = -1
             NextStatus = -2
             orders.updateCurrentStatus(-1,order_id)
             orders.updateNextStatus(-2,order_id)
+            logit_detail('Change the order status',order_id,statusDict[CurrentStatus])
             Send_email(order_id)
         if CurrentStatus != -1:
             res_status.append(False)

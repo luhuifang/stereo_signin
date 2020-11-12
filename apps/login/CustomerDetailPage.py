@@ -11,6 +11,7 @@ from dash.dependencies import Input, Output, State, ALL
 from dash.exceptions import PreventUpdate
 
 from spatialTrancriptomeReport import app
+from apps.login.UserActionLog import logit_detail
 from apps.db.tableService.Users import Users
 from apps.db.tableService.Groups import Groups
 from apps.db.tableService.OrderForm import Orders
@@ -183,7 +184,7 @@ def Datainfo_content(productData):
                         html.A(id='assignGroup')
                         ]),
                     html.Div([
-                        html.A(id="detail_Submit_button"),
+                        html.P(id="detail_Submit_button"),
                     ]),
                 ])
                 ])
@@ -242,6 +243,7 @@ def status_button_disabled(modify_id):
     ]
     )
 def cancel_order(n_clicks,status_id,custo_cancel):
+    # print(dash.callback_context.triggered)
     if not dash.callback_context.triggered:
         raise PreventUpdate
     for index in range(len(status_id)):
@@ -249,7 +251,7 @@ def cancel_order(n_clicks,status_id,custo_cancel):
         if dash.callback_context.triggered[0]['prop_id'] == '{"index":"'+str(order_id)+'_cancel_confirm_detail","type":"detail_cancel_confirm_button"}.n_clicks':
             order = Orders(order_id)
             order.updateByisdelete(True)
-
+    logit_detail('Cancel the order',order_id)
     return custo_cancel
 
 @app.callback(
@@ -266,6 +268,7 @@ def cancel_order(n_clicks,status_id,custo_cancel):
     ]
     )
 def assignSubmit(n_clicks,snID,assignUser,assignGroup):
+    # print(dash.callback_context.triggered)
     if not dash.callback_context.triggered:
         raise PreventUpdate
     product = Product(snID)
@@ -281,12 +284,14 @@ def assignSubmit(n_clicks,snID,assignUser,assignGroup):
         else:
             product.updateSharedUser(userID)
             err_msg = 'successfully added'
+            logit_detail('Assign the order')
     elif not assignUser and assignGroup:
         if not groups.checkExists():
             err_msg = 'Groupname does not exists, please re-enter!'
         else:
             product.updateSharedGroup(GroupID)
             err_msg = 'successfully added'
+            logit_detail('Assign the order')
     elif assignUser and assignGroup:
         if user.checkExists() and not groups.checkExists():
             err_msg = 'Groupname does not exists, please re-enter!'
@@ -298,5 +303,6 @@ def assignSubmit(n_clicks,snID,assignUser,assignGroup):
             product.updateSharedUser(userID)
             product.updateSharedGroup(GroupID)
             err_msg = 'successfully added'
+            logit_detail('Assign the order')
     # print(err_msg)
     return assignUser,assignGroup,err_msg
