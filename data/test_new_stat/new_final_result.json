@@ -1,0 +1,210 @@
+{
+    "1.Filter_and_Map": {
+        "1.1.Adapter_Filter": [
+            {
+                "Sample_id": "V300062757_T67_L04_read",
+                "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
+                "total_reads": "238.59M",
+                "fixed_sequence_contianing_reads": "5.55K(0.00%)",
+                "mapped_reads": "90.54M(37.95%)",
+                "barcode_misOverlap_reads": "22.29M(9.34%)",
+                "barcode_withN_reads": "1.25M(0.53%)",
+                "Q10_bases_in_barcode": "98.99%",
+                "Q20_bases_in_barcode": "96.31%",
+                "Q30_bases_in_barcode": "86.27%",
+                "Q10_bases_in_MID": "88.01%",
+                "Q20_bases_in_MID": "73.12%",
+                "Q30_bases_in_MID": "58.79%",
+                "MID_filter_reads": "65.03M(27.26%)",
+                "MID_with_N_reads": "1.76M(0.74%)",
+                "MID_with_polyA_reads": "16.61K(0.01%)",
+                "MID_with_low_quality_base_reads": "63.26M(26.51%)"
+            },
+            {
+                "Sample_id": "V300062757_T67_L03_read",
+                "getBarcodePositionMap_uniqBarcodeTypes": "129.49M",
+                "total_reads": "231.64M",
+                "fixed_sequence_contianing_reads": "5.3K(0.00%)",
+                "mapped_reads": "88.19M(38.07%)",
+                "barcode_misOverlap_reads": "22.23M(9.60%)",
+                "barcode_withN_reads": "1.21M(0.52%)",
+                "Q10_bases_in_barcode": "98.83%",
+                "Q20_bases_in_barcode": "96.14%",
+                "Q30_bases_in_barcode": "85.90%",
+                "Q10_bases_in_MID": "88.76%",
+                "Q20_bases_in_MID": "74.78%",
+                "Q30_bases_in_MID": "60.83%",
+                "MID_filter_reads": "59.02M(25.48%)",
+                "MID_with_N_reads": "3.0M(1.29%)",
+                "MID_with_polyA_reads": "16.58K(0.01%)",
+                "MID_with_low_quality_base_reads": "56.01M(24.18%)"
+            }
+        ],
+        "1.2.Filter_Stat": [
+            {
+                "Sample_Name": "V300062757_T67_L04_read",
+                "Raw_Reads": "77.89M",
+                "Clean_Reads": "68.95M",
+                "Low_Quality_Reads": "1.07M",
+                "Too_Many_N_Reads": "8.0",
+                "Too_Short_Reads": "7.87M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300062757_T67_L04_read_read_trim.html"
+            },
+            {
+                "Sample_Name": "V300062757_T67_L03_read",
+                "Raw_Reads": "76.39M",
+                "Clean_Reads": "68.23M",
+                "Low_Quality_Reads": "968.42K",
+                "Too_Many_N_Reads": "2.0",
+                "Too_Short_Reads": "7.19M",
+                "Too_Long_Reads": "0.0",
+                "Remarks": "/filter/V300062757_T67_L03_read_read_trim.html"
+            }
+        ]
+    },
+    "2.Alignment": {
+        "2.6.Filter_And_Deduplication": [
+            {
+                "TOTAL_READS": "93.53M",
+                "PASS_FILTER": "65.25M",
+                "UNIQUE_READS": "3.58M",
+                "FAIL_FILTER_RATE": "30.24",
+                "DUPLICATION_RATE": "94.52"
+            }
+        ],
+        "2.7.Annotation": [
+            {
+                "TOTAL_READS": "65.25M(100.0%)",
+                "MAP": "65.25M(100.0%)",
+                "EXONIC": "42.54M(65.2%)",
+                "INTRONIC": "58.46K(0.1%)",
+                "INTERGENIC": "6.57M(34.7%)",
+                "TRANSCRIPTOME": "39.87M(61.1%)",
+                "ANTISENSE": "6.75M(10.3%)"
+            }
+        ],
+        "2.1.Input_Read": [
+            {
+                "Sample_Id": "V300062757_T67_L04_read",
+                "Number_Of_Input_Reads": "68.95M",
+                "Average_Input_Read_Length": "50.0"
+            },
+            {
+                "Sample_Id": "V300062757_T67_L03_read",
+                "Number_Of_Input_Reads": "68.23M",
+                "Average_Input_Read_Length": "50.0"
+            }
+        ],
+        "2.2.Uniquely_Mapped_Read": [
+            {
+                "Sample_Id": "V300062757_T67_L04_read",
+                "Mapped_Reads_Number": "32.4M",
+                "Mapped_Reads(%)": "46.99%",
+                "Average_Mapped_Length": "49.12"
+            },
+            {
+                "Sample_Id": "V300062757_T67_L03_read",
+                "Mapped_Reads_Number": "32.84M",
+                "Mapped_Reads(%)": "48.13%",
+                "Average_Mapped_Length": "49.14"
+            }
+        ],
+        "2.3.Multi_Mapping_Read": [
+            {
+                "Sample_Id": "V300062757_T67_L04_read",
+                "Multiple_Loci": "13.99M(20.29%)",
+                "Many_Loci": "2.9M(4.21%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67_L03_read",
+                "Multiple_Loci": "14.3M(20.95%)",
+                "Many_Loci": "3.02M(4.43%)"
+            }
+        ],
+        "2.4.Unmapping_Read": [
+            {
+                "Sample_Id": "V300062757_T67_L04_read",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "19.33M(28.04%)",
+                "Other": "322.87K(0.47%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67_L03_read",
+                "Too_Many_Mismatches": "0.0(0.00%)",
+                "Too_Short": "17.73M(25.99%)",
+                "Other": "342.06K(0.50%)"
+            }
+        ],
+        "2.5.Chimeric_Read": [
+            {
+                "Sample_Id": "V300062757_T67_L04_read",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            },
+            {
+                "Sample_Id": "V300062757_T67_L03_read",
+                "Number_Of_Chimeric_Reads": "0.0(0.00%)"
+            }
+        ]
+    },
+    "4.TissueCut": {
+        "4.2.TissueCut_Bin_stat": [
+            {
+                "binSize": "1",
+                "Mean_reads_per_spot": "39.77",
+                "Median_reads_per_spot": "1.0",
+                "Mean_gene_type_per_spot": "1.9",
+                "Median_gene_type_per_spot": "1.0",
+                "Mean_Umi_per_spot": "3.24",
+                "Median_Umi_per_spot": "1.0"
+            },
+            {
+                "binSize": "50",
+                "Mean_reads_per_spot": "55.05",
+                "Median_reads_per_spot": "2.0",
+                "Mean_gene_type_per_spot": "2.61",
+                "Median_gene_type_per_spot": "1.0",
+                "Mean_Umi_per_spot": "4.48",
+                "Median_Umi_per_spot": "1.0"
+            },
+            {
+                "binSize": "100",
+                "Mean_reads_per_spot": "106.36",
+                "Median_reads_per_spot": "4.0",
+                "Mean_gene_type_per_spot": "4.99",
+                "Median_gene_type_per_spot": "2.0",
+                "Mean_Umi_per_spot": "8.65",
+                "Median_Umi_per_spot": "3.0"
+            },
+            {
+                "binSize": "150",
+                "Mean_reads_per_spot": "202.48",
+                "Median_reads_per_spot": "8.0",
+                "Mean_gene_type_per_spot": "9.39",
+                "Median_gene_type_per_spot": "5.0",
+                "Mean_Umi_per_spot": "16.48",
+                "Median_Umi_per_spot": "6.0"
+            },
+            {
+                "binSize": "200",
+                "Mean_reads_per_spot": "333.62",
+                "Median_reads_per_spot": "17.0",
+                "Mean_gene_type_per_spot": "15.32",
+                "Median_gene_type_per_spot": "9.0",
+                "Mean_Umi_per_spot": "27.15",
+                "Median_Umi_per_spot": "10.0"
+            }
+        ],
+        "4.1.TissueCut_Total_Stat": [
+            {
+                "Contour_area": "233.11M",
+                "Number_of_DNB_under_tissue": "43.22K",
+                "Ratio": "0.02%",
+                "Total_Gene_type": "15.35K",
+                "Umi_counts": "139.87K",
+                "Reads_under_tissue": "1.72M",
+                "Fraction_Reads_in_Spots_Under_Tissue": "69.46%"
+            }
+        ]
+    }
+}

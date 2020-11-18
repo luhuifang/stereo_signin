@@ -1,3 +1,4 @@
+import os
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_bootstrap_components as dbc
@@ -8,12 +9,14 @@ from apps.statPage.utils import url_search_to_dict
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
+data_file = os.path.join(os.path.dirname(__file__), 'data/test_new_stat')
+print(data_file)
 app.layout = html.Div([
     dcc.Location(id = 'url', refresh = False),
     html.Div(id = 'custom-auth-frame', children=[
     	html.H1('Welcome!'),
     	dbc.Button('Sign in', color='primary'),
-        dbc.Button('Stat', color='primary', href='/stat?DataID=E:\\01.program\\11.st_RNA\\03.data\\test_new_stat'),
+        dbc.Button('Stat', color='primary', href=f'/stat?DataID={data_file}'),
     ]),
 ])
 
