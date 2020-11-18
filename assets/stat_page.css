@@ -1,0 +1,47 @@
+.shadow{
+	box-shadow: 2px 2px 2px lightgrey;
+}
+
+.text-green{
+	color: green;
+}
+.text-blue{
+	color: var(--stereo-blue-9);
+}
+.text-right{
+	float: right;
+}
+
+.gridtable{	
+	height: 500px;
+	border: 1px solid #ddd;
+	border-collapse:collapse;
+	vertical-align:middle!important;
+}
+table.gridtable th {
+	text-align:left;
+	border-top: 1px;
+	height:82.3px;
+	vertical-align:middle!important;
+	font-size: 1em;
+	font-weight: bold;
+}
+table.gridtable td {
+    vertical-align:middle!important;
+	text-align: center;
+	padding: 15px;
+	font-size: 1.2em;
+	font-weight: 250;    
+}
+.card-mid{
+	height: 500px;
+	padding: 0px 0px;
+}
+.card-mid td{
+	vertical-align:middle!important;
+	font-size: 1.2em;
+	font-weight: 250;
+}
+.font-DIN{
+	font-family: DIN Next LT Pro;
+}

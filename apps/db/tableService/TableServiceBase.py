@@ -1,5 +1,5 @@
 from apps.db.tableService.ConnectMYSQL import ConnectMYSQL
-from db.database_settings import MYSQL_LOCAL as MYSQL
+from apps.db.database_settings import MYSQL_LOCAL as MYSQL
 
 class TableServiceBase(object):
 	def __init__(self, tableName):
