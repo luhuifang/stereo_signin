@@ -16,9 +16,9 @@ from spatialTrancriptomeReport import app
 
 from apps.statPage.load_json import LoadStatJson, LoadStatFigure, number2human
 from apps.statPage.disposal_sun_data import get_sun_fig
-from apps.statPage.static_info import SPOT_SUMMARY_COLLAPSE, SPOT_SUMMARY_FIELD, QUALITY_COLLAPSE, QUALITY_FIELD, BIN_SUMMARY_COLLAPSE, BIN_SUMMARY_FIELD, IMPORTANT_FIELD
+from apps.statPage.static_info import SPOT_SUMMARY_COLLAPSE, SPOT_SUMMARY_FIELD, QUALITY_COLLAPSE, QUALITY_FIELD, BIN_SUMMARY_COLLAPSE, BIN_SUMMARY_FIELD, IMPORTANT_FIELD, RNA_MAPPING_FIELD, RNA_MAPPING_COLLAPSE ,ANNOTATION_FIELD, ANNOTATION_COLLAPSE ,CELLCUT_BIN_STAT_COLLAPSE, CELLCUT_BIN_STAT_FIELD, CELLCUT_TOTAL_STAT_FIELD, CELLCUT_TOTAL_STAT_COLLAPSE
 
-from apps.statPage.utils import get_dir_from_search_str
+from apps.statPage.utils import get_dir_from_search_str,get_file_list 
 
 def showImportantData(show_value_list):
     if not isinstance(show_value_list, list):
@@ -88,11 +88,29 @@ def showTableBody(field_list, values):
         )
     return html.Tbody(child)
 
+def showBinTable(df_table):
+    Thead = []
+    Tbody = []
+    for i in df_table.iloc:
+        Thead = []
+        row_Td = []
+        for colname in df_table.columns.values.tolist():
+            Thead.append(html.Th(colname))
+            row_Td.append(html.Td(i[colname]))
+
+        Tbody.append(html.Tr(row_Td))
+        
+    return html.Table(className='gridtable',children=[
+        html.Thead(html.Tr(Thead)),
+        html.Tbody(Tbody)
+    ]),
+
 
 def showPicTabs(pics):
     tab_child = []
     count = 0
     for bin_size, pics_one in sorted(pics.items(),key=lambda x:eval(x[0])):
+        print(bin_size,pics_one)
         pic_row = []
         for pic_type, pic_path in pics_one.items():
             title = os.path.basename(pic_path)
@@ -100,28 +118,119 @@ def showPicTabs(pics):
             col = dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        html.Img(src=image, id = {'id': f'{count}', 'type':'img'}, n_clicks=0),
+                        html.Img(src=image, id = {'id': f'{count}', 'type':'img'}, n_clicks=0,className='bin-img'),
                         dbc.Modal([
                             dbc.ModalHeader(title),
                             dbc.ModalBody(html.Img(src=image, width='750px',height="auto")),
                         ], id= {'id':f'{count}', 'type':'modal'}, size="lg", centered=True)
-                    ]),
+                    ],className='text-center'),
                 ], className="card-fig mt-3", style={'height': '400px'}),
-            ], width=6)
+            ], width=12)
             pic_row.append(col)
             count += 1
         tab_child.append(dbc.Tab(dbc.Row(pic_row), label=f'Bin-{bin_size}', tab_id=f'Bin-{bin_size}'))
     return dbc.Tabs(tab_child, id="card-tabs")
 
-def statLayout(file_dir, sn=''):
+def showCellPicTabs(pics):
+    tab_child = []
+    pic_row = []
+    count = 0
+    for bin_size, pics_one in sorted(pics.items(),key=lambda x:eval(x[0])):
+        for pic_type, pic_path in pics_one.items():
+            title = os.path.basename(pic_path)
+            image = 'data:image/png;base64,{}'.format(base64.b64encode(open(pic_path, 'rb').read()).decode('ascii'))
+            col = dbc.Col([
+                dbc.Card([
+                    dbc.CardBody([
+                        html.Img(src=image, id = {'id': f'{count}', 'type':'img'}, n_clicks=0,className='bin-img'),
+                        dbc.Modal([
+                            dbc.ModalHeader(title),
+                            dbc.ModalBody(html.Img(src=image, width='750px',height="auto")),
+                        ], id= {'id':f'{count}', 'type':'modal'}, size="lg", centered=True)
+                    ],className='text-center'),
+                ], className="card-fig mt-3", style={'height': '400px'}),
+            ], width=12)
+            pic_row.append(col)
+            count += 1
+    tab_child.append(dbc.Tab(dbc.Row(pic_row),label='Bin Figure'))
+    return dbc.Tabs(tab_child, id="card-tabs")
+
+def BinData(file_dir):
     loadJson =LoadStatJson(file_dir)
     data_json = loadJson.data_json
     df_table = loadJson.getDfTable(data_json)
-    data_dict = loadJson.getDataDict(data_json)
     flag, spot_summary = loadJson.getSpotSummary(data_json)
+    is_cell,total_stat_summary, bin_stat_summary = loadJson.IsCell(data_json)
+    pictures = LoadStatFigure(file_dir).getPicDict()
+    final_collapse_info =[]
+    table_body_list = []
 
+    if not is_cell:
+        if flag == '4':
+            final_collapse_info = SPOT_SUMMARY_COLLAPSE
+            table_body_list = SPOT_SUMMARY_FIELD
+        elif  flag == '3':
+            final_collapse_info = BIN_SUMMARY_COLLAPSE
+            table_body_list = BIN_SUMMARY_FIELD
+        total_stat = dbc.Col(
+                            showTableStat(
+                                table_title="TissueCut Total Stat", 
+                                id_name="collapse-2", 
+                                collapse_info=final_collapse_info, 
+                                table_body_list=table_body_list, 
+                                values=spot_summary
+                            ), 
+                            sm=4, xs=12
+                        )
+        bin_stat = dbc.Col(id = 'bin_table', sm=8, xs=12, children=showBinTable(df_table))
+        bin_picture = showPicTabs(pictures)
+    else: 
+        total_stat = dbc.Col(
+                        showTableStat(
+                            table_title="CellCut Total Stat", 
+                            id_name="collapse-2", 
+                            collapse_info=CELLCUT_TOTAL_STAT_COLLAPSE, 
+                            table_body_list=CELLCUT_TOTAL_STAT_FIELD, 
+                            values=total_stat_summary
+                        ), 
+                        sm=6, xs=12
+                    )
+        bin_stat = dbc.Col(
+                showTableStat(
+                    table_title="CellCut Bin Stat", 
+                    id_name="collapse-5", 
+                    collapse_info=CELLCUT_BIN_STAT_COLLAPSE, 
+                    table_body_list=CELLCUT_BIN_STAT_FIELD, 
+                    values=bin_stat_summary
+                ), 
+                sm=6, xs=12
+            )
+        bin_picture = showCellPicTabs(pictures)
+    return total_stat,bin_stat,bin_picture
+
+def statLayout(file_dir, sn=''):
+    loadJson =LoadStatJson(file_dir)
+    data_json = loadJson.data_json
+    data_dict = loadJson.getDataDict(data_json)
     filter_stat = data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"]
     filter_dropdown_children = []
+    summary_filter_dropdown_children = []
+    summaryReport_file_dir = os.path.join(file_dir, 'filter')
+    SummaryFile = get_file_list(summaryReport_file_dir, shuffix='summaryReport.html')
+    if SummaryFile:
+        for sample_dir in SummaryFile:
+            summaryfile_basename = os.path.basename(sample_dir)
+            sample_name = summaryfile_basename.strip('summaryReport.html')
+            summary_filter_dropdown_children.append(dbc.DropdownMenuItem(
+                html.A(
+                    sample_name, 
+                    href = '{0}{1}?path={2}'.format('/Stereo-Draftsman/static_file/', summaryfile_basename, sample_dir),
+                    target='_blank'
+                )
+            ))
+        summary_filter_stat_dropdown = dbc.DropdownMenu(summary_filter_dropdown_children, label='View summary report', nav=True, in_navbar=True)
+    else:
+        summary_filter_stat_dropdown=''
     for sample_name, v in filter_stat.items():
         basename = os.path.basename(v['Remarks'])
         dirname = '/'.join([file_dir, os.path.dirname(v['Remarks'])])
@@ -133,21 +242,13 @@ def statLayout(file_dir, sn=''):
             )
         ))
     filter_stat_dropdown = dbc.DropdownMenu(filter_dropdown_children, label='View fastp report', nav=True, in_navbar=True)
+    total_stat,bin_stat,bin_picture = BinData(file_dir)
 
-    pictures = LoadStatFigure(file_dir).getPicDict()
-    final_collapse_info =[]
-    table_body_list = []
-    if flag == '4':
-        final_collapse_info = SPOT_SUMMARY_COLLAPSE
-        table_body_list = SPOT_SUMMARY_FIELD
-    elif  flag == '3':
-        final_collapse_info = BIN_SUMMARY_COLLAPSE
-        table_body_list = BIN_SUMMARY_FIELD
-    
     return dbc.Container([
         dbc.Row(dbc.Col(
             dbc.NavbarSimple(
-                filter_stat_dropdown,
+                [summary_filter_stat_dropdown,
+                filter_stat_dropdown,],
                 brand=sn,
                 color="dark",dark=True, className='mb-2'
             )
@@ -186,26 +287,26 @@ def statLayout(file_dir, sn=''):
                 ),
             ], sm=8, xs=12),
         ], className='mb-1'),
-        dbc.Row([
+        dbc.Row([ 
             dbc.Col(
-                showTableStat(
-                    table_title="TissueCut Total Stat", 
-                    id_name="collapse-2", 
-                    collapse_info=final_collapse_info, 
-                    table_body_list=table_body_list, 
-                    values=spot_summary
-                ), 
-                sm=4, xs=12
+                showTableStat(table_title="RNA Mapping", id_name="collapse-3", 
+                collapse_info=RNA_MAPPING_COLLAPSE, table_body_list=RNA_MAPPING_FIELD),
+                sm=6, xs=12
             ),
-            dbc.Col(id = 'bin_table', sm=8, xs=12, children=[
-                dbc.Table.from_dataframe(df_table,striped=True, hover=True,className='gridtable'),
-            ]),
+            dbc.Col(
+                showTableStat(table_title="Annotation", id_name="collapse-4", 
+                collapse_info=ANNOTATION_COLLAPSE, table_body_list=ANNOTATION_FIELD),
+                sm=6, xs=12),
+        ], className='mb-1'),
+        dbc.Row([
+            total_stat,
+            bin_stat,
         ]),
         dbc.Row([
             dbc.Col([
                 dbc.Card([
                     dbc.CardBody([
-                        showPicTabs(pictures)
+                    bin_picture
                     ], className='card-tabs' )
                 ], className='card-lg')
             ],width=12)
@@ -249,6 +350,36 @@ def toggle_collapse_2(n, is_open):
     return is_open
 
 @app.callback(
+    Output("collapse-3", "is_open"),
+    [Input("collapse-3-button", "n_clicks")],
+    [State("collapse-3", "is_open")],
+)
+def toggle_collapse_3(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse-4", "is_open"),
+    [Input("collapse-4-button", "n_clicks")],
+    [State("collapse-4", "is_open")],
+)
+def toggle_collapse_4(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output("collapse-5", "is_open"),
+    [Input("collapse-5-button", "n_clicks")],
+    [State("collapse-5", "is_open")],
+)
+def toggle_collapse_5(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
     Output('sunburst-fig','children'),
     [Input('Sample_dropdown','value')],
     [State('url', 'search')]
@@ -284,12 +415,20 @@ def key_indic(values, url_search):
      Output('mapped_reads','children'),
      Output('clean_reads','children'),
      Output('reference_mapping_reads','children'),
-     Output('Q10_Barcode','children'),
-     Output('Q20_Barcode','children'),
+     Output('Total_Reads','children'),
      Output('Q30_Barcode','children'),
-     Output('Q10_UMI','children'),
-     Output('Q20_UMI','children'),
-     Output('Q30_UMI','children'),],
+     Output('Q30_UMI','children'),
+     Output('Input_read','children'),
+     Output('Uniquely_Mapped_Read','children'),
+     Output('Multi_Mapping_Read','children'),
+     Output('RNA_Unmapping_Read','children'),
+     Output('Chimeric_Read','children'),
+     Output('Exonic','children'),
+     Output('Intronic','children'),
+     Output('Intergenic','children'),
+     Output('Transcriotome','children'),
+     Output('Antisense','children'),
+    ],
     [Input('Sample_dropdown','value')],
     [State('url', 'search')]
     )
@@ -301,9 +440,13 @@ def data_set(values, url_search):
         Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads, \
-        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = loadJson.getReadsStatData(values)
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI,\
+        Exonic, Intronic, Intergenic, Transcriotome, Antisense,\
+        Input_read, Uniquely_Mapped_Read, Multi_Mapping_Read, RNA_Unmapping_Read, Chimeric_Read = loadJson.getReadsStatData(values)
 
         return number2human(Total_reads), number2human(Barcode_Mapping), number2human(Clean_reads), number2human(Reference_Mapping_reads), \
-            Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI
+            number2human(Total_reads),Q30_Barcode,Q30_UMI,number2human(Input_read), number2human(Uniquely_Mapped_Read), number2human(Multi_Mapping_Read),\
+            number2human(RNA_Unmapping_Read), number2human(Chimeric_Read), number2human(Exonic), number2human(Intronic),\
+            number2human(Intergenic), number2human(Transcriotome), number2human(Antisense)
     else:
         return '','','','','','','','','',''

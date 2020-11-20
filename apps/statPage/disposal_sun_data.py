@@ -13,7 +13,9 @@ def get_sun_fig(values, file_dir):
         Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads, \
-            Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = loadJson.getReadsStatData(values)
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI,\
+        Exonic, Intronic, Intergenic, Transcriotome, Antisense,\
+        Input_read, Uniquely_Mapped_Read, Multi_Mapping_Read, RNA_Unmapping_Read, Chimeric_Read = loadJson.getReadsStatData(values)
     
     
     name_pro = []
