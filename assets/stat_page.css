@@ -14,7 +14,7 @@
 
 .gridtable{	
 	width: 100%;
-	height: 100%;
+	height: 397px;
 	border: 1px solid #ddd;
 	border-collapse:collapse;
 	vertical-align:middle!important;
@@ -26,35 +26,68 @@ table.gridtable th {
 	vertical-align:middle!important;
 	font-size: 0.85em;
 	font-weight: bold;
+	padding: 8px;
+	border-bottom:1px solid #dedede;
 }
 table.gridtable td {
     vertical-align:middle!important;
 	text-align: center;
-	padding: 10px;
+	padding: 8px;
 	font-size: 1em;
-	font-weight: 200;    
+	/* font-weight: 200;   */
+	border-bottom:1px solid #dedede;  
 }
 
 table.gridtable thead {
     background: #f5f5f6;
 }
 
-table.gridtable td, table.gridtable th {
-    padding: 8px;
-    border-bottom:1px solid #dedede;
-}
 .card-fig{
 	margin:15px;
 }
+
 .card-mid{
-	height: 500px;
+	height: 515px;
 	padding: 0px 0px;
 }
-.card-mid td{
-	vertical-align:middle!important;
-	font-size: 1.2em;
-	font-weight: 250;
+.table-layout{
+	height: 250px;
+	padding: 0px 0px;
 }
+.table-layout th{
+	vertical-align:middle!important;
+	font-size: 1em;
+	/* font-weight: 250px; */
+	padding-top:10px;
+	margin:0px;
+}
+.table-layout td{
+	vertical-align:middle!important;
+	font-size: 1em;
+	/* font-weight: 250px; */
+	padding:8px;
+	margin:0px;
+}
+
+.total-stat-table{
+	height: 471px;
+	padding: 0px 0px;
+}
+.total-stat-table th{
+	vertical-align:middle!important;
+	font-size: 1em;
+	/* font-weight: 250px; */
+	padding-top:10px;
+	margin:0px;
+}
+.total-stat-table td{
+	vertical-align:middle!important;
+	font-size: 1em;
+	/* font-weight: 250px; */
+	padding:8px;
+	margin:0px;
+}
+
 .font-DIN{
 	font-family: DIN Next LT Pro;
 }

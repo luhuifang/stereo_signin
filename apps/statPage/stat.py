@@ -16,7 +16,7 @@ from spatialTrancriptomeReport import app
 
 from apps.statPage.load_json import LoadStatJson, LoadStatFigure, number2human
 from apps.statPage.disposal_sun_data import get_sun_fig
-from apps.statPage.static_info import SPOT_SUMMARY_COLLAPSE, SPOT_SUMMARY_FIELD, QUALITY_COLLAPSE, QUALITY_FIELD, BIN_SUMMARY_COLLAPSE, BIN_SUMMARY_FIELD, IMPORTANT_FIELD, RNA_MAPPING_FIELD, RNA_MAPPING_COLLAPSE ,ANNOTATION_FIELD, ANNOTATION_COLLAPSE ,CELLCUT_BIN_STAT_COLLAPSE, CELLCUT_BIN_STAT_FIELD, CELLCUT_TOTAL_STAT_FIELD, CELLCUT_TOTAL_STAT_COLLAPSE
+from apps.statPage.static_info import SPOT_SUMMARY_COLLAPSE, SPOT_SUMMARY_FIELD, QUALITY_COLLAPSE, QUALITY_FIELD, BIN_SUMMARY_COLLAPSE, BIN_SUMMARY_FIELD, IMPORTANT_FIELD, RNA_MAPPING_FIELD, RNA_MAPPING_COLLAPSE ,ANNOTATION_FIELD, ANNOTATION_COLLAPSE ,CELLCUT_BIN_STAT_COLLAPSE, CELLCUT_BIN_STAT_FIELD, CELLCUT_TOTAL_STAT_FIELD, CELLCUT_TOTAL_STAT_COLLAPSE,FILTER_FIELD,FILTER_COLLAPSE
 
 from apps.statPage.utils import get_dir_from_search_str,get_file_list 
 
@@ -53,7 +53,7 @@ def showCollapse(info_list):
     return collapse
 
 
-def showTableStat(table_title, id_name, collapse_info=[], table_body_list=[], values=[]):
+def showTableStat(table_title, id_name, collapse_info=[], table_body_list=[], values=[],classname='table-layout'):
     return dbc.Table(children = [
         html.Thead(html.Tr([html.Th([
             dbc.Row([
@@ -62,7 +62,7 @@ def showTableStat(table_title, id_name, collapse_info=[], table_body_list=[], va
                         table_title,
                         dbc.Button("?", id=f'{id_name}-button',color="light",size='sm', className='ml-2' )
                     ])
-                ], width=6),
+                ], width=12),
             ])
         ])])),
         dbc.Collapse(
@@ -70,7 +70,7 @@ def showTableStat(table_title, id_name, collapse_info=[], table_body_list=[], va
             id=id_name,
         ),
         showTableBody(table_body_list, values),                    
-    ], bordered=True,className='card-mid'),
+    ], bordered=True,className=classname)
 
 def showTableBody(field_list, values):
     child = []
@@ -164,7 +164,7 @@ def BinData(file_dir):
     pictures = LoadStatFigure(file_dir).getPicDict()
     final_collapse_info =[]
     table_body_list = []
-
+    print(not is_cell,flag)
     if not is_cell:
         if flag == '4':
             final_collapse_info = SPOT_SUMMARY_COLLAPSE
@@ -191,7 +191,8 @@ def BinData(file_dir):
                             id_name="collapse-2", 
                             collapse_info=CELLCUT_TOTAL_STAT_COLLAPSE, 
                             table_body_list=CELLCUT_TOTAL_STAT_FIELD, 
-                            values=total_stat_summary
+                            values=total_stat_summary,
+                            classname='total-stat-table'
                         ), 
                         sm=6, xs=12
                     )
@@ -275,7 +276,8 @@ def statLayout(file_dir, sn=''):
         ]),
         dbc.Row([
             dbc.Col(
-                showTableStat(table_title="Adapter Filter", id_name="collapse-1", collapse_info=QUALITY_COLLAPSE, table_body_list=QUALITY_FIELD),
+                [showTableStat(table_title="Sequence", id_name="collapse-1", collapse_info=QUALITY_COLLAPSE, table_body_list=QUALITY_FIELD),
+                showTableStat(table_title="Filter", id_name="collapse-6", collapse_info=FILTER_COLLAPSE, table_body_list=FILTER_FIELD)],
                 sm=4, xs=12
             ),
             dbc.Col([
@@ -380,6 +382,16 @@ def toggle_collapse_5(n, is_open):
     return is_open
 
 @app.callback(
+    Output("collapse-6", "is_open"),
+    [Input("collapse-6-button", "n_clicks")],
+    [State("collapse-6", "is_open")],
+)
+def toggle_collapse_6(n, is_open):
+    if n:
+        return not is_open
+    return is_open
+
+@app.callback(
     Output('sunburst-fig','children'),
     [Input('Sample_dropdown','value')],
     [State('url', 'search')]
@@ -417,7 +429,7 @@ def key_indic(values, url_search):
      Output('reference_mapping_reads','children'),
      Output('Total_Reads','children'),
      Output('Q30_Barcode','children'),
-     Output('Q30_UMI','children'),
+     Output('Q30_MID','children'),
      Output('Input_read','children'),
      Output('Uniquely_Mapped_Read','children'),
      Output('Multi_Mapping_Read','children'),
@@ -428,6 +440,10 @@ def key_indic(values, url_search):
      Output('Intergenic','children'),
      Output('Transcriotome','children'),
      Output('Antisense','children'),
+     Output('Too_Short_Reads','children'),
+     Output('Too_Long_Reads','children'),
+     Output('Too_Many_N_Reads','children'),
+     Output('Low_Quality_Reads','children'),
     ],
     [Input('Sample_dropdown','value')],
     [State('url', 'search')]
@@ -437,16 +453,18 @@ def data_set(values, url_search):
     if values:
         loadJson = LoadStatJson(file_dir)
         Total_reads, Barcode_Mapping, UnMapping, Clean_reads, Filter_reads, Reference_Mapping_reads, \
-        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
+        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, MID_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads, \
-        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI,\
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_MID,Q20_MID,Q30_MID,\
         Exonic, Intronic, Intergenic, Transcriotome, Antisense,\
         Input_read, Uniquely_Mapped_Read, Multi_Mapping_Read, RNA_Unmapping_Read, Chimeric_Read = loadJson.getReadsStatData(values)
 
         return number2human(Total_reads), number2human(Barcode_Mapping), number2human(Clean_reads), number2human(Reference_Mapping_reads), \
-            number2human(Total_reads),Q30_Barcode,Q30_UMI,number2human(Input_read), number2human(Uniquely_Mapped_Read), number2human(Multi_Mapping_Read),\
+            number2human(Total_reads),Q30_Barcode,Q30_MID,number2human(Input_read), number2human(Uniquely_Mapped_Read), number2human(Multi_Mapping_Read),\
             number2human(RNA_Unmapping_Read), number2human(Chimeric_Read), number2human(Exonic), number2human(Intronic),\
-            number2human(Intergenic), number2human(Transcriotome), number2human(Antisense)
+            number2human(Intergenic), number2human(Transcriotome), number2human(Antisense),number2human(Too_Short_Reads), \
+            number2human(Too_Long_Reads), number2human(Too_Many_N_Reads), number2human(Low_Quality_Reads)
     else:
         return '','','','','','','','','',''
+

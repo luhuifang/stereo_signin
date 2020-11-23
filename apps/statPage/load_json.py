@@ -93,7 +93,7 @@ class LoadStatJson(object):
         return flag, spot_summary
     
     def IsCell(self, data_json):
-        is_cell = 'None'
+        is_cell = None
         total_stat_summary = []
         bin_stat_summary = []
         if '4.TissueCut' in data_json:
@@ -113,6 +113,10 @@ class LoadStatJson(object):
                 for i in v2:
                     sample_id = count
                     if "Sample_id" in i.keys():
+                        for each_key in i.keys():
+                            if 'umi' in each_key:
+                                new_key = each_key.replace('umi','MID')
+                                i[new_key] = i.pop(each_key)
                         sample_id = i["Sample_id"]
                     elif "Sample_Name" in i.keys():
                         sample_id = i["Sample_Name"]
@@ -131,10 +135,10 @@ class LoadStatJson(object):
     def getReadsStatData(self, samples):
         data_dict = self.getDataDict(self.data_json)
 
-        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI = 0, 0, 0, 0, 0, 0
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_MID,Q20_MID,Q30_MID = 0, 0, 0, 0, 0, 0
 
         Total_reads, Barcode_Mapping, UnMapping, Clean_reads, Filter_reads, Reference_Mapping_reads, \
-        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
+        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, MID_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads = 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
@@ -167,33 +171,33 @@ class LoadStatJson(object):
             Too_Short_Reads += tran_data(data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Too_Short_Reads"])
             Too_Long_Reads += tran_data(data_dict["1.Filter_and_Map"]["1.2.Filter_Stat"][value]["Too_Long_Reads"])
             mapped_reads += tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["mapped_reads"].split('(')[-2])
-            Umi_Filter_Reads = mapped_reads - Raw_Reads
+            MID_Filter_Reads = mapped_reads - Raw_Reads
             
             # UnMapping Data
             UnMapping += tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]) - tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["mapped_reads"].split('(')[-2]) 
-            #Filter_reads = Umi_Filter_Reads + Too_Long_Reads + Too_Short_Reads + Low_Quality_Reads + Too_Many_N_Reads
+            #Filter_reads = MID_Filter_Reads + Too_Long_Reads + Too_Short_Reads + Low_Quality_Reads + Too_Many_N_Reads
             Filter_reads = Too_Long_Reads + Too_Short_Reads + Low_Quality_Reads + Too_Many_N_Reads
-            # print(Filter_reads , Umi_Filter_Reads , Too_Long_Reads , Too_Short_Reads , Low_Quality_Reads , Too_Many_N_Reads)
+            # print(Filter_reads , MID_Filter_Reads , Too_Long_Reads , Too_Short_Reads , Low_Quality_Reads , Too_Many_N_Reads)
             Barcode_Mapping = Filter_reads + Clean_reads
             
             #Total reads Data
             #Total_reads = Barcode_Mapping + UnMapping
-            Total_reads = Barcode_Mapping + UnMapping + Umi_Filter_Reads
+            Total_reads = Barcode_Mapping + UnMapping + MID_Filter_Reads
 
-            # Barcode and Umi QC Data
+            # Barcode and MID QC Data
             Q10_Barcode_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_barcode"].replace('%',''))/100
             Q20_Barcode_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q20_bases_in_barcode"].replace('%',''))/100
             Q30_Barcode_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_barcode"].replace('%',''))/100
-            Q10_UMI_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_MID"].replace('%',''))/100
-            Q20_UMI_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]['Q20_bases_in_MID'].replace('%',''))/100
-            Q30_UMI_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_MID"].replace('%',''))/100
+            Q10_MID_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q10_bases_in_MID"].replace('%',''))/100
+            Q20_MID_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]['Q20_bases_in_MID'].replace('%',''))/100
+            Q30_MID_rate = tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["Q30_bases_in_MID"].replace('%',''))/100
             
             Q10_Barcode += round(Q10_Barcode_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
             Q20_Barcode += round(Q20_Barcode_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
             Q30_Barcode += round(Q30_Barcode_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q10_UMI += round(Q10_UMI_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q20_UMI += round(Q20_UMI_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
-            Q30_UMI += round(Q30_UMI_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
+            Q10_MID += round(Q10_MID_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
+            Q20_MID += round(Q20_MID_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
+            Q30_MID += round(Q30_MID_rate*tran_data(data_dict["1.Filter_and_Map"]["1.1.Adapter_Filter"][value]["total_reads"]),2)
 
             # RNA mapping Data
             Input_read += tran_data(data_dict["2.Alignment"]["2.1.Input_Read"][value]["Number_Of_Input_Reads"])
@@ -213,15 +217,15 @@ class LoadStatJson(object):
         Q10_Barcode = '{}({}%)'.format(number2human(Q10_Barcode),round(Q10_Barcode/Total_reads*100,2))
         Q20_Barcode = '{}({}%)'.format(number2human(Q20_Barcode),round(Q20_Barcode/Total_reads*100,2))
         Q30_Barcode = '{}({}%)'.format(number2human(Q30_Barcode),round(Q30_Barcode/Total_reads*100,2))
-        Q10_UMI = '{}({}%)'.format(number2human(Q10_UMI),round(Q10_UMI/Total_reads*100,2))
-        Q20_UMI = '{}({}%)'.format(number2human(Q20_UMI),round(Q20_UMI/Total_reads*100,2))
-        Q30_UMI = '{}({}%)'.format(number2human(Q30_UMI),round(Q30_UMI/Total_reads*100,2))
+        Q10_MID = '{}({}%)'.format(number2human(Q10_MID),round(Q10_MID/Total_reads*100,2))
+        Q20_MID = '{}({}%)'.format(number2human(Q20_MID),round(Q20_MID/Total_reads*100,2))
+        Q30_MID = '{}({}%)'.format(number2human(Q30_MID),round(Q30_MID/Total_reads*100,2))
 
         return Total_reads, Barcode_Mapping, UnMapping, Clean_reads, Filter_reads, Reference_Mapping_reads, \
-        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
+        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, MID_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads, \
-        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI,\
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_MID,Q20_MID,Q30_MID,\
         Exonic, Intronic, Intergenic, Transcriotome, Antisense,\
         Input_read, Uniquely_Mapped_Read, Multi_Mapping_Read, RNA_Unmapping_Read, Chimeric_Read
     

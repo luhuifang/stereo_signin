@@ -10,10 +10,10 @@ def get_sun_fig(values, file_dir):
     data_dict = loadJson.getDataDict(loadJson.data_json)
 
     Total_reads, Barcode_Mapping, UnMapping, Clean_reads, Filter_reads, Reference_Mapping_reads, \
-        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, Umi_Filter_Reads, \
+        Unique_Mapped_Reads, Multi_Mapping_Reads, Chimeric_Reads, Unmapping_Read, MID_Filter_Reads, \
         Too_Short_Reads, Too_Long_Reads, Too_Many_N_Reads, Low_Quality_Reads, DuPlication_Reads, \
         Unique_Reads, Fail_Filter, Raw_Reads, mapped_reads, \
-        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_UMI,Q20_UMI,Q30_UMI,\
+        Q10_Barcode,Q20_Barcode,Q30_Barcode,Q10_MID,Q20_MID,Q30_MID,\
         Exonic, Intronic, Intergenic, Transcriotome, Antisense,\
         Input_read, Uniquely_Mapped_Read, Multi_Mapping_Read, RNA_Unmapping_Read, Chimeric_Read = loadJson.getReadsStatData(values)
     
@@ -50,8 +50,8 @@ def get_sun_fig(values, file_dir):
         text = name_pro,
         branchvalues="total",
         marker = {
-            'colors':['#CC99CC','#FF9999','#FF99CC','#9999CC','#CCCCFF',
-            '#66CCFF','#99CCFF','#3399CC','#6699CC','#99CCFF','#66CCCC','#CCFFCC','#CCFFFF','#99CCCC',
+            'colors':['#CC99CC','#FF9999','#FF99CC','#FFB6C1','#009ACD','#C6E2FF','#00BFFF',
+            '#99CCFF','#99CCFF','#66CCCC','#CCFFCC','#CCFFFF','#99CCCC',
             '#336633','#669933'],
             'colorscale':'YlGnBu'
         },

@@ -147,30 +147,63 @@
             }
         ]
     },
-    "4.CellCut": {
-        "4.3.CellCut_Bin_stat": [
+    "4.TissueCut": {
+        "4.2.TissueCut_Bin_stat": [
             {
-                "Total_cell_count": "2383",
-                "Mean_reads": "3165.17",
-                "Median_reads": "1154.0",
-                "Mean_Gene_type_per_cell": "532.14",
-                "Median_Gene_type_per_cell": "281.5",
-                "Mean_MID_per_cell": "847.01",
-                "Median_MID_per_cell": "354.0",
-		"Mean_cell_area":"1742.82",
-		"Mean_DNB_per_cell":"460.09",
-		"Median_DNB_per_cell":"193.0"
+                "binSize": "1",
+                "Mean_reads_per_spot": "39.77",
+                "Median_reads_per_spot": "1.0",
+                "Mean_gene_type_per_spot": "1.9",
+                "Median_gene_type_per_spot": "1.0",
+                "Mean_Umi_per_spot": "3.24",
+                "Median_Umi_per_spot": "1.0"
+            },
+            {
+                "binSize": "50",
+                "Mean_reads_per_spot": "55.05",
+                "Median_reads_per_spot": "2.0",
+                "Mean_gene_type_per_spot": "2.61",
+                "Median_gene_type_per_spot": "1.0",
+                "Mean_Umi_per_spot": "4.48",
+                "Median_Umi_per_spot": "1.0"
+            },
+            {
+                "binSize": "100",
+                "Mean_reads_per_spot": "106.36",
+                "Median_reads_per_spot": "4.0",
+                "Mean_gene_type_per_spot": "4.99",
+                "Median_gene_type_per_spot": "2.0",
+                "Mean_Umi_per_spot": "8.65",
+                "Median_Umi_per_spot": "3.0"
+            },
+            {
+                "binSize": "150",
+                "Mean_reads_per_spot": "202.48",
+                "Median_reads_per_spot": "8.0",
+                "Mean_gene_type_per_spot": "9.39",
+                "Median_gene_type_per_spot": "5.0",
+                "Mean_Umi_per_spot": "16.48",
+                "Median_Umi_per_spot": "6.0"
+            },
+            {
+                "binSize": "200",
+                "Mean_reads_per_spot": "333.62",
+                "Median_reads_per_spot": "17.0",
+                "Mean_gene_type_per_spot": "15.32",
+                "Median_gene_type_per_spot": "9.0",
+                "Mean_Umi_per_spot": "27.15",
+                "Median_Umi_per_spot": "10.0"
             }
         ],
-        "4.1.CellCut_Total_Stat": [
+        "4.1.TissueCut_Total_Stat": [
             {
-                "Total_contour_area": "100.86M",
-                "Number_of_DNB_under_cell": "2.1M",
-                "Ratio": "2.09%",
-                "Total_Gene_type": "17.82K",
-                "Total_umi_under_cell": "178.72M",
-                "Reads_under_cell": "71.43M",
-                "Fraction_Reads_in_Spots_Under_Tissue": "39.97%"
+                "Contour_area": "233.11M",
+                "Number_of_DNB_under_tissue": "43.22K",
+                "Ratio": "0.02%",
+                "Total_Gene_type": "15.35K",
+                "Umi_counts": "139.87K",
+                "Reads_under_tissue": "1.72M",
+                "Fraction_Reads_in_Spots_Under_Tissue": "69.46%"
             }
         ]
     }

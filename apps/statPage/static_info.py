@@ -2,7 +2,7 @@ SPOT_SUMMARY_COLLAPSE=[
     {'title':"Contour area", 'content':"Contour area"},
     {'title':"Number of DNB under tissue", 'content':"Number of DNB in tissue area"},
     {'title':"Total Gene type", 'content':"Total gene types in contour area"},
-    {'title':"UMI under tissue", 'content': 'Number of UMI in tissue area'},
+    {'title':"MID under tissue", 'content': 'Number of MID in tissue area'},
     {'title':"Reads under tissue", 'content': "Number of Reads in tissue area"},
     {'title':"Fraction Reads in Spots Under Tissue", 'content':"Fraction Reads in tissue area"},
 ]
@@ -12,13 +12,13 @@ SPOT_SUMMARY_FIELD = [
     {'label': "Number of DNB under tissue", 'id':'Number_of_DNB_under_tissue'},
     {'label': "Ratio", 'id':'Ratio'},
     {'label': "Total Gene type", 'id': 'Total_Gene_type'},
-    {'label': "UMI under tissue", 'id':'Umi_counts'},
+    {'label': "MID under tissue", 'id':'Umi_counts'},
     {'label': "Reads under tissue", 'id':'Reads_under_tissue'},
     {'label': "Fraction Reads in Spots Under Tissue", 'id':'Fraction_Reads_in_Spots_Under_Tissue'},
 ]
 
 BIN_SUMMARY_COLLAPSE=[
-    {'title':"Total_Umi_Mapping_To_Gene_And_slide", 'content':"Total number of UMIs mapped to gene region"},
+    {'title':"Total_MID_Mapping_To_Gene_And_slide", 'content':"Total number of MIDs mapped to gene region"},
     {'title':"Gene_Number", 'content':"Number of types of genes that captured"},
     {'title':"Number_Of_DNB_With_Reads", 'content':"Number of DNB that captured mRNA"},
     {'title':"Slide_Area", 'content':"Area of debris"},
@@ -26,7 +26,7 @@ BIN_SUMMARY_COLLAPSE=[
 ]
 
 BIN_SUMMARY_FIELD = [
-    {'label': "Total Umi Mapping To Gene And slide", 'id':'Total_Umi_Mapping_To_Gene_And_slide'},
+    {'label': "Total MID Mapping To Gene And slide", 'id':'Total_Umi_Mapping_To_Gene_And_slide'},
     {'label': "Gene Number", 'id':'Gene_Number'},
     {'label': "Number Of DNB With Reads", 'id':'Number_Of_DNB_With_Reads'},
     {'label': "Slide Area", 'id':'Slide_Area'},
@@ -38,7 +38,7 @@ CELLCUT_TOTAL_STAT_COLLAPSE =[
     {'content': "Number of DNB Under Cell", 'title':'Number_of_DNB_under_cell'},
     {'content': "Ratio", 'title':'Ratio'},
     {'content': "Total Gene type", 'title':'Total_Gene_type'},
-    {'content': "Total Umi Under Cell", 'title':'Total_umi_under_cell'},
+    {'content': "Total MID Under Cell", 'title':'Total_MID_under_cell'},
     {'content': "Reads Under Cell", 'title':'Reads_under_cell'},
     {'content': "Fraction Reads in Spots Under Tissue", 'title':'Fraction_Reads_in_Spots_Under_Tissue'}
 ]
@@ -48,7 +48,7 @@ CELLCUT_TOTAL_STAT_FIELD =[
     {'label': "Number of DNB Under Cell", 'id':'Number_of_DNB_under_cell'},
     {'label': "Ratio", 'id':'Ratio'},
     {'label': "Total Gene type", 'id':'Total_Gene_type'},
-    {'label': "Total Umi Under Cell", 'id':'Total_umi_under_cell'},
+    {'label': "Total MID Under Cell", 'id':'Total_umi_under_cell'},
     {'label': "Reads Under Cell", 'id':'Reads_under_cell'},
     {'label': "Fraction Reads in Spots Under Tissue", 'id':'Fraction_Reads_in_Spots_Under_Tissue'}
 ]
@@ -80,18 +80,30 @@ CELLCUT_BIN_STAT_FIELD =[
 ]
 
 QUALITY_COLLAPSE = [
-    {'title':"Q10 Bases in Barcode",  'content': "Ratio of bases whose quality value exceeds Q10 in barcode. "},
-    {'title':"Q20 Bases in Barcode",  'content': "Ratio of bases whose quality value exceeds Q20 in barcode. "},
+    {'title':"Total Reads",  'content': "Total number of sequencing reads"},
     {'title':"Q30 Bases in Barcode",  'content': "Ratio of bases whose quality value exceeds Q30 in barcode. "},
-    {'title':"Q10 Bases in UMI",  'content': "Ratio of bases whose quality value exceeds Q10 in UMI. "},
-    {'title':"Q20 Bases in UMI",  'content': "Ratio of bases whose quality value exceeds Q20 in UMI. "},
-    {'title':"Q30 Bases in UMI",  'content': "Ratio of bases whose quality value exceeds Q30 in UMI. "},
+    {'title':"Q30 Bases in MID",  'content': "Ratio of bases whose quality value exceeds Q30 in MID. "},
+    {'title':"Q30 Bases in Reads",  'content': "Ratio of bases whose quality value exceeds Q30 in Reads. "},
 ]
 QUALITY_FIELD = [
     {'label': "Total Reads", 'id':'Total_Reads'},
     {'label': "Q30 Bases in Barcode", 'id':'Q30_Barcode'},
-    {'label': "Q30 Bases in UMI", 'id':'Q30_UMI'},
+    {'label': "Q30 Bases in MID", 'id':'Q30_MID'},
     {'label': "Q30 Bases in Reads", 'id':'Q30_Reads'},
+]
+
+FILTER_COLLAPSE = [
+    {'title':"Low Quality Reads",  'content': "Number of reads filtered due to low quality. (Ratio = Low Quality Reads / Filter reads). "},
+    {'title':"Too Many N Reads",  'content': "Number of reads filtered that contain too many N. (Ratio = Too Many N Reads / Filter reads). "},
+    {'title':"Too Short Reads",  'content': "Number of reads filtered which too short. (Ratio = Too Short Reads / Filter reads). "},
+    {'title':"Too Long Reads",  'content': "Number of reads filtered with too long. (Ratio = Too Long Reads / Filter reads). "},
+]
+FILTER_FIELD = [
+    {'label': "Low Quality Reads", 'id':'Low_Quality_Reads'},
+    {'label': "Too Many N Reads", 'id':'Too_Many_N_Reads'},
+    {'label': "Too Short Reads", 'id':'Too_Short_Reads'},
+    {'label': "Too Long Reads", 'id':'Too_Long_Reads'},
+
 ]
 IMPORTANT_FIELD = [
     {'id' : 'raw_reads', 'label' : "Total Reads"},
@@ -130,7 +142,7 @@ ANNOTATION_FIELD = [
 ]
 
 labels_color = {'Total_reads':'#F0FFFF','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads','Filter_reads':'Barcode_Mapping',
-    'Clean_reads':'Barcode_Mapping', 'Umi_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
+    'Clean_reads':'Barcode_Mapping', 'MID_Filter_Reads':'Filter_reads','Too_Long_Reads':'Filter_reads',
     'Too_Short_Reads':'Filter_reads','Too_Many_N_Reads':'Filter_reads','Low_Quality_Reads':'Filter_reads',
     'Reference_Mapping_reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Reference_Mapping_reads',
     'Fail_Filter':'Reference_Mapping_reads','Unique_Reads':'Reference_Mapping_reads'
@@ -141,7 +153,7 @@ hovertext_dict = {'Total_reads':'Total number of sequencing reads',
     'UnMapping':'Second sequencing cannot map back <br>the number of reads from the first time.<br>(Ratio = UnMapping / Total reads)',
     'Filter_reads':'Number of filter reads after quality control. <br>(Ratio = Filter reads / Barcode Mapping)',
     'Clean_reads':'Number of reads after quality control. <br>(Ratio = Clean reads / Barcode Mapping)', 
-    'Umi_Filter_Reads':'Number of reads filtered with umi, <br>including : umi_with_N_reads , umi_with_polyA_reads , umi_with_low_quality_base_reads. <br>( Ratio = Umi Filter Reads/ Filter reads)',
+    'MID_Filter_Reads':'Number of reads filtered with MID, <br>including : MID_with_N_reads , MID_with_polyA_reads , MID_with_low_quality_base_reads. <br>( Ratio = MID Filter Reads/ Filter reads)',
     'Too_Long_Reads':'Number of reads filtered with too long.<br>(Ratio = Too Long Reads / Filter reads)',
     'Too_Short_Reads':'Number of reads filtered which too short.<br>(Ratio = Too Short Reads / Filter reads)',
     'Too_Many_N_Reads':'Number of reads filtered that contain too many N.<br>(Ratio = Too Many N Reads / Filter reads)',
@@ -155,7 +167,7 @@ hovertext_dict = {'Total_reads':'Total number of sequencing reads',
 }
 
 parents_dict = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads',
-    'Umi_Filter_Reads':'Total_reads','Clean_reads':'Barcode_Mapping', 
+    'MID_Filter_Reads':'Total_reads','Clean_reads':'Barcode_Mapping', 
     'Too_Long_Reads':'Barcode_Mapping','Too_Short_Reads':'Barcode_Mapping','Too_Many_N_Reads':'Barcode_Mapping',
     'Low_Quality_Reads':'Barcode_Mapping','Unique_Mapped_Reads':'Clean_reads','Chimeric_Reads':'Clean_reads',
     'Multi_Mapping_Reads':'Clean_reads','Unmapping_Read':'Clean_reads','DuPlication_Reads':'Unique_Mapped_Reads',
@@ -163,7 +175,7 @@ parents_dict = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'To
 }
 
 parents_dict_sort = {'Total_reads':'','Barcode_Mapping':'Total_reads','UnMapping':'Total_reads',
-    'Umi_Filter_Reads':'Total_reads','Clean_reads':'Barcode_Mapping', 
+    'MID_Filter_Reads':'Total_reads','Clean_reads':'Barcode_Mapping', 
     'Too_Long_Reads':'Barcode_Mapping','Too_Short_Reads':'Barcode_Mapping','Too_Many_N_Reads':'Barcode_Mapping',
     'Low_Quality_Reads':'Barcode_Mapping','Unique_Mapped_Reads':'Clean_reads','Chimeric_Reads':'Clean_reads',
     'Multi_Mapping_Reads':'Clean_reads','Unmapping_Read':'Clean_reads'

@@ -133,11 +133,13 @@
         ],
         "2.7.Annotation": [
             {
-                "TOTAL_READS": "1.97M",
-                "READS_WRONG_STRAND": "41.23K",
-                "READS_RIGHT_STRAND": "1.93M",
-                "READ_AMBIGUOUS_GENE_FIXED": "0.0",
-                "AMBIGUOUS_READS_REJECTED": "0.0"
+                "TOTAL_READS": "65.25M(100.0%)",
+                "MAP": "65.25M(100.0%)",
+                "EXONIC": "42.54M(65.2%)",
+                "INTRONIC": "58.46K(0.1%)",
+                "INTERGENIC": "6.57M(34.7%)",
+                "TRANSCRIPTOME": "39.87M(61.1%)",
+                "ANTISENSE": "6.75M(10.3%)"
             }
         ],
         "2.1.Input_Read": [
